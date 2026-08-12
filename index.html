@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v1.9</title>
+<title>LEENAI 今日の作業 v2.0</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -136,7 +136,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v1.9</div>
+  <div class="splash-ver">v2.0</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -152,7 +152,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v1.9 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v2.0 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -553,7 +553,7 @@ const IV_IMPORTER_MAP = {
   'MG': {name:'MEGA SURYA',    staff:'大場'},
   'IK': {name:'INDAH KIAT',    staff:'大場'},
   'TJ': {name:'TJIWI KIMIA',   staff:'大場'},
-  'HP': {name:'HANKUK PAPER',  staff:'大場'},
+  'HA': {name:'HANKUK PAPER',  staff:'大場'},  // NHA
   'NA': {name:'NATURA',        staff:'大場'},
   'PC': {name:'PAPER COREA',   staff:'大場'},
   'RE': {name:'RE',            staff:'大場'},
@@ -570,7 +570,7 @@ const IV_IMPORTER_MAP = {
   'CR': {name:'CORELEX',       staff:'大場'},
   'VT': {name:'VIET TRI',      staff:'大場'},
   'TH': {name:'THANH HOA',     staff:'大場'},
-  'XD': {name:'XSD',           staff:'大場'},
+  'XS': {name:'XSD',           staff:'大場'},  // NXS
   // パク 담당
   'AS': {name:'ASIA PAPER',    staff:'パク'},
   'DH': {name:'DAEHAN PAPER',  staff:'パク'},
@@ -585,17 +585,16 @@ const IV_IMPORTER_MAP = {
   'TL': {name:'TAILIM PAPER',  staff:'パク'},
   'YC': {name:'YUCHANG',       staff:'パク'},
   'NF': {name:'NIKKO FIBRE',   staff:'パク'},
-  'CY': {name:'CLC(Y)',         staff:'パク'},
-  'CV': {name:'CLC(V)',         staff:'パク'},
+  'CL': {name:'CLC',           staff:'パク'},  // NCL(Y/V 구분 없음)
   'DA': {name:'DOUBLE A',      staff:'パク'},
-  'CS': {name:'CAS',           staff:'パク'},
+  'CA': {name:'CAS',           staff:'パク'},  // NCA
   'DT': {name:'DONG TIEN',     staff:'パク'},
   'XM': {name:'XUAN MAI',      staff:'パク'},
-  'TK': {name:'TKC KRAFT',     staff:'パク'},
+  'KC': {name:'TKC KRAFT',     staff:'パク'},  // NKC
   'TQ': {name:'TAN QUANG',     staff:'パク'},
   'NI': {name:'NIC INTERTRADE',staff:'パク'},
   'VD': {name:'VAN DIEM',      staff:'パク'},
-  'NT': {name:'NEW TOYO',      staff:'パク'},
+  'NE': {name:'NEW TOYO',      staff:'パク'},  // NNE
   'TE': {name:'THAI HIEP',     staff:'パク'},
   'NB': {name:'NIBONG TEBAL',  staff:'パク'},
   'A':  {name:'ASPEX',         staff:'パク'},  // 1자 — 최후 매칭
