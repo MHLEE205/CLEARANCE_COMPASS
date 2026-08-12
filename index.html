@@ -690,6 +690,7 @@ async function loadShipping(){
     }
 
     allShipping=targetBookings.map(b=>{
+      const etdRaw=(b.crcf9_bl_etd||b.cr49f_etd||'').slice(0,10);
       const pol=(polMap[b['_cr49f_region_japan_id_value']]||'—').replace(', JAPAN','').trim();
       const cntr=regionMap[b['_cr49f_region_id_value']]||'—';
       return{
@@ -697,6 +698,7 @@ async function loadShipping(){
         iv_no:b.cr49f_invoice_no||'—',
         bkg_no:b.cr49f_booking_no||'—',
         etd:fmtDate(b.crcf9_bl_etd||b.cr49f_etd),
+        etd_raw:etdRaw,
         eta:fmtDate(b.crcf9_bl_eta||b.cr49f_eta),
         cy_cut:fmtDate(b.cr49f_cy_cut),
         pol, cntr,
@@ -722,7 +724,7 @@ function renderShipping(){
     (!fp||r.pol.toUpperCase().includes(fp))&&
     (!fs||r.staff===fs)&&
     (!fc||r.cntr.toUpperCase().includes(fc))
-  );
+  ).sort((a,b)=>(a.etd_raw||'').localeCompare(b.etd_raw||''));
   document.getElementById('spCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('spBody').innerHTML='<tr class="msg-row"><td colspan="13">該当データなし</td></tr>';return;}
   document.getElementById('spBody').innerHTML=rows.map(r=>{
