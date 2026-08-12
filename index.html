@@ -2,14 +2,27 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v1.0</title>
+<title>LEENAI 今日の作業 v1.2</title>
 <style>
-:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--info:#38bdf8;--radius:10px;}
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
 [data-theme="leenai"]{--bg:#FAFDF7;--surface:#ffffff;--surface2:#F2F9EE;--surface3:#E8F5E0;--border:#D0E8C0;--border2:#B8DFB0;--text:#1A3A0E;--text2:#4A6A3A;--text3:#8AAA80;--accent:#2D5A1E;--accent2:#2E72C8;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh;}
-
+.loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:999;align-items:center;justify-content:center;}
+.loading-overlay.show{display:flex;}
+.loading-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 36px;text-align:center;}
+.loading-msg{font-size:13px;color:var(--text2);margin-top:12px;}
+.splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;}
+.splash-logo{font-size:52px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;}
+.splash-logo span{background:linear-gradient(135deg,#4f8ef7,#2D5A1E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.splash-sys{font-size:11px;color:var(--text3);letter-spacing:.12em;margin-bottom:8px;}
+.splash-title{font-size:18px;font-weight:500;color:var(--text);margin-bottom:4px;}
+.splash-ver{font-size:12px;color:var(--text3);margin-bottom:20px;}
+.splash-div{width:40px;height:1px;background:var(--border);margin:0 auto 20px;}
+.splash-desc{font-size:12px;color:var(--text3);line-height:1.7;margin-bottom:24px;}
+.splash-btn{padding:11px 32px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;}
+.splash-btn:hover{opacity:.85;}
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .header-left{display:flex;align-items:center;gap:12px;}
 .logo{width:32px;height:32px;background:#2D5A1E;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
@@ -18,26 +31,15 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;background:var
 .header-right{display:flex;align-items:center;gap:8px;}
 .status-chip{font-size:11px;color:var(--ok);display:none;}
 .theme-btn{padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:11px;}
-.btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:12px;transition:all .15s;}
-.btn:hover{border-color:var(--accent);color:var(--accent);}
+.btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:12px;}
 .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);}
-.btn-primary:hover{opacity:.88;}
-
-.login-wrap{display:flex;align-items:center;justify-content:center;min-height:calc(100vh - 52px);}
-.login-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:40px;text-align:center;max-width:400px;width:100%;margin:20px;}
-.login-icon{font-size:44px;margin-bottom:16px;}
-.login-title{font-size:18px;font-weight:500;margin-bottom:8px;}
-.login-sub{font-size:13px;color:var(--text2);line-height:1.7;margin-bottom:24px;}
-
-.main{padding:16px 20px;max-width:1200px;margin:0 auto;}
-
+.main{padding:16px 20px;max-width:1400px;margin:0 auto;}
 .filter-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .filter-label{font-size:12px;color:var(--text2);flex-shrink:0;}
 .filter-sel{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);cursor:pointer;}
 .fdivider{width:1px;height:16px;background:var(--border);margin:0 2px;}
 .filter-info{font-size:11px;color:var(--text3);}
 .today-label{font-size:13px;font-weight:500;color:var(--text);margin-left:auto;}
-
 .section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;}
 .sec-hdr{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
 .sec-title{font-size:13px;font-weight:500;}
@@ -45,7 +47,6 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;background:var
 .sec-cnt{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500;}
 .cnt-green{background:#E8F4E0;color:#2D6B1E;}
 .cnt-blue{background:#E6F1FB;color:#185FA5;}
-
 .table-wrap{overflow-x:auto;}
 table{border-collapse:collapse;white-space:nowrap;font-size:12px;width:100%;}
 thead th{padding:7px 10px;font-size:11px;font-weight:500;text-align:center;border-bottom:1px solid rgba(255,255,255,.15);border-right:1px solid rgba(255,255,255,.1);position:sticky;top:0;z-index:2;color:rgba(255,255,255,.9);}
@@ -56,70 +57,63 @@ tr:nth-child(even) td{background:var(--surface2);}
 tr:hover td{background:var(--surface3);}
 .cn{text-align:center;}
 .iv{font-weight:500;color:var(--accent);}
-
-.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;}
-.b-no{background:var(--surface3);color:var(--text2);}
-.b-ok{background:#E8F4E0;color:#2D6B1E;}
-.b-warn{background:#FEF3E2;color:#8A4F00;}
-.b-danger{background:#FEEBE8;color:#8A1F10;}
-
 .chip{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;}
 .ju{background:#EAF3DE;color:#3B6D11;}
 .zhan{background:#E6F1FB;color:#185FA5;}
 .lee{background:#FBEAF0;color:#993556;}
 .take{background:#FAEEDA;color:#854F0B;}
 .none{background:var(--surface3);color:var(--text3);}
-
+.ct-badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;background:var(--surface3);color:var(--text2);}
 .msg-row td{text-align:center;padding:24px;color:var(--text3);}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+.spinner-lg{width:28px;height:28px;border-width:3px;}
 @keyframes spin{to{transform:rotate(360deg)}}
-
 .powered{text-align:center;font-size:11px;color:var(--text3);padding:12px;border-top:1px solid var(--border);}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <div class="logo">LN</div>
-    <div>
-      <div class="header-title">LEENAI 今日の作業</div>
-      <div class="header-sub">v1.0 | 通関・COTECNA 作業管理</div>
-    </div>
-  </div>
-  <div class="header-right">
-    <span class="status-chip" id="statusChip">● COMPASS 接続中</span>
-    <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 ダーク</button>
-    <button class="btn btn-primary" id="loginBtn" onclick="startLogin()">🔐 COMPASSログイン</button>
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-box">
+    <div class="spinner spinner-lg"></div>
+    <div class="loading-msg" id="loadingMsg">データ取得中...</div>
   </div>
 </div>
 
-<!-- 로그인 화면 -->
-<div id="loginView" class="login-wrap">
-  <div class="login-card">
-    <div class="login-icon">📅</div>
-    <div class="login-title">今日の作業へようこそ</div>
-    <div class="login-sub">
-      COMPASSにログインすると、今日対応が必要な<br>
-      <strong>通関</strong>（CY_CUT 明日分）と<br>
-      <strong>COTECNA 報告書</strong>（当日・前日作業分）を<br>
-      担当者別に自動表示します。
-    </div>
-    <button class="btn btn-primary" style="width:100%;padding:10px;" onclick="startLogin()">🔐 COMPASSログイン</button>
-  </div>
+<div id="loginView" class="splash">
+  <div class="splash-logo">LEEN<span>AI</span></div>
+  <div class="splash-sys">今日の作業</div>
+  <div class="splash-title">通関・COTECNA 作業管理</div>
+  <div class="splash-ver">v1.2</div>
+  <div class="splash-div"></div>
+  <div class="splash-desc">このツールを使用するには<br>COMPASSアカウントでのログインが必要です</div>
+  <button class="splash-btn" id="loginBtn" onclick="startLogin()">⚡ COMPASSでログイン</button>
 </div>
 
-<!-- 메인 화면 -->
 <div id="mainView" style="display:none;">
-  <div class="main">
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">LN</div>
+      <div>
+        <div class="header-title">LEENAI 今日の作業</div>
+        <div class="header-sub">v1.2 | 通関・COTECNA 作業管理</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <span class="status-chip" id="statusChip">● COMPASS 接続中</span>
+      <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 ダーク</button>
+      <button class="btn btn-primary" onclick="startLogin()">🔄 再ログイン</button>
+    </div>
+  </div>
 
+  <div class="main">
     <div class="filter-bar">
       <span class="filter-label">担当者</span>
       <select class="filter-sel" id="staffFilter" onchange="applyFilter()">
         <option value="">全員</option>
-        <option value="JU">JU</option>
-        <option value="ZHAN">ZHAN</option>
-        <option value="LEE JUAH">LEE JUAH</option>
+        <option value="JU">JU (朱 フナム)</option>
+        <option value="ZHAN">ZHAN (セン ガイキン)</option>
+        <option value="LEE JUAH">LEE JUAH (李 ジュア)</option>
         <option value="竹内 雅将">竹内 雅将</option>
       </select>
       <div class="fdivider"></div>
@@ -127,18 +121,17 @@ tr:hover td{background:var(--surface3);}
       <span class="today-label" id="todayLabel"></span>
     </div>
 
-    <!-- 通関 섹션 -->
     <div class="section">
       <div class="sec-hdr" style="background:rgba(45,90,30,.08);">
         <span class="sec-title" style="color:#2D5A1E;">🛃 通関 — 今日対応</span>
         <span class="sec-date" id="tsukanDateLabel"></span>
-        <span class="sec-cnt cnt-green" id="tsukanCnt">読込中</span>
+        <span class="sec-cnt cnt-green" id="tsukanCnt">—</span>
       </div>
       <div class="table-wrap">
         <table>
           <thead><tr>
             <th class="th-g" style="width:82px;">CY_CUT</th>
-            <th class="th-g" style="width:96px;">POL</th>
+            <th class="th-g" style="width:100px;">POL</th>
             <th class="th-g" style="width:112px;">IV_NO</th>
             <th class="th-g" style="width:168px;">BKG_NO</th>
             <th class="th-g" style="width:86px;">担当者</th>
@@ -150,43 +143,41 @@ tr:hover td{background:var(--surface3);}
       </div>
     </div>
 
-    <!-- COTECNA 섹션 -->
     <div class="section">
       <div class="sec-hdr" style="background:rgba(26,77,143,.06);">
         <span class="sec-title" style="color:#1A4D8F;">📋 COTECNA 報告書 — 今日〆切</span>
         <span class="sec-date">（当日・前日作業分）</span>
-        <span class="sec-cnt cnt-blue" id="cotecnaCnt">読込中</span>
+        <span class="sec-cnt cnt-blue" id="cotecnaCnt">—</span>
       </div>
       <div class="table-wrap">
         <table>
           <thead><tr>
             <th class="th-b" style="width:82px;">WORK_DATE</th>
-            <th class="th-b" style="width:96px;">POL</th>
+            <th class="th-b" style="width:100px;">POL</th>
             <th class="th-b" style="width:112px;">IV_NO</th>
             <th class="th-b" style="width:112px;">VO_NO</th>
-            <th class="th-b" style="width:72px;">Partial</th>
+            <th class="th-b" style="width:68px;">Partial</th>
+            <th class="th-b" style="width:52px;">CT数</th>
+            <th class="th-b" style="width:130px;">PACKER</th>
             <th class="th-b" style="width:86px;">担当者</th>
           </tr></thead>
           <tbody id="cotecnaBody">
-            <tr class="msg-row"><td colspan="6"><span class="spinner"></span>読み込み中...</td></tr>
+            <tr class="msg-row"><td colspan="8"><span class="spinner"></span>読み込み中...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
-
   </div>
   <div class="powered">✦ Powered by LEENAI Automation System</div>
 </div>
 
 <script>
-// === 상수 ===
 const CLIENT_ID='f071a165-5e9b-44bf-b6a1-baba654524db';
 const TENANT_ID='a56988ff-c2b8-4df8-9727-889ad4205198';
 const REDIRECT_URI='https://mhlee205.github.io/CLEARANCE_COMPASS/';
 const DV_API='https://orgde512c6f.crm7.dynamics.com/api/data/v9.2';
 const SCOPE=`https://orgde512c6f.crm7.dynamics.com/user_impersonation offline_access`;
 
-// POL → 担당者 마스터 (PORTAL_MASTER.xlsx / clearance 시트 기준)
 const POL_STAFF={
   'ISHIKARI':'JU','NAHA':'JU',
   'KANAZAWA':'ZHAN','AKITA':'ZHAN','NIIGATA':'ZHAN','NAGOYA':'ZHAN',
@@ -196,18 +187,17 @@ const POL_STAFF={
 };
 const CHIP_CLS={'JU':'ju','ZHAN':'zhan','LEE JUAH':'lee','竹内 雅将':'take'};
 
-let dvToken=null;
-let allTsukan=[];
-let allCotecna=[];
+let dvToken=null,allTsukan=[],allCotecna=[];
 
-// === PKCE 인증 ===
+function showLoading(msg='データ取得中...'){document.getElementById('loadingMsg').textContent=msg;document.getElementById('loadingOverlay').classList.add('show');}
+function hideLoading(){document.getElementById('loadingOverlay').classList.remove('show');}
+
 function rnd(n){const a=new Uint8Array(n);crypto.getRandomValues(a);return a;}
 function b64url(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
 async function sha256(s){return await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));}
 
 async function startLogin(){
-  const v=b64url(rnd(32));
-  const c=b64url(await sha256(v));
+  const v=b64url(rnd(32)),c=b64url(await sha256(v));
   sessionStorage.setItem('pkce_v',v);
   const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT_URI,scope:SCOPE,response_mode:'query',code_challenge:c,code_challenge_method:'S256',prompt:'select_account'});
   location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?${p}`;
@@ -218,7 +208,7 @@ async function handleCallback(){
   const code=p.get('code'),v=sessionStorage.getItem('pkce_v');
   if(!code||!v)return;
   history.replaceState({},'',location.pathname);
-  document.getElementById('loginBtn').innerHTML='<span class="spinner"></span>認証中...';
+  const btn=document.getElementById('loginBtn');if(btn)btn.textContent='認証中...';
   try{
     const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,{
       method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
@@ -226,49 +216,40 @@ async function handleCallback(){
     });
     const d=await r.json();
     if(d.error)throw new Error(d.error_description||d.error);
-    dvToken=d.access_token;
-    sessionStorage.setItem('cc_dv_token',dvToken);
-    sessionStorage.removeItem('pkce_v');
-    showMain();
-    loadAll();
-  }catch(e){alert('ログインエラー: '+e.message);document.getElementById('loginBtn').textContent='🔐 COMPASSログイン';}
+    dvToken=d.access_token;sessionStorage.setItem('cc_dv_token',dvToken);sessionStorage.removeItem('pkce_v');
+    showMain();await loadAll();
+  }catch(e){alert('ログインエラー: '+e.message);if(btn)btn.textContent='⚡ COMPASSでログイン';}
 }
 
-// === Dataverse API ===
 async function dvGet(url){
   const r=await fetch(url,{headers:{Authorization:`Bearer ${dvToken}`,'OData-MaxVersion':'4.0','OData-Version':'4.0',Accept:'application/json;odata.metadata=minimal'}});
-  if(!r.ok){
-    if(r.status===401){dvToken=null;sessionStorage.removeItem('cc_dv_token');showLoginView();throw new Error('認証切れ — 再ログインしてください');}
-    throw new Error(`API Error ${r.status}`);
-  }
+  if(!r.ok){if(r.status===401){dvToken=null;sessionStorage.removeItem('cc_dv_token');showLoginView();throw new Error('認証切れ');}throw new Error(`API ${r.status}`);}
   return r.json();
 }
 
-// === 날짜 유틸 ===
-function localDateStr(offsetDays=0){
-  const d=new Date();d.setDate(d.getDate()+offsetDays);
+function localDateStr(offset=0){
+  const d=new Date();d.setDate(d.getDate()+offset);
   return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
 }
-function fmtDate(iso){
-  if(!iso)return '—';
-  const s=iso.slice(0,10).split('-');
-  return `${s[0]}/${s[1]}/${s[2]}`;
-}
-function todayLabel(){
-  const days=['日','月','火','水','木','金','土'],d=new Date();
-  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}（${days[d.getDay()]}）`;
-}
+function fmtDate(iso){if(!iso)return '—';const s=iso.slice(0,10).split('-');return `${s[0]}/${s[1]}/${s[2]}`;}
+function todayLbl(){const days=['日','月','火','水','木','金','土'],d=new Date();return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}（${days[d.getDay()]}）`;}
 
-// === POL → 担당자 ===
-function getStaff(polText){
-  if(!polText)return '—';
-  const up=polText.toUpperCase();
-  for(const[k,v]of Object.entries(POL_STAFF)){if(up.includes(k))return v;}
+function getStaff(pol){
+  if(!pol||pol==='—')return '—';
+  const up=pol.toUpperCase();
+  for(const[k,v]of Object.entries(POL_STAFF))if(up.includes(k))return v;
   return '—';
 }
-function mkChip(staff){
-  const cls=CHIP_CLS[staff]||'none';
-  return `<span class="chip ${cls}">${staff||'—'}</span>`;
+function mkChip(s){return `<span class="chip ${CHIP_CLS[s]||'none'}">${s||'—'}</span>`;}
+
+// POL lookup 공통 함수
+async function fetchPolMap(regionGuids){
+  const polMap={};
+  await Promise.all(regionGuids.map(async g=>{
+    try{const d=await dvGet(`${DV_API}/crcf9_region_japans(${g})?$select=crcf9_pol,crcf9_region_japan`);
+      polMap[g]=d.crcf9_pol||d.crcf9_region_japan||'—';}catch(e){}
+  }));
+  return polMap;
 }
 
 // === 통관 로드 ===
@@ -276,17 +257,22 @@ async function loadTsukan(){
   const tm=localDateStr(1);
   const filter=`cr49f_cy_cut ge ${tm}T00:00:00Z and cr49f_cy_cut le ${tm}T23:59:59Z`;
   try{
-    const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_invoice_no,cr49f_booking_no,cr49f_cy_cut,crcf9_bl_pol_text&$orderby=crcf9_bl_pol_text asc&$top=200`);
-    allTsukan=(res.value||[]).map(b=>{
-      const pol=(b.crcf9_bl_pol_text||'').trim();
-      return{cy_cut:fmtDate(b.cr49f_cy_cut),pol:pol||'—',iv_no:b.cr49f_invoice_no||'—',bkg_no:b.cr49f_booking_no||'—',staff:getStaff(pol)};
+    const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_invoice_no,cr49f_booking_no,cr49f_cy_cut,crcf9_bl_pol_text,_cr49f_region_japan_id_value&$orderby=cr49f_cy_cut asc&$top=200`);
+    const bookings=res.value||[];
+
+    // POL 폴백: bl_pol_text가 없는 건만 region_japan lookup
+    const missingGuids=[...new Set(bookings.filter(b=>!(b.crcf9_bl_pol_text||'').trim()).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
+    const polMap=await fetchPolMap(missingGuids);
+
+    allTsukan=bookings.map(b=>{
+      const pol=(b.crcf9_bl_pol_text||'').trim()||polMap[b['_cr49f_region_japan_id_value']]||'—';
+      return{cy_cut:fmtDate(b.cr49f_cy_cut),pol,iv_no:b.cr49f_invoice_no||'—',bkg_no:b.cr49f_booking_no||'—',staff:getStaff(pol)};
     });
     document.getElementById('tsukanDateLabel').textContent=`(CY_CUT: ${fmtDate(tm)})`;
   }catch(e){
     allTsukan=[];
     document.getElementById('tsukanBody').innerHTML=`<tr class="msg-row"><td colspan="5">⚠ ${e.message}</td></tr>`;
-    document.getElementById('tsukanCnt').textContent='エラー';
-    return;
+    document.getElementById('tsukanCnt').textContent='エラー';return;
   }
   renderTsukan();
 }
@@ -298,8 +284,7 @@ function renderTsukan(){
   if(!rows.length){document.getElementById('tsukanBody').innerHTML='<tr class="msg-row"><td colspan="5">該当データなし</td></tr>';return;}
   document.getElementById('tsukanBody').innerHTML=rows.map(r=>`
     <tr data-staff="${r.staff}">
-      <td class="cn">${r.cy_cut}</td>
-      <td>${r.pol}</td>
+      <td class="cn">${r.cy_cut}</td><td>${r.pol}</td>
       <td class="iv">${r.iv_no}</td>
       <td style="font-size:11px;color:var(--text2);">${r.bkg_no}</td>
       <td class="cn">${mkChip(r.staff)}</td>
@@ -311,41 +296,75 @@ async function loadCotecna(){
   const today=localDateStr(0),yday=localDateStr(-1);
   const filter=`crcf9_inspection eq true and crcf9_work_date ge ${yday}T00:00:00Z and crcf9_work_date le ${today}T23:59:59Z`;
   try{
-    const res=await dvGet(`${DV_API}/crcf9_container_informations?$filter=${encodeURIComponent(filter)}&$select=crcf9_container_informationid,crcf9_partial_no,crcf9_work_date,_crcf9_booking_id_value&$orderby=crcf9_work_date asc&$top=200`);
+    const res=await dvGet(`${DV_API}/crcf9_container_informations?$filter=${encodeURIComponent(filter)}&$select=crcf9_container_informationid,crcf9_partial_no,crcf9_work_date,_crcf9_booking_id_value,_crcf9_purchase_contract_id_value&$orderby=crcf9_work_date asc&$top=500`);
     const cts=res.value||[];
     if(!cts.length){allCotecna=[];renderCotecna();return;}
 
-    // BKG 취득
+    // BKG 일괄 취득
     const bkgGuids=[...new Set(cts.map(c=>c['_crcf9_booking_id_value']).filter(Boolean))];
     const bkgMap={};
     await Promise.all(bkgGuids.map(async g=>{
-      try{bkgMap[g]=await dvGet(`${DV_API}/cr49f_bookings(${g})?$select=cr49f_invoice_no,cr49f_booking_no,crcf9_bl_pol_text,_cr49f_sale_contract_id_value`);}catch(e){}
+      try{bkgMap[g]=await dvGet(`${DV_API}/cr49f_bookings(${g})?$select=cr49f_invoice_no,crcf9_bl_pol_text,_cr49f_region_japan_id_value,_cr49f_sale_contract_id_value`);}catch(e){}
     }));
 
-    // S/I → VO No 취득
+    // [병렬] S/I → VO No / POL 폴백 / purchase_contract → packer
     const scGuids=[...new Set(Object.values(bkgMap).map(b=>b['_cr49f_sale_contract_id_value']).filter(Boolean))];
-    const voMap={};
-    await Promise.all(scGuids.map(async g=>{
-      try{
-        const d=await dvGet(`${DV_API}/cr49f_s_is?$filter=_cr49f_sale_contract_id_value eq ${g}&$select=crcf9_vo_no&$top=1`);
-        if(d.value?.length&&d.value[0].crcf9_vo_no)voMap[g]=d.value[0].crcf9_vo_no;
-      }catch(e){}
+    const missingPolGuids=[...new Set(Object.values(bkgMap).filter(b=>!(b.crcf9_bl_pol_text||'').trim()).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
+    const pcGuids=[...new Set(cts.map(c=>c['_crcf9_purchase_contract_id_value']).filter(Boolean))];
+
+    const [voMap,polMap,pcMap]=await Promise.all([
+      // VO No
+      Promise.all(scGuids.map(async g=>{
+        try{const d=await dvGet(`${DV_API}/cr49f_s_is?$filter=_cr49f_sale_contract_id_value eq ${g}&$select=crcf9_vo_no&$top=1`);
+          if(d.value?.length&&d.value[0].crcf9_vo_no)return[g,d.value[0].crcf9_vo_no];}catch(e){}
+        return[g,''];
+      })).then(entries=>Object.fromEntries(entries.filter(e=>e[1]))),
+      // POL 폴백
+      fetchPolMap(missingPolGuids),
+      // purchase_contract
+      Promise.all(pcGuids.map(async g=>{
+        try{const d=await dvGet(`${DV_API}/cr49f_purchase_contracts(${g})?$select=cr49f_purchase_contractid,_cr49f_packer_id_value`);return[g,d];}catch(e){}
+        return[g,null];
+      })).then(entries=>Object.fromEntries(entries.filter(e=>e[1])))
+    ]);
+
+    // packer 이름 취득
+    const packerGuids=[...new Set(Object.values(pcMap).map(p=>p['_cr49f_packer_id_value']).filter(Boolean))];
+    const packerMap={};
+    await Promise.all(packerGuids.map(async g=>{
+      try{packerMap[g]=await dvGet(`${DV_API}/cr49f_packers(${g})?$select=cr49f_packer,cr49f_packer_name`);}catch(e){}
     }));
 
-    allCotecna=cts.map(c=>{
-      const bkg=bkgMap[c['_crcf9_booking_id_value']]||{};
+    // VO_NO + Partial로 그룹화
+    const groupMap={};
+    cts.forEach(c=>{
+      const bkgGuid=c['_crcf9_booking_id_value'];
+      const bkg=bkgMap[bkgGuid]||{};
       const scId=bkg['_cr49f_sale_contract_id_value'];
       const rawVo=voMap[scId]||'';
       const vm=rawVo.match(/(\d+\.\d+)/);
       const voNo=vm?`X.${vm[1]}`:(rawVo||'—');
-      const pol=(bkg.crcf9_bl_pol_text||'').trim();
-      return{work_date:fmtDate(c.crcf9_work_date),pol:pol||'—',iv_no:bkg.cr49f_invoice_no||'—',vo_no:voNo,partial:c.crcf9_partial_no||'—',staff:getStaff(pol)};
+      const pol=(bkg.crcf9_bl_pol_text||'').trim()||polMap[bkg['_cr49f_region_japan_id_value']]||'—';
+      const ivNo=bkg.cr49f_invoice_no||'—';
+      const partial=c.crcf9_partial_no||'—';
+      const pcId=c['_crcf9_purchase_contract_id_value'];
+      const packerId=pcId&&pcMap[pcId]?pcMap[pcId]['_cr49f_packer_id_value']:null;
+      const packerName=packerId&&packerMap[packerId]?(packerMap[packerId].cr49f_packer_name||packerMap[packerId].cr49f_packer||'—'):'—';
+
+      const key=`${ivNo}|${voNo}|${partial}`;
+      if(!groupMap[key]){
+        groupMap[key]={work_date:fmtDate(c.crcf9_work_date),pol,iv_no:ivNo,vo_no:voNo,partial,ct_count:0,packer:packerName,staff:getStaff(pol)};
+      }
+      groupMap[key].ct_count++;
+      // PACKER가 없으면 나중 것으로 채움
+      if(groupMap[key].packer==='—'&&packerName!=='—')groupMap[key].packer=packerName;
     });
+
+    allCotecna=Object.values(groupMap);
   }catch(e){
     allCotecna=[];
-    document.getElementById('cotecnaBody').innerHTML=`<tr class="msg-row"><td colspan="6">⚠ ${e.message}</td></tr>`;
-    document.getElementById('cotecnaCnt').textContent='エラー';
-    return;
+    document.getElementById('cotecnaBody').innerHTML=`<tr class="msg-row"><td colspan="8">⚠ ${e.message}</td></tr>`;
+    document.getElementById('cotecnaCnt').textContent='エラー';return;
   }
   renderCotecna();
 }
@@ -354,14 +373,15 @@ function renderCotecna(){
   const f=document.getElementById('staffFilter').value;
   const rows=allCotecna.filter(r=>!f||r.staff===f);
   document.getElementById('cotecnaCnt').textContent=`${rows.length}件`;
-  if(!rows.length){document.getElementById('cotecnaBody').innerHTML='<tr class="msg-row"><td colspan="6">該当データなし</td></tr>';return;}
+  if(!rows.length){document.getElementById('cotecnaBody').innerHTML='<tr class="msg-row"><td colspan="8">該当データなし</td></tr>';return;}
   document.getElementById('cotecnaBody').innerHTML=rows.map(r=>`
     <tr data-staff="${r.staff}">
-      <td class="cn">${r.work_date}</td>
-      <td>${r.pol}</td>
+      <td class="cn">${r.work_date}</td><td>${r.pol}</td>
       <td class="iv">${r.iv_no}</td>
       <td style="font-size:11px;">${r.vo_no}</td>
       <td class="cn">${r.partial}</td>
+      <td class="cn"><span class="ct-badge">${r.ct_count}</span></td>
+      <td style="font-size:11px;">${r.packer}</td>
       <td class="cn">${mkChip(r.staff)}</td>
     </tr>`).join('');
 }
@@ -369,25 +389,23 @@ function renderCotecna(){
 function applyFilter(){renderTsukan();renderCotecna();}
 
 async function loadAll(){
-  await Promise.all([loadTsukan(),loadCotecna()]);
+  showLoading('COMPASSからデータ取得中...');
+  try{await Promise.all([loadTsukan(),loadCotecna()]);}
+  finally{hideLoading();}
 }
 
-// === 화면 전환 ===
 function showMain(){
   document.getElementById('loginView').style.display='none';
   document.getElementById('mainView').style.display='';
-  document.getElementById('loginBtn').textContent='🔄 再ログイン';
   document.getElementById('statusChip').style.display='';
-  document.getElementById('todayLabel').textContent=todayLabel();
+  document.getElementById('todayLabel').textContent=todayLbl();
 }
 function showLoginView(){
-  document.getElementById('loginView').style.display='';
+  document.getElementById('loginView').style.display='flex';
   document.getElementById('mainView').style.display='none';
   document.getElementById('statusChip').style.display='none';
-  document.getElementById('loginBtn').textContent='🔐 COMPASSログイン';
 }
 
-// === 테마 (v1.5 표준 3단계) ===
 function toggleTheme(){
   const h=document.documentElement,cur=h.getAttribute('data-theme')||'dark';
   const order=['dark','light','leenai'],next=order[(order.indexOf(cur)+1)%order.length];
@@ -403,7 +421,6 @@ function updateThemeBtn(t){
   document.addEventListener('DOMContentLoaded',()=>updateThemeBtn(s));
 })();
 
-// === 초기화 ===
 window.onload=async()=>{
   const saved=sessionStorage.getItem('cc_dv_token');
   if(saved){dvToken=saved;showMain();loadAll();}
