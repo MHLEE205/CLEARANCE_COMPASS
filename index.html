@@ -402,13 +402,13 @@ async function startDvLogin(){
   const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT,
     scope:DV_SCOPE,response_mode:'query',code_challenge:c,code_challenge_method:'S256',
     state:'dv_1',prompt:'select_account'});
-  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.5/authorize?${p}`;
+  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?${p}`;
 }
 async function handleDvCallback(code){
   const d=JSON.parse(sessionStorage.getItem('dv_pkce')||'{}');
   if(!d.v)return;
   sessionStorage.removeItem('dv_pkce');
-  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.5/token`,{
+  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,{
     method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
     body:new URLSearchParams({grant_type:'authorization_code',client_id:CLIENT_ID,
       code,redirect_uri:REDIRECT,code_verifier:d.v,scope:DV_SCOPE})
@@ -430,13 +430,13 @@ async function startGraphLogin(){
   const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT,
     scope:GR_SCOPE,response_mode:'query',code_challenge:c,code_challenge_method:'S256',
     state:'graph_1'});
-  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.5/authorize?${p}`;
+  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?${p}`;
 }
 async function handleGraphCallback(code){
   const d=JSON.parse(sessionStorage.getItem('gr_pkce')||'{}');
   if(!d.v)return;
   sessionStorage.removeItem('gr_pkce');
-  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.5/token`,{
+  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,{
     method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
     body:new URLSearchParams({grant_type:'authorization_code',client_id:CLIENT_ID,
       code,redirect_uri:REDIRECT,code_verifier:d.v,scope:GR_SCOPE})
