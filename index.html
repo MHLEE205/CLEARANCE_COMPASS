@@ -156,7 +156,18 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
         <option value="1">+1日</option><option value="2">+2日</option>
         <option value="3">+3日</option><option value="4">+4日</option>
         <option value="5">+5日</option><option value="6">+6日</option>
-        <option value="7">+7日</option>
+        <option value="7" selected>+7日</option>
+      </select>
+      <div class="fdivider"></div>
+      <span class="filter-label">POL</span>
+      <select class="filter-sel" id="polFilter" onchange="applyFilter()">
+        <option value="">全港</option>
+        <option>ISHIKARI</option><option>KANAZAWA</option><option>SENDAI</option>
+        <option>AKITA</option><option>NIIGATA</option><option>TOKYO</option>
+        <option>YOKOHAMA</option><option>NAGOYA</option><option>SHIMIZU</option>
+        <option>OSAKA</option><option>KOBE</option><option>MIZUSHIMA</option>
+        <option>HAKATA</option><option>KUMAMOTO</option><option>MOJI</option>
+        <option>NAHA</option>
       </select>
       <div class="fdivider"></div>
       <span class="filter-label">担当者</span>
@@ -491,7 +502,8 @@ async function loadTsukan(rd){
 }
 function renderTsukan(){
   const f=document.getElementById('staffFilter').value;
-  const rows=allTsukan.filter(r=>!f||r.staff===f);
+  const p=document.getElementById('polFilter').value.toUpperCase();
+  const rows=allTsukan.filter(r=>(!f||r.staff===f)&&(!p||r.pol.toUpperCase().includes(p)));
   document.getElementById('tsukanCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('tsukanBody').innerHTML='<tr class="msg-row"><td colspan="7">該当データなし</td></tr>';return;}
   const tomorrow=localDateStr(1),hasSp=!!grToken;
@@ -559,7 +571,8 @@ async function loadCotecna(rd){
 }
 function renderCotecna(){
   const f=document.getElementById('staffFilter').value;
-  const rows=allCotecna.filter(r=>!f||r.staff===f);
+  const p=document.getElementById('polFilter').value.toUpperCase();
+  const rows=allCotecna.filter(r=>(!f||r.staff===f)&&(!p||r.pol.toUpperCase().includes(p)));
   document.getElementById('cotecnaCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('cotecnaBody').innerHTML='<tr class="msg-row"><td colspan="9">該当データなし</td></tr>';return;}
   const today=localDateStr(0),hasSp=!!grToken;
