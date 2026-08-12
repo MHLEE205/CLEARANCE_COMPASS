@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v1.8</title>
+<title>LEENAI 今日の作業 v1.9</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -136,7 +136,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v1.8</div>
+  <div class="splash-ver">v1.9</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -152,7 +152,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v1.8 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v1.9 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -290,10 +290,8 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <span class="filter-label">担当者</span>
       <select class="filter-sel" id="spStaffFilter" onchange="renderShipping()">
         <option value="">全員</option>
-        <option value="JU">JU (朱 フナム)</option>
-        <option value="ZHAN">ZHAN (セン ガイキン)</option>
-        <option value="LEE JUAH">LEE JUAH (李 ジュア)</option>
-        <option value="竹内 雅将">竹内 雅将</option>
+        <option value="大場">大場</option>
+        <option value="パク">パク</option>
       </select>
       <div class="fdivider"></div>
       <span class="filter-label">CNTR</span>
@@ -547,7 +545,75 @@ function applyCtColor(sel){
   else sel.classList.add('st-no');
 }
 
-// ── 탭 전환 ──
+// ── IV prefix → Importer → 담당자 매핑 (船積書類タブ用) ──
+// N + [코드] + [YYMM] + -[번호] 에서 코드 추출 (긴 것 우선 매칭)
+const IV_IMPORTER_MAP = {
+  // 大場 담당
+  'RA': {name:'R. A.',         staff:'大場'},
+  'MG': {name:'MEGA SURYA',    staff:'大場'},
+  'IK': {name:'INDAH KIAT',    staff:'大場'},
+  'TJ': {name:'TJIWI KIMIA',   staff:'大場'},
+  'HP': {name:'HANKUK PAPER',  staff:'大場'},
+  'NA': {name:'NATURA',        staff:'大場'},
+  'PC': {name:'PAPER COREA',   staff:'大場'},
+  'RE': {name:'RE',            staff:'大場'},
+  'SG': {name:'SAIGON',        staff:'大場'},
+  'KN': {name:'KHOI NGUYEN',   staff:'大場'},
+  'SI': {name:'SINO PAPER',    staff:'大場'},
+  'TP': {name:'THAI PAPER',    staff:'大場'},
+  'TA': {name:'Thuan An',      staff:'大場'},
+  'KO': {name:'KOA(M)',        staff:'大場'},
+  'DD': {name:'DDT',           staff:'大場'},
+  'HK': {name:'HKB',           staff:'大場'},
+  'DO': {name:'DOHACO',        staff:'大場'},
+  'SK': {name:'SIAM KRAFT',    staff:'大場'},
+  'CR': {name:'CORELEX',       staff:'大場'},
+  'VT': {name:'VIET TRI',      staff:'大場'},
+  'TH': {name:'THANH HOA',     staff:'大場'},
+  'XD': {name:'XSD',           staff:'大場'},
+  // パク 담당
+  'AS': {name:'ASIA PAPER',    staff:'パク'},
+  'DH': {name:'DAEHAN PAPER',  staff:'パク'},
+  'DW': {name:'DAEWANG PAPER', staff:'パク'},
+  'OW': {name:'DONGWON',       staff:'パク'},
+  'HS': {name:'HANSOL',        staff:'パク'},
+  'JJ': {name:'JEONJU',        staff:'パク'},
+  'JS': {name:'JUSHIN',        staff:'パク'},
+  'KL': {name:'KLEANNARA',     staff:'パク'},
+  'TG': {name:'TAE GYOUNG',    staff:'パク'},
+  'KS': {name:'KISUK',         staff:'パク'},
+  'TL': {name:'TAILIM PAPER',  staff:'パク'},
+  'YC': {name:'YUCHANG',       staff:'パク'},
+  'NF': {name:'NIKKO FIBRE',   staff:'パク'},
+  'CY': {name:'CLC(Y)',         staff:'パク'},
+  'CV': {name:'CLC(V)',         staff:'パク'},
+  'DA': {name:'DOUBLE A',      staff:'パク'},
+  'CS': {name:'CAS',           staff:'パク'},
+  'DT': {name:'DONG TIEN',     staff:'パク'},
+  'XM': {name:'XUAN MAI',      staff:'パク'},
+  'TK': {name:'TKC KRAFT',     staff:'パク'},
+  'TQ': {name:'TAN QUANG',     staff:'パク'},
+  'NI': {name:'NIC INTERTRADE',staff:'パク'},
+  'VD': {name:'VAN DIEM',      staff:'パク'},
+  'NT': {name:'NEW TOYO',      staff:'パク'},
+  'TE': {name:'THAI HIEP',     staff:'パク'},
+  'NB': {name:'NIBONG TEBAL',  staff:'パク'},
+  'A':  {name:'ASPEX',         staff:'パク'},  // 1자 — 최후 매칭
+};
+// 긴 코드 우선 매칭용 정렬 키 (내림차순)
+const IV_CODE_KEYS = Object.keys(IV_IMPORTER_MAP).sort((a,b)=>b.length-a.length);
+
+function getShipStaff(ivNo){
+  if(!ivNo||ivNo==='—')return{name:'—',staff:'—'};
+  // N 제거 후 코드 추출: NMG2607-01 → MG
+  const body=ivNo.replace(/^N/,'');
+  for(const k of IV_CODE_KEYS){
+    if(body.startsWith(k)&&/\d/.test(body[k.length]||'')){
+      return IV_IMPORTER_MAP[k];
+    }
+  }
+  return{name:'—',staff:'—'};
+}
 function switchTab(name){
   ['today','shipping'].forEach(t=>{
     document.getElementById(`tab-${t}`).classList.toggle('on',t===name);
@@ -638,16 +704,20 @@ async function loadShipping(){
     const bookings=res.value||[];
 
     // ① ETD가 오늘 이후 AND FD 미완료인 것 전부 표시
-    //    (통관 未も含む / ETD < 今日は서류완성으로 제외)
+    //    JSON에 기록 없고 ETD < 오늘 → 이미 완료로 간주 → 제외
     const today=localDateStr(0);
     const targetBookings=bookings.filter(b=>{
-      // ETD 확인 (BL 확정값 우선)
       const etdRaw=(b.crcf9_bl_etd||b.cr49f_etd||'').slice(0,10);
-      if(etdRaw&&etdRaw<today)return false; // 오늘 이전 ETD → 제외
-      // FD 입력 완료 → 제외
       const ivNo=b.cr49f_invoice_no||'';
-      const sp=shippingMap[ivNo]||{};
-      return!(sp.fd_text||'').trim();
+      const sp=shippingMap[ivNo];
+      // FD 입력 완료 → 무조건 제외
+      if(sp&&(sp.fd_text||'').trim())return false;
+      // ETD가 오늘 이후 → 무조건 표시 (FD 미완료라면)
+      if(etdRaw>=today)return true;
+      // ETD < 오늘인데 JSON에 기록이 있으면 → 형님이 직접 체크한 것 → 표시 유지
+      if(sp&&(sp.dep!=='未'||sp.furikomi!=='未'))return true;
+      // ETD < 오늘 + JSON 기록 없음 → 이미 완료로 간주 → 제외
+      return false;
     });
 
     if(!targetBookings.length){allShipping=[];renderShipping();return;}
@@ -692,9 +762,11 @@ async function loadShipping(){
       const etdRaw=(b.crcf9_bl_etd||b.cr49f_etd||'').slice(0,10);
       const pol=(polMap[b['_cr49f_region_japan_id_value']]||'—').replace(', JAPAN','').trim();
       const cntr=regionMap[b['_cr49f_region_id_value']]||'—';
+      const ivNo=b.cr49f_invoice_no||'—';
+      const sp=getShipStaff(ivNo);
       return{
         guid:b.cr49f_bookingid,
-        iv_no:b.cr49f_invoice_no||'—',
+        iv_no:ivNo,
         bkg_no:b.cr49f_booking_no||'—',
         etd:fmtDate(b.crcf9_bl_etd||b.cr49f_etd),
         etd_raw:etdRaw,
@@ -703,7 +775,8 @@ async function loadShipping(){
         pol, cntr,
         ship:carrierMap[b['_cr49f_carrier_id_value']]||'—',
         ct_count:ctCountMap[b.cr49f_bookingid]||'—',
-        staff:getStaff(pol),
+        importer:sp.name,
+        staff:sp.staff,
         is_vietnam:cntr.toUpperCase().includes('VIETNAM')
       };
     });
