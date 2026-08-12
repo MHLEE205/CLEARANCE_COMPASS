@@ -2,46 +2,72 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v1.3</title>
+<title>LEENAI 今日の作業 v1.4</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
 [data-theme="leenai"]{--bg:#FAFDF7;--surface:#ffffff;--surface2:#F2F9EE;--surface3:#E8F5E0;--border:#D0E8C0;--border2:#B8DFB0;--text:#1A3A0E;--text2:#4A6A3A;--text3:#8AAA80;--accent:#2D5A1E;--accent2:#2E72C8;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh;}
+
+/* ── 오버레이 ── */
 .loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:999;align-items:center;justify-content:center;}
 .loading-overlay.show{display:flex;}
 .loading-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 36px;text-align:center;}
 .loading-msg{font-size:13px;color:var(--text2);margin-top:12px;}
+
+/* ── 스플래시 ── */
 .splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;}
 .splash-logo{font-size:52px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;}
 .splash-logo span{background:linear-gradient(135deg,#4f8ef7,#2D5A1E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.splash-sys{font-size:11px;color:var(--text3);letter-spacing:.12em;margin-bottom:8px;}
+.splash-sys{font-size:11px;color:var(--text3);letter-spacing:.12em;margin-bottom:6px;}
 .splash-title{font-size:18px;font-weight:500;color:var(--text);margin-bottom:4px;}
-.splash-ver{font-size:12px;color:var(--text3);margin-bottom:20px;}
-.splash-div{width:40px;height:1px;background:var(--border);margin:0 auto 20px;}
-.splash-desc{font-size:12px;color:var(--text3);line-height:1.7;margin-bottom:24px;}
-.splash-btn{padding:11px 32px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;}
-.splash-btn:hover{opacity:.85;}
+.splash-ver{font-size:12px;color:var(--text3);margin-bottom:24px;}
+.splash-div{width:40px;height:1px;background:var(--border);margin:0 auto 24px;}
+
+/* ── STEP 카드 ── */
+.step-wrap{display:flex;flex-direction:column;gap:12px;width:100%;max-width:360px;}
+.step-card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;display:flex;align-items:center;gap:14px;text-align:left;}
+.step-card.done{border-color:var(--ok);opacity:.7;}
+.step-num{width:28px;height:28px;border-radius:50%;border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;color:var(--text2);flex-shrink:0;}
+.step-card.done .step-num{background:var(--ok);border-color:var(--ok);color:#fff;}
+.step-info{flex:1;}
+.step-label{font-size:12px;font-weight:500;color:var(--text);}
+.step-desc{font-size:11px;color:var(--text3);margin-top:2px;}
+.step-btn{padding:6px 14px;border-radius:6px;border:none;background:var(--accent);color:#fff;font-size:12px;font-weight:500;cursor:pointer;flex-shrink:0;}
+.step-btn:disabled{background:var(--surface3);color:var(--text3);cursor:not-allowed;}
+.step-done-mark{font-size:16px;color:var(--ok);}
+
+/* ── 헤더 ── */
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .header-left{display:flex;align-items:center;gap:12px;}
 .logo{width:32px;height:32px;background:#2D5A1E;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
 .header-title{font-size:15px;font-weight:500;color:var(--text);}
 .header-sub{font-size:11px;color:var(--text2);}
 .header-right{display:flex;align-items:center;gap:8px;}
-.status-chip{font-size:11px;color:var(--ok);display:none;}
+.chip-dv{font-size:11px;color:var(--ok);display:none;}
+.chip-sp{font-size:11px;color:#4f8ef7;display:none;}
 .theme-btn{padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:11px;}
 .btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:12px;}
 .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);}
-.main{padding:16px 20px;max-width:1400px;margin:0 auto;}
+
+/* ── 필터바 & 저장바 ── */
 .filter-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .filter-label{font-size:12px;color:var(--text2);flex-shrink:0;}
-.filter-sel{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);cursor:pointer;}
-/* 범위 셀렉터 강조 */
 .range-sel{font-size:12px;padding:4px 10px;border:1.5px solid var(--accent);border-radius:6px;background:var(--surface2);color:var(--accent);cursor:pointer;font-weight:500;}
+.filter-sel{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);cursor:pointer;}
 .fdivider{width:1px;height:16px;background:var(--border);margin:0 2px;}
 .filter-info{font-size:11px;color:var(--text3);}
 .today-label{font-size:13px;font-weight:500;color:var(--text);margin-left:auto;}
+.save-area{display:flex;align-items:center;gap:8px;margin-left:auto;}
+.unsaved-badge{font-size:11px;color:var(--warn);display:none;}
+.save-btn{padding:5px 16px;border-radius:6px;border:none;background:#2D5A1E;color:#fff;font-size:12px;font-weight:500;cursor:pointer;display:none;}
+.save-btn:hover{opacity:.85;}
+.save-btn:disabled{background:var(--surface3);color:var(--text3);cursor:not-allowed;}
+.save-ok{font-size:11px;color:var(--ok);display:none;}
+
+/* ── 섹션 & 테이블 ── */
+.main{padding:16px 20px;max-width:1500px;margin:0 auto;}
 .section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;}
 .sec-hdr{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
 .sec-title{font-size:13px;font-weight:500;}
@@ -54,21 +80,27 @@ table{border-collapse:collapse;white-space:nowrap;font-size:12px;width:100%;}
 thead th{padding:7px 10px;font-size:11px;font-weight:500;text-align:center;border-bottom:1px solid rgba(255,255,255,.15);border-right:1px solid rgba(255,255,255,.1);position:sticky;top:0;z-index:2;color:rgba(255,255,255,.9);}
 th.th-g{background:#2D5A1E;}
 th.th-b{background:#1A4D8F;}
-td{padding:6px 10px;border-bottom:.5px solid var(--border);border-right:.5px solid var(--border2);vertical-align:middle;color:var(--text);}
+th.th-c{background:#5A3A8A;}
+td{padding:5px 10px;border-bottom:.5px solid var(--border);border-right:.5px solid var(--border2);vertical-align:middle;color:var(--text);}
 tr:nth-child(even) td{background:var(--surface2);}
 tr:hover td{background:var(--surface3);}
+tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 .cn{text-align:center;}
 .iv{font-weight:500;color:var(--accent);}
+
+/* ── 체크리스트 UI ── */
+.cl-check{width:16px;height:16px;cursor:pointer;accent-color:var(--ok);}
+.status-sel{font-size:11px;padding:2px 6px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);cursor:pointer;}
+.status-sel.st-ed{border-color:var(--warn);color:var(--warn);}
+.status-sel.st-ok{border-color:var(--ok);color:var(--ok);}
+.dot-unsaved{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--warn);margin-left:4px;vertical-align:middle;}
+
+/* ── 기타 ── */
 .chip{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;}
-.ju{background:#EAF3DE;color:#3B6D11;}
-.zhan{background:#E6F1FB;color:#185FA5;}
-.lee{background:#FBEAF0;color:#993556;}
-.take{background:#FAEEDA;color:#854F0B;}
-.none{background:var(--surface3);color:var(--text3);}
+.ju{background:#EAF3DE;color:#3B6D11;}.zhan{background:#E6F1FB;color:#185FA5;}
+.lee{background:#FBEAF0;color:#993556;}.take{background:#FAEEDA;color:#854F0B;}.none{background:var(--surface3);color:var(--text3);}
 .ct-badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;background:var(--surface3);color:var(--text2);}
-/* 날짜 컬럼 색상 (범위 모드 시 구분용) */
-.date-today{color:var(--ok);font-weight:500;}
-.date-future{color:var(--text2);}
+.date-today{color:var(--ok);font-weight:500;}.date-future{color:var(--text2);}
 .msg-row td{text-align:center;padding:24px;color:var(--text3);}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 .spinner-lg{width:28px;height:28px;border-width:3px;}
@@ -85,29 +117,48 @@ tr:hover td{background:var(--surface3);}
   </div>
 </div>
 
+<!-- 로그인 스플래시 -->
 <div id="loginView" class="splash">
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v1.3</div>
+  <div class="splash-ver">v1.4</div>
   <div class="splash-div"></div>
-  <div class="splash-desc">このツールを使用するには<br>COMPASSアカウントでのログインが必要です</div>
-  <button class="splash-btn" id="loginBtn" onclick="startLogin()">⚡ COMPASSでログイン</button>
+  <div class="step-wrap">
+    <div class="step-card" id="stepCard1">
+      <div class="step-num" id="stepNum1">1</div>
+      <div class="step-info">
+        <div class="step-label">COMPASS ログイン</div>
+        <div class="step-desc">D365データ取得用</div>
+      </div>
+      <button class="step-btn" id="stepBtn1" onclick="startDvLogin()">ログイン</button>
+    </div>
+    <div class="step-card" id="stepCard2">
+      <div class="step-num" id="stepNum2">2</div>
+      <div class="step-info">
+        <div class="step-label">SharePoint ログイン</div>
+        <div class="step-desc">チェックリスト保存用</div>
+      </div>
+      <button class="step-btn" id="stepBtn2" onclick="startGraphLogin()" disabled>ログイン</button>
+    </div>
+  </div>
 </div>
 
+<!-- 메인 화면 -->
 <div id="mainView" style="display:none;">
   <div class="header">
     <div class="header-left">
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v1.3 | 通関・COTECNA 作業管理</div>
+        <div class="header-sub">v1.4 | 通関・COTECNA 作業管理</div>
       </div>
     </div>
     <div class="header-right">
-      <span class="status-chip" id="statusChip">● COMPASS 接続中</span>
+      <span class="chip-dv" id="chipDv">● COMPASS</span>
+      <span class="chip-sp" id="chipSp">● SP</span>
       <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 ダーク</button>
-      <button class="btn btn-primary" onclick="startLogin()">🔄 再ログイン</button>
+      <button class="btn btn-primary" onclick="reLogin()">🔄 再ログイン</button>
     </div>
   </div>
 
@@ -116,12 +167,9 @@ tr:hover td{background:var(--surface3);}
       <span class="filter-label">表示範囲</span>
       <select class="range-sel" id="rangeFilter" onchange="onRangeChange()">
         <option value="0">今日のみ</option>
-        <option value="1">+1日</option>
-        <option value="2">+2日</option>
-        <option value="3">+3日</option>
-        <option value="4">+4日</option>
-        <option value="5">+5日</option>
-        <option value="6">+6日</option>
+        <option value="1">+1日</option><option value="2">+2日</option>
+        <option value="3">+3日</option><option value="4">+4日</option>
+        <option value="5">+5日</option><option value="6">+6日</option>
         <option value="7">+7日</option>
       </select>
       <div class="fdivider"></div>
@@ -135,9 +183,15 @@ tr:hover td{background:var(--surface3);}
       </select>
       <div class="fdivider"></div>
       <span class="filter-info" id="rangeHint">通関: CY_CUT 明日分 ｜ COTECNA: 当日・前日分</span>
-      <span class="today-label" id="todayLabel"></span>
+      <div class="save-area">
+        <span class="unsaved-badge" id="unsavedBadge">● 未保存あり</span>
+        <button class="save-btn" id="saveBtn" onclick="saveStatus()">💾 変更を保存</button>
+        <span class="save-ok" id="saveOk">✅ 保存済み</span>
+        <span class="today-label" id="todayLabel"></span>
+      </div>
     </div>
 
+    <!-- 通関 섹션 -->
     <div class="section">
       <div class="sec-hdr" style="background:rgba(45,90,30,.08);">
         <span class="sec-title" style="color:#2D5A1E;">🛃 通関 — 対応期間</span>
@@ -152,14 +206,17 @@ tr:hover td{background:var(--surface3);}
             <th class="th-g" style="width:112px;">IV_NO</th>
             <th class="th-g" style="width:168px;">BKG_NO</th>
             <th class="th-g" style="width:86px;">担当者</th>
+            <th class="th-c" style="width:76px;">通関依頼済</th>
+            <th class="th-c" style="width:96px;">通関状態</th>
           </tr></thead>
           <tbody id="tsukanBody">
-            <tr class="msg-row"><td colspan="5"><span class="spinner"></span>読み込み中...</td></tr>
+            <tr class="msg-row"><td colspan="7"><span class="spinner"></span>読み込み中...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
+    <!-- COTECNA 섹션 -->
     <div class="section">
       <div class="sec-hdr" style="background:rgba(26,77,143,.06);">
         <span class="sec-title" style="color:#1A4D8F;">📋 COTECNA 報告書 — 対応期間</span>
@@ -189,123 +246,251 @@ tr:hover td{background:var(--surface3);}
 </div>
 
 <script>
-const CLIENT_ID='f071a165-5e9b-44bf-b6a1-baba654524db';
-const TENANT_ID='a56988ff-c2b8-4df8-9727-889ad4205198';
-const REDIRECT_URI='https://mhlee205.github.io/CLEARANCE_COMPASS/';
-const DV_API='https://orgde512c6f.crm7.dynamics.com/api/data/v9.2';
-const SCOPE=`https://orgde512c6f.crm7.dynamics.com/user_impersonation offline_access`;
+// ── 상수 ──
+const CLIENT_ID  = 'f071a165-5e9b-44bf-b6a1-baba654524db';
+const TENANT_ID  = 'a56988ff-c2b8-4df8-9727-889ad4205198';
+const REDIRECT   = 'https://mhlee205.github.io/CLEARANCE_COMPASS/';
+const DV_API     = 'https://orgde512c6f.crm7.dynamics.com/api/data/v9.2';
+const DV_SCOPE   = 'https://orgde512c6f.crm7.dynamics.com/user_impersonation offline_access';
+const GR_SCOPE   = 'https://graph.microsoft.com/Files.ReadWrite offline_access';
+const DRIVE_ID   = 'b!ZK58_9YllU-vETQD3Xz0TbOInXbVCXJHnQ2280KJBArFLeM_18EgRbSeoO-TW__U';
+const JSON_PATH  = '古紙/-. AI 活用/PORTAL/clearance_status.json';
+const GR_API     = 'https://graph.microsoft.com/v1.0';
 
-const POL_STAFF={
+const POL_STAFF = {
   'ISHIKARI':'JU','NAHA':'JU',
   'KANAZAWA':'ZHAN','AKITA':'ZHAN','NIIGATA':'ZHAN','NAGOYA':'ZHAN',
   'SHIMIZU':'ZHAN','MIZUSHIMA':'ZHAN','HAKATA':'ZHAN','KUMAMOTO':'ZHAN','MOJI':'ZHAN',
   'SENDAI':'LEE JUAH','OSAKA':'LEE JUAH','KOBE':'LEE JUAH',
   'TOKYO':'竹内 雅将','YOKOHAMA':'竹内 雅将'
 };
-const CHIP_CLS={'JU':'ju','ZHAN':'zhan','LEE JUAH':'lee','竹内 雅将':'take'};
+const CHIP_CLS = {'JU':'ju','ZHAN':'zhan','LEE JUAH':'lee','竹内 雅将':'take'};
+const ST_OPTS  = ['未','ED未','送付済み'];
 
-let dvToken=null,allTsukan=[],allCotecna=[];
+// ── 상태 ──
+let dvToken = null, grToken = null;
+let allTsukan = [], allCotecna = [];
+let statusMap  = {};  // { iv_no: {tsukan_irai, tsukan_status, updated_by} }
+let savedMap   = {};  // 마지막 저장 상태 (변경 감지용)
+let currentUser = '';
 
-function showLoading(msg='データ取得中...'){document.getElementById('loadingMsg').textContent=msg;document.getElementById('loadingOverlay').classList.add('show');}
+// ── 로딩 ──
+function showLoading(m='データ取得中...'){document.getElementById('loadingMsg').textContent=m;document.getElementById('loadingOverlay').classList.add('show');}
 function hideLoading(){document.getElementById('loadingOverlay').classList.remove('show');}
 
+// ── PKCE 공통 ──
 function rnd(n){const a=new Uint8Array(n);crypto.getRandomValues(a);return a;}
-function b64url(buf){return btoa(String.fromCharCode(...new Uint8Array(buf))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
-async function sha256(s){return await crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));}
+function b64url(b){return btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
+async function sha256(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));}
+async function pkceParams(){const v=b64url(rnd(32));return{v,c:b64url(await sha256(v))};}
 
-async function startLogin(){
-  const v=b64url(rnd(32)),c=b64url(await sha256(v));
-  sessionStorage.setItem('pkce_v',v);
-  const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT_URI,scope:SCOPE,response_mode:'query',code_challenge:c,code_challenge_method:'S256',prompt:'select_account'});
+// ── Dataverse 로그인 ──
+async function startDvLogin(){
+  const {v,c}=await pkceParams();
+  sessionStorage.setItem('dv_pkce',JSON.stringify({v}));
+  const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT,
+    scope:DV_SCOPE,response_mode:'query',code_challenge:c,code_challenge_method:'S256',
+    state:'dv_1',prompt:'select_account'});
   location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?${p}`;
 }
-
-async function handleCallback(){
-  const p=new URLSearchParams(location.search);
-  const code=p.get('code'),v=sessionStorage.getItem('pkce_v');
-  if(!code||!v)return;
-  history.replaceState({},'',location.pathname);
-  const btn=document.getElementById('loginBtn');if(btn)btn.textContent='認証中...';
-  try{
-    const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,{
-      method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
-      body:new URLSearchParams({grant_type:'authorization_code',client_id:CLIENT_ID,code,redirect_uri:REDIRECT_URI,code_verifier:v,scope:SCOPE})
-    });
-    const d=await r.json();
-    if(d.error)throw new Error(d.error_description||d.error);
-    dvToken=d.access_token;sessionStorage.setItem('cc_dv_token',dvToken);sessionStorage.removeItem('pkce_v');
-    showMain();await loadAll();
-  }catch(e){alert('ログインエラー: '+e.message);if(btn)btn.textContent='⚡ COMPASSでログイン';}
+async function handleDvCallback(code){
+  const d=JSON.parse(sessionStorage.getItem('dv_pkce')||'{}');
+  if(!d.v)return;
+  sessionStorage.removeItem('dv_pkce');
+  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,{
+    method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams({grant_type:'authorization_code',client_id:CLIENT_ID,
+      code,redirect_uri:REDIRECT,code_verifier:d.v,scope:DV_SCOPE})
+  });
+  const data=await r.json();
+  if(data.error)throw new Error(data.error_description||data.error);
+  dvToken=data.access_token;
+  sessionStorage.setItem('dv_token',dvToken);
+  // 사용자명 추출 (JWT)
+  try{const pl=JSON.parse(atob(dvToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
+    currentUser=pl.name||pl.preferred_username||'担当者';}catch(e){}
+  markStepDone(1);
 }
 
+// ── Graph 로그인 ──
+async function startGraphLogin(){
+  const {v,c}=await pkceParams();
+  sessionStorage.setItem('gr_pkce',JSON.stringify({v}));
+  const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT,
+    scope:GR_SCOPE,response_mode:'query',code_challenge:c,code_challenge_method:'S256',
+    state:'graph_1'});
+  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?${p}`;
+}
+async function handleGraphCallback(code){
+  const d=JSON.parse(sessionStorage.getItem('gr_pkce')||'{}');
+  if(!d.v)return;
+  sessionStorage.removeItem('gr_pkce');
+  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,{
+    method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
+    body:new URLSearchParams({grant_type:'authorization_code',client_id:CLIENT_ID,
+      code,redirect_uri:REDIRECT,code_verifier:d.v,scope:GR_SCOPE})
+  });
+  const data=await r.json();
+  if(data.error)throw new Error(data.error_description||data.error);
+  grToken=data.access_token;
+  sessionStorage.setItem('gr_token',grToken);
+  markStepDone(2);
+  showMain();
+  loadAll();
+}
+
+// ── Dataverse API ──
 async function dvGet(url){
-  const r=await fetch(url,{headers:{Authorization:`Bearer ${dvToken}`,'OData-MaxVersion':'4.0','OData-Version':'4.0',Accept:'application/json;odata.metadata=minimal'}});
-  if(!r.ok){if(r.status===401){dvToken=null;sessionStorage.removeItem('cc_dv_token');showLoginView();throw new Error('認証切れ');}throw new Error(`API ${r.status}`);}
+  const r=await fetch(url,{headers:{Authorization:`Bearer ${dvToken}`,
+    'OData-MaxVersion':'4.0','OData-Version':'4.0',Accept:'application/json;odata.metadata=minimal'}});
+  if(!r.ok){if(r.status===401){dvToken=null;sessionStorage.removeItem('dv_token');}throw new Error(`DV ${r.status}`);}
   return r.json();
 }
 
-function localDateStr(offset=0){
-  const d=new Date();d.setDate(d.getDate()+offset);
-  return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');
+// ── Graph API (SharePoint) ──
+function grFilePath(){
+  return JSON_PATH.split('/').map(encodeURIComponent).join('/');
 }
-function fmtDate(iso){if(!iso)return '—';const s=iso.slice(0,10).split('-');return `${s[0]}/${s[1]}/${s[2]}`;}
-function todayLbl(){const days=['日','月','火','水','木','金','土'],d=new Date();return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}（${days[d.getDay()]}）`;}
+async function grGet(path){
+  const r=await fetch(`${GR_API}${path}`,{headers:{Authorization:`Bearer ${grToken}`}});
+  if(!r.ok)throw new Error(`GR ${r.status}`);
+  return r;
+}
+async function loadStatusJson(){
+  try{
+    const r=await grGet(`/drives/${DRIVE_ID}/root:/${grFilePath()}:/content`);
+    const d=await r.json();
+    statusMap=d.records||{};
+    savedMap=JSON.parse(JSON.stringify(statusMap));
+  }catch(e){
+    // 파일 없으면 빈 상태로 시작
+    statusMap={};savedMap={};
+  }
+}
+async function saveStatusJson(){
+  const payload={last_updated:new Date().toISOString(),records:statusMap};
+  const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${grFilePath()}:/content`,{
+    method:'PUT',
+    headers:{Authorization:`Bearer ${grToken}`,'Content-Type':'application/json'},
+    body:JSON.stringify(payload,null,2)
+  });
+  if(!r.ok)throw new Error(`保存失敗 ${r.status}`);
+}
+
+// ── 상태 관리 ──
+function getStatus(ivNo){
+  return statusMap[ivNo]||{tsukan_irai:false,tsukan_status:'未'};
+}
+function isUnsaved(ivNo){
+  const cur=statusMap[ivNo]||{tsukan_irai:false,tsukan_status:'未'};
+  const sav=savedMap[ivNo]||{tsukan_irai:false,tsukan_status:'未'};
+  return cur.tsukan_irai!==sav.tsukan_irai||cur.tsukan_status!==sav.tsukan_status;
+}
+function anyUnsaved(){return allTsukan.some(r=>isUnsaved(r.iv_no));}
+
+function onCheckChange(ivNo,checked){
+  if(!statusMap[ivNo])statusMap[ivNo]={tsukan_irai:false,tsukan_status:'未'};
+  statusMap[ivNo].tsukan_irai=checked;
+  statusMap[ivNo].updated_by=currentUser;
+  statusMap[ivNo].updated_at=new Date().toISOString();
+  updateUnsavedUI(ivNo);
+}
+function onStatusChange(ivNo,val){
+  if(!statusMap[ivNo])statusMap[ivNo]={tsukan_irai:false,tsukan_status:'未'};
+  statusMap[ivNo].tsukan_status=val;
+  statusMap[ivNo].updated_by=currentUser;
+  statusMap[ivNo].updated_at=new Date().toISOString();
+  updateUnsavedUI(ivNo);
+}
+function updateUnsavedUI(ivNo){
+  // 행 배경
+  const row=document.querySelector(`tr[data-iv="${ivNo}"]`);
+  if(row){row.classList.toggle('row-unsaved',isUnsaved(ivNo));}
+  // 점 표시
+  const dot=document.getElementById(`dot_${CSS.escape(ivNo)}`);
+  if(dot){dot.style.display=isUnsaved(ivNo)?'inline-block':'none';}
+  // 셀렉트 색
+  const sel=document.getElementById(`sel_${CSS.escape(ivNo)}`);
+  if(sel){applyStatusColor(sel);}
+  // 저장 버튼
+  const has=anyUnsaved();
+  document.getElementById('unsavedBadge').style.display=has?'':'none';
+  document.getElementById('saveBtn').style.display=has?'':'none';
+  document.getElementById('saveOk').style.display='none';
+}
+function applyStatusColor(sel){
+  sel.className='status-sel';
+  if(sel.value==='ED未')sel.classList.add('st-ed');
+  else if(sel.value==='送付済み')sel.classList.add('st-ok');
+}
+
+async function saveStatus(){
+  const btn=document.getElementById('saveBtn');
+  btn.disabled=true;btn.textContent='保存中...';
+  try{
+    await saveStatusJson();
+    savedMap=JSON.parse(JSON.stringify(statusMap));
+    // UI 리셋
+    allTsukan.forEach(r=>{
+      const row=document.querySelector(`tr[data-iv="${r.iv_no}"]`);
+      if(row)row.classList.remove('row-unsaved');
+      const dot=document.getElementById(`dot_${CSS.escape(r.iv_no)}`);
+      if(dot)dot.style.display='none';
+    });
+    document.getElementById('unsavedBadge').style.display='none';
+    document.getElementById('saveBtn').style.display='none';
+    document.getElementById('saveOk').style.display='';
+    setTimeout(()=>{document.getElementById('saveOk').style.display='none';},3000);
+  }catch(e){alert('保存エラー: '+e.message);}
+  finally{btn.disabled=false;btn.textContent='💾 変更を保存';}
+}
+
+// ── 날짜 유틸 ──
+function localDateStr(off=0){const d=new Date();d.setDate(d.getDate()+off);
+  return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
+function fmtDate(iso){if(!iso)return'—';const s=iso.slice(0,10).split('-');return`${s[0]}/${s[1]}/${s[2]}`;}
+function todayLbl(){const days=['日','月','火','水','木','金','土'],d=new Date();
+  return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}（${days[d.getDay()]}）`;}
 function getRangeDays(){return parseInt(document.getElementById('rangeFilter').value)||0;}
 
-function getStaff(pol){
-  if(!pol||pol==='—')return '—';
-  const up=pol.toUpperCase();
-  for(const[k,v]of Object.entries(POL_STAFF))if(up.includes(k))return v;
-  return '—';
-}
-function mkChip(s){return `<span class="chip ${CHIP_CLS[s]||'none'}">${s||'—'}</span>`;}
-
-async function fetchPolMap(regionGuids){
-  const polMap={};
-  await Promise.all(regionGuids.map(async g=>{
+// ── POL 유틸 ──
+function getStaff(pol){if(!pol||pol==='—')return'—';const up=pol.toUpperCase();
+  for(const[k,v]of Object.entries(POL_STAFF))if(up.includes(k))return v;return'—';}
+function mkChip(s){return`<span class="chip ${CHIP_CLS[s]||'none'}">${s||'—'}</span>`;}
+async function fetchPolMap(guids){
+  const m={};
+  await Promise.all(guids.map(async g=>{
     try{const d=await dvGet(`${DV_API}/crcf9_region_japans(${g})?$select=crcf9_pol,crcf9_region_japan`);
-      polMap[g]=d.crcf9_pol||d.crcf9_region_japan||'—';}catch(e){}
-  }));
-  return polMap;
+      m[g]=d.crcf9_pol||d.crcf9_region_japan||'—';}catch(e){}
+  }));return m;
 }
 
-// 범위 힌트 업데이트
-function updateRangeHint(rangeDays){
-  const tmStart=fmtDate(localDateStr(1));
-  const tmEnd=fmtDate(localDateStr(1+rangeDays));
-  const cotEnd=fmtDate(localDateStr(rangeDays));
-  const yday=fmtDate(localDateStr(-1));
-  const today=fmtDate(localDateStr(0));
-
-  document.getElementById('tsukanDateLabel').textContent=
-    rangeDays===0 ? `(CY_CUT: ${tmStart})` : `(CY_CUT: ${tmStart} 〜 ${tmEnd})`;
-  document.getElementById('cotecnaDateLabel').textContent=
-    rangeDays===0 ? `(WORK_DATE: ${yday} 〜 ${today})` : `(WORK_DATE: ${yday} 〜 ${cotEnd})`;
-  document.getElementById('rangeHint').textContent=
-    rangeDays===0
-      ? '通関: CY_CUT 明日分 ｜ COTECNA: 当日・前日分'
-      : `通関: 明日〜${rangeDays+1}日後 ｜ COTECNA: 前日〜${rangeDays}日後`;
+// ── 범위 힌트 ──
+function updateRangeHint(rd){
+  const tm=fmtDate(localDateStr(1)),te=fmtDate(localDateStr(1+rd));
+  const ce=fmtDate(localDateStr(rd)),yd=fmtDate(localDateStr(-1));
+  document.getElementById('tsukanDateLabel').textContent=rd===0?`(CY_CUT: ${tm})`:`(CY_CUT: ${tm} 〜 ${te})`;
+  document.getElementById('cotecnaDateLabel').textContent=rd===0?`(WORK_DATE: ${yd} 〜 ${fmtDate(localDateStr(0))})`:`(WORK_DATE: ${yd} 〜 ${ce})`;
+  document.getElementById('rangeHint').textContent=rd===0?'通関: CY_CUT 明日分 ｜ COTECNA: 当日・前日分':`通関: 明日〜${rd+1}日後 ｜ COTECNA: 前日〜${rd}日後`;
 }
 
-// === 통관 로드 ===
-async function loadTsukan(rangeDays){
-  const tmStart=localDateStr(1);
-  const tmEnd=localDateStr(1+rangeDays);
-  const filter=`cr49f_cy_cut ge ${tmStart}T00:00:00Z and cr49f_cy_cut le ${tmEnd}T23:59:59Z`;
+// ── 통관 로드 ──
+async function loadTsukan(rd){
+  const s=localDateStr(1),e=localDateStr(1+rd);
+  const filter=`cr49f_cy_cut ge ${s}T00:00:00Z and cr49f_cy_cut le ${e}T23:59:59Z`;
   try{
     const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_invoice_no,cr49f_booking_no,cr49f_cy_cut,crcf9_bl_pol_text,_cr49f_region_japan_id_value&$orderby=cr49f_cy_cut asc&$top=500`);
-    const bookings=res.value||[];
-    const missingGuids=[...new Set(bookings.filter(b=>!(b.crcf9_bl_pol_text||'').trim()).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
-    const polMap=await fetchPolMap(missingGuids);
-    allTsukan=bookings.map(b=>{
-      const pol=(b.crcf9_bl_pol_text||'').trim()||polMap[b['_cr49f_region_japan_id_value']]||'—';
-      return{cy_cut:b.cr49f_cy_cut?b.cr49f_cy_cut.slice(0,10):'',cy_cut_fmt:fmtDate(b.cr49f_cy_cut),pol,iv_no:b.cr49f_invoice_no||'—',bkg_no:b.cr49f_booking_no||'—',staff:getStaff(pol)};
+    const bkgs=res.value||[];
+    const miss=[...new Set(bkgs.filter(b=>!(b.crcf9_bl_pol_text||'').trim()).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
+    const pm=await fetchPolMap(miss);
+    allTsukan=bkgs.map(b=>{
+      const pol=(b.crcf9_bl_pol_text||'').trim()||pm[b['_cr49f_region_japan_id_value']]||'—';
+      return{cy_cut:b.cr49f_cy_cut?b.cr49f_cy_cut.slice(0,10):'',cy_cut_fmt:fmtDate(b.cr49f_cy_cut),pol,
+        iv_no:b.cr49f_invoice_no||'—',bkg_no:b.cr49f_booking_no||'—',staff:getStaff(pol)};
     });
-  }catch(e){
-    allTsukan=[];
-    document.getElementById('tsukanBody').innerHTML=`<tr class="msg-row"><td colspan="5">⚠ ${e.message}</td></tr>`;
-    document.getElementById('tsukanCnt').textContent='エラー';return;
-  }
+  }catch(e){allTsukan=[];
+    document.getElementById('tsukanBody').innerHTML=`<tr class="msg-row"><td colspan="7">⚠ ${e.message}</td></tr>`;
+    document.getElementById('tsukanCnt').textContent='エラー';return;}
   renderTsukan();
 }
 
@@ -313,87 +498,73 @@ function renderTsukan(){
   const f=document.getElementById('staffFilter').value;
   const rows=allTsukan.filter(r=>!f||r.staff===f);
   document.getElementById('tsukanCnt').textContent=`${rows.length}件`;
-  if(!rows.length){document.getElementById('tsukanBody').innerHTML='<tr class="msg-row"><td colspan="5">該当データなし</td></tr>';return;}
-  const today=localDateStr(0),tomorrow=localDateStr(1);
+  if(!rows.length){document.getElementById('tsukanBody').innerHTML='<tr class="msg-row"><td colspan="7">該当データなし</td></tr>';return;}
+  const tomorrow=localDateStr(1);
+  const hasSp=!!grToken;
   document.getElementById('tsukanBody').innerHTML=rows.map(r=>{
-    const isTomorrow=r.cy_cut===tomorrow;
-    const dtClass=isTomorrow?'date-today':'date-future';
-    return`<tr data-staff="${r.staff}">
-      <td class="cn ${dtClass}">${r.cy_cut_fmt}</td>
-      <td>${r.pol}</td>
+    const st=getStatus(r.iv_no);
+    const unsaved=isUnsaved(r.iv_no);
+    const dtCls=r.cy_cut===tomorrow?'date-today':'date-future';
+    const stCls=st.tsukan_status==='ED未'?'st-ed':st.tsukan_status==='送付済み'?'st-ok':'';
+    const opts=ST_OPTS.map(o=>`<option${o===st.tsukan_status?' selected':''}>${o}</option>`).join('');
+    const checkCell=hasSp
+      ?`<td class="cn"><input type="checkbox" class="cl-check" id="chk_${r.iv_no}" ${st.tsukan_irai?'checked':''} onchange="onCheckChange('${r.iv_no}',this.checked)">
+         <span class="dot-unsaved" id="dot_${r.iv_no}" style="display:${unsaved?'inline-block':'none'}"></span></td>
+         <td class="cn"><select class="status-sel ${stCls}" id="sel_${r.iv_no}" onchange="onStatusChange('${r.iv_no}',this.value)">${opts}</select></td>`
+      :`<td class="cn" colspan="2" style="font-size:11px;color:var(--text3);">SP未ログイン</td>`;
+    return`<tr data-staff="${r.staff}" data-iv="${r.iv_no}" class="${unsaved?'row-unsaved':''}">
+      <td class="cn ${dtCls}">${r.cy_cut_fmt}</td><td>${r.pol}</td>
       <td class="iv">${r.iv_no}</td>
       <td style="font-size:11px;color:var(--text2);">${r.bkg_no}</td>
       <td class="cn">${mkChip(r.staff)}</td>
-    </tr>`;}).join('');
+      ${checkCell}
+    </tr>`;
+  }).join('');
 }
 
-// === COTECNA 로드 ===
-async function loadCotecna(rangeDays){
-  const yday=localDateStr(-1);
-  const endDay=localDateStr(rangeDays);
-  const filter=`crcf9_inspection eq true and crcf9_work_date ge ${yday}T00:00:00Z and crcf9_work_date le ${endDay}T23:59:59Z`;
+// ── COTECNA 로드 ──
+async function loadCotecna(rd){
+  const today=localDateStr(0),yday=localDateStr(-1),end=localDateStr(rd);
+  const filter=`crcf9_inspection eq true and crcf9_work_date ge ${yday}T00:00:00Z and crcf9_work_date le ${end}T23:59:59Z`;
   try{
     const res=await dvGet(`${DV_API}/crcf9_container_informations?$filter=${encodeURIComponent(filter)}&$select=crcf9_container_informationid,crcf9_partial_no,crcf9_work_date,_crcf9_booking_id_value,_crcf9_purchase_contract_id_value&$orderby=crcf9_work_date asc&$top=500`);
     const cts=res.value||[];
     if(!cts.length){allCotecna=[];renderCotecna();return;}
-
     const bkgGuids=[...new Set(cts.map(c=>c['_crcf9_booking_id_value']).filter(Boolean))];
     const bkgMap={};
-    await Promise.all(bkgGuids.map(async g=>{
-      try{bkgMap[g]=await dvGet(`${DV_API}/cr49f_bookings(${g})?$select=cr49f_invoice_no,crcf9_bl_pol_text,_cr49f_region_japan_id_value,_cr49f_sale_contract_id_value`);}catch(e){}
-    }));
-
+    await Promise.all(bkgGuids.map(async g=>{try{bkgMap[g]=await dvGet(`${DV_API}/cr49f_bookings(${g})?$select=cr49f_invoice_no,crcf9_bl_pol_text,_cr49f_region_japan_id_value,_cr49f_sale_contract_id_value`);}catch(e){}}));
     const scGuids=[...new Set(Object.values(bkgMap).map(b=>b['_cr49f_sale_contract_id_value']).filter(Boolean))];
-    const missingPolGuids=[...new Set(Object.values(bkgMap).filter(b=>!(b.crcf9_bl_pol_text||'').trim()).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
+    const missP=[...new Set(Object.values(bkgMap).filter(b=>!(b.crcf9_bl_pol_text||'').trim()).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
     const pcGuids=[...new Set(cts.map(c=>c['_crcf9_purchase_contract_id_value']).filter(Boolean))];
-
     const [voMap,polMap,pcMap]=await Promise.all([
-      Promise.all(scGuids.map(async g=>{
-        try{const d=await dvGet(`${DV_API}/cr49f_s_is?$filter=_cr49f_sale_contract_id_value eq ${g}&$select=crcf9_vo_no&$top=1`);
-          if(d.value?.length&&d.value[0].crcf9_vo_no)return[g,d.value[0].crcf9_vo_no];}catch(e){}
-        return[g,''];
-      })).then(e=>Object.fromEntries(e.filter(x=>x[1]))),
-      fetchPolMap(missingPolGuids),
-      Promise.all(pcGuids.map(async g=>{
-        try{const d=await dvGet(`${DV_API}/cr49f_purchase_contracts(${g})?$select=cr49f_purchase_contractid,_cr49f_packer_id_value`);return[g,d];}catch(e){}
-        return[g,null];
-      })).then(e=>Object.fromEntries(e.filter(x=>x[1])))
+      Promise.all(scGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/cr49f_s_is?$filter=_cr49f_sale_contract_id_value eq ${g}&$select=crcf9_vo_no&$top=1`);if(d.value?.length&&d.value[0].crcf9_vo_no)return[g,d.value[0].crcf9_vo_no];}catch(e){}return[g,''];})).then(e=>Object.fromEntries(e.filter(x=>x[1]))),
+      fetchPolMap(missP),
+      Promise.all(pcGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/cr49f_purchase_contracts(${g})?$select=cr49f_purchase_contractid,_cr49f_packer_id_value`);return[g,d];}catch(e){}return[g,null];})).then(e=>Object.fromEntries(e.filter(x=>x[1])))
     ]);
-
-    const packerGuids=[...new Set(Object.values(pcMap).map(p=>p['_cr49f_packer_id_value']).filter(Boolean))];
-    const packerMap={};
-    await Promise.all(packerGuids.map(async g=>{
-      try{packerMap[g]=await dvGet(`${DV_API}/cr49f_packers(${g})?$select=cr49f_packer,cr49f_packer_name`);}catch(e){}
-    }));
-
-    const groupMap={};
+    const pkrGuids=[...new Set(Object.values(pcMap).map(p=>p['_cr49f_packer_id_value']).filter(Boolean))];
+    const pkrMap={};
+    await Promise.all(pkrGuids.map(async g=>{try{pkrMap[g]=await dvGet(`${DV_API}/cr49f_packers(${g})?$select=cr49f_packer,cr49f_packer_name`);}catch(e){}}));
+    const grp={};
     cts.forEach(c=>{
       const bkg=bkgMap[c['_crcf9_booking_id_value']]||{};
       const scId=bkg['_cr49f_sale_contract_id_value'];
-      const rawVo=voMap[scId]||'';
-      const vm=rawVo.match(/(\d+\.\d+)/);
+      const rawVo=voMap[scId]||'';const vm=rawVo.match(/(\d+\.\d+)/);
       const voNo=vm?`X.${vm[1]}`:(rawVo||'—');
       const pol=(bkg.crcf9_bl_pol_text||'').trim()||polMap[bkg['_cr49f_region_japan_id_value']]||'—';
       const ivNo=bkg.cr49f_invoice_no||'—';
       const partial=c.crcf9_partial_no||'—';
       const pcId=c['_crcf9_purchase_contract_id_value'];
-      const packerId=pcId&&pcMap[pcId]?pcMap[pcId]['_cr49f_packer_id_value']:null;
-      const packerName=packerId&&packerMap[packerId]?(packerMap[packerId].cr49f_packer_name||packerMap[packerId].cr49f_packer||'—'):'—';
-      const workDate=c.crcf9_work_date?c.crcf9_work_date.slice(0,10):'';
-
+      const pkId=pcId&&pcMap[pcId]?pcMap[pcId]['_cr49f_packer_id_value']:null;
+      const packer=pkId&&pkrMap[pkId]?(pkrMap[pkId].cr49f_packer_name||pkrMap[pkId].cr49f_packer||'—'):'—';
       const key=`${ivNo}|${voNo}|${partial}`;
-      if(!groupMap[key]){
-        groupMap[key]={work_date:workDate,work_date_fmt:fmtDate(c.crcf9_work_date),pol,iv_no:ivNo,vo_no:voNo,partial,ct_count:0,packer:packerName,staff:getStaff(pol)};
-      }
-      groupMap[key].ct_count++;
-      if(groupMap[key].packer==='—'&&packerName!=='—')groupMap[key].packer=packerName;
+      if(!grp[key])grp[key]={work_date:c.crcf9_work_date?c.crcf9_work_date.slice(0,10):'',work_date_fmt:fmtDate(c.crcf9_work_date),pol,iv_no:ivNo,vo_no:voNo,partial,ct_count:0,packer,staff:getStaff(pol)};
+      grp[key].ct_count++;
+      if(grp[key].packer==='—'&&packer!=='—')grp[key].packer=packer;
     });
-    allCotecna=Object.values(groupMap);
-  }catch(e){
-    allCotecna=[];
+    allCotecna=Object.values(grp);
+  }catch(e){allCotecna=[];
     document.getElementById('cotecnaBody').innerHTML=`<tr class="msg-row"><td colspan="8">⚠ ${e.message}</td></tr>`;
-    document.getElementById('cotecnaCnt').textContent='エラー';return;
-  }
+    document.getElementById('cotecnaCnt').textContent='エラー';return;}
   renderCotecna();
 }
 
@@ -403,51 +574,54 @@ function renderCotecna(){
   document.getElementById('cotecnaCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('cotecnaBody').innerHTML='<tr class="msg-row"><td colspan="8">該当データなし</td></tr>';return;}
   const today=localDateStr(0);
-  document.getElementById('cotecnaBody').innerHTML=rows.map(r=>{
-    const isToday=r.work_date===today;
-    const dtClass=isToday?'date-today':'date-future';
-    return`<tr data-staff="${r.staff}">
-      <td class="cn ${dtClass}">${r.work_date_fmt}</td>
-      <td>${r.pol}</td>
-      <td class="iv">${r.iv_no}</td>
+  document.getElementById('cotecnaBody').innerHTML=rows.map(r=>`
+    <tr data-staff="${r.staff}">
+      <td class="cn ${r.work_date===today?'date-today':'date-future'}">${r.work_date_fmt}</td>
+      <td>${r.pol}</td><td class="iv">${r.iv_no}</td>
       <td style="font-size:11px;">${r.vo_no}</td>
       <td class="cn">${r.partial}</td>
       <td class="cn"><span class="ct-badge">${r.ct_count}</span></td>
       <td style="font-size:11px;">${r.packer}</td>
       <td class="cn">${mkChip(r.staff)}</td>
-    </tr>`;}).join('');
+    </tr>`).join('');
 }
 
 function applyFilter(){renderTsukan();renderCotecna();}
 
 async function onRangeChange(){
-  const rangeDays=getRangeDays();
-  updateRangeHint(rangeDays);
+  const rd=getRangeDays();updateRangeHint(rd);
   showLoading('データ更新中...');
-  try{await Promise.all([loadTsukan(rangeDays),loadCotecna(rangeDays)]);}
-  finally{hideLoading();}
+  try{await Promise.all([loadTsukan(rd),loadCotecna(rd)]);}finally{hideLoading();}
 }
-
 async function loadAll(){
-  const rangeDays=getRangeDays();
-  updateRangeHint(rangeDays);
+  const rd=getRangeDays();updateRangeHint(rd);
   showLoading('COMPASSからデータ取得中...');
-  try{await Promise.all([loadTsukan(rangeDays),loadCotecna(rangeDays)]);}
-  finally{hideLoading();}
+  try{
+    await loadStatusJson();
+    await Promise.all([loadTsukan(rd),loadCotecna(rd)]);
+  }finally{hideLoading();}
 }
 
+// ── 화면 전환 ──
+function markStepDone(n){
+  const card=document.getElementById(`stepCard${n}`);
+  const num=document.getElementById(`stepNum${n}`);
+  const btn=document.getElementById(`stepBtn${n}`);
+  card.classList.add('done');
+  num.textContent='✓';
+  btn.replaceWith(Object.assign(document.createElement('span'),{className:'step-done-mark',textContent:'✅'}));
+  if(n===1)document.getElementById('stepBtn2').disabled=false;
+}
 function showMain(){
   document.getElementById('loginView').style.display='none';
   document.getElementById('mainView').style.display='';
-  document.getElementById('statusChip').style.display='';
+  document.getElementById('chipDv').style.display='';
+  if(grToken)document.getElementById('chipSp').style.display='';
   document.getElementById('todayLabel').textContent=todayLbl();
 }
-function showLoginView(){
-  document.getElementById('loginView').style.display='flex';
-  document.getElementById('mainView').style.display='none';
-  document.getElementById('statusChip').style.display='none';
-}
+function reLogin(){location.href=REDIRECT;}
 
+// ── 테마 ──
 function toggleTheme(){
   const h=document.documentElement,cur=h.getAttribute('data-theme')||'dark';
   const order=['dark','light','leenai'],next=order[(order.indexOf(cur)+1)%order.length];
@@ -457,16 +631,41 @@ function updateThemeBtn(t){
   const b=document.getElementById('themeToggleBtn');if(!b)return;
   b.textContent={dark:'🌙 ダーク',light:'☀️ ライト',leenai:'🌿 LEENAI'}[t]||'🌙 ダーク';
 }
-(function(){
-  const s=localStorage.getItem('leenai_theme')||'dark';
-  document.documentElement.setAttribute('data-theme',s);
-  document.addEventListener('DOMContentLoaded',()=>updateThemeBtn(s));
-})();
+(function(){const s=localStorage.getItem('leenai_theme')||'dark';document.documentElement.setAttribute('data-theme',s);document.addEventListener('DOMContentLoaded',()=>updateThemeBtn(s));})();
 
+// ── 초기화 ──
 window.onload=async()=>{
-  const saved=sessionStorage.getItem('cc_dv_token');
-  if(saved){dvToken=saved;showMain();loadAll();}
-  if(location.search.includes('code='))await handleCallback();
+  // 세션 토큰 복원
+  const sd=sessionStorage.getItem('dv_token'),sg=sessionStorage.getItem('gr_token');
+  if(sd)dvToken=sd;
+  if(sg)grToken=sg;
+
+  // callback 처리
+  if(location.search.includes('code=')){
+    const p=new URLSearchParams(location.search);
+    const code=p.get('code'),state=p.get('state')||'';
+    history.replaceState({},'',location.pathname);
+    showLoading('認証中...');
+    try{
+      if(state.startsWith('graph_')){
+        if(dvToken)markStepDone(1);
+        await handleGraphCallback(code);
+      } else {
+        await handleDvCallback(code);
+        // DV 완료 후 저장된 gr_token이 있으면 Step2도 완료 처리
+        if(grToken){markStepDone(2);showMain();loadAll();}
+      }
+    }catch(e){alert('認証エラー: '+e.message);}
+    finally{hideLoading();}
+    return;
+  }
+
+  // 두 토큰 모두 있으면 바로 메인
+  if(dvToken&&grToken){
+    markStepDone(1);markStepDone(2);showMain();loadAll();return;
+  }
+  // DV만 있으면 Step1 완료 표시
+  if(dvToken){markStepDone(1);}
 };
 </script>
 </body>
