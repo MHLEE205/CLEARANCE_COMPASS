@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v1.2</title>
+<title>LEENAI 今日の作業 v1.3</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -37,6 +37,8 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;background:var
 .filter-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;margin-bottom:16px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .filter-label{font-size:12px;color:var(--text2);flex-shrink:0;}
 .filter-sel{font-size:12px;padding:4px 8px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text);cursor:pointer;}
+/* 범위 셀렉터 강조 */
+.range-sel{font-size:12px;padding:4px 10px;border:1.5px solid var(--accent);border-radius:6px;background:var(--surface2);color:var(--accent);cursor:pointer;font-weight:500;}
 .fdivider{width:1px;height:16px;background:var(--border);margin:0 2px;}
 .filter-info{font-size:11px;color:var(--text3);}
 .today-label{font-size:13px;font-weight:500;color:var(--text);margin-left:auto;}
@@ -64,6 +66,9 @@ tr:hover td{background:var(--surface3);}
 .take{background:#FAEEDA;color:#854F0B;}
 .none{background:var(--surface3);color:var(--text3);}
 .ct-badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;background:var(--surface3);color:var(--text2);}
+/* 날짜 컬럼 색상 (범위 모드 시 구분용) */
+.date-today{color:var(--ok);font-weight:500;}
+.date-future{color:var(--text2);}
 .msg-row td{text-align:center;padding:24px;color:var(--text3);}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 .spinner-lg{width:28px;height:28px;border-width:3px;}
@@ -84,7 +89,7 @@ tr:hover td{background:var(--surface3);}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v1.2</div>
+  <div class="splash-ver">v1.3</div>
   <div class="splash-div"></div>
   <div class="splash-desc">このツールを使用するには<br>COMPASSアカウントでのログインが必要です</div>
   <button class="splash-btn" id="loginBtn" onclick="startLogin()">⚡ COMPASSでログイン</button>
@@ -96,7 +101,7 @@ tr:hover td{background:var(--surface3);}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v1.2 | 通関・COTECNA 作業管理</div>
+        <div class="header-sub">v1.3 | 通関・COTECNA 作業管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -108,6 +113,18 @@ tr:hover td{background:var(--surface3);}
 
   <div class="main">
     <div class="filter-bar">
+      <span class="filter-label">表示範囲</span>
+      <select class="range-sel" id="rangeFilter" onchange="onRangeChange()">
+        <option value="0">今日のみ</option>
+        <option value="1">+1日</option>
+        <option value="2">+2日</option>
+        <option value="3">+3日</option>
+        <option value="4">+4日</option>
+        <option value="5">+5日</option>
+        <option value="6">+6日</option>
+        <option value="7">+7日</option>
+      </select>
+      <div class="fdivider"></div>
       <span class="filter-label">担当者</span>
       <select class="filter-sel" id="staffFilter" onchange="applyFilter()">
         <option value="">全員</option>
@@ -117,13 +134,13 @@ tr:hover td{background:var(--surface3);}
         <option value="竹内 雅将">竹内 雅将</option>
       </select>
       <div class="fdivider"></div>
-      <span class="filter-info">通関: CY_CUT 明日分 ｜ COTECNA: 作業日 当日・前日分</span>
+      <span class="filter-info" id="rangeHint">通関: CY_CUT 明日分 ｜ COTECNA: 当日・前日分</span>
       <span class="today-label" id="todayLabel"></span>
     </div>
 
     <div class="section">
       <div class="sec-hdr" style="background:rgba(45,90,30,.08);">
-        <span class="sec-title" style="color:#2D5A1E;">🛃 通関 — 今日対応</span>
+        <span class="sec-title" style="color:#2D5A1E;">🛃 通関 — 対応期間</span>
         <span class="sec-date" id="tsukanDateLabel"></span>
         <span class="sec-cnt cnt-green" id="tsukanCnt">—</span>
       </div>
@@ -145,8 +162,8 @@ tr:hover td{background:var(--surface3);}
 
     <div class="section">
       <div class="sec-hdr" style="background:rgba(26,77,143,.06);">
-        <span class="sec-title" style="color:#1A4D8F;">📋 COTECNA 報告書 — 今日〆切</span>
-        <span class="sec-date">（当日・前日作業分）</span>
+        <span class="sec-title" style="color:#1A4D8F;">📋 COTECNA 報告書 — 対応期間</span>
+        <span class="sec-date" id="cotecnaDateLabel"></span>
         <span class="sec-cnt cnt-blue" id="cotecnaCnt">—</span>
       </div>
       <div class="table-wrap">
@@ -233,6 +250,7 @@ function localDateStr(offset=0){
 }
 function fmtDate(iso){if(!iso)return '—';const s=iso.slice(0,10).split('-');return `${s[0]}/${s[1]}/${s[2]}`;}
 function todayLbl(){const days=['日','月','火','水','木','金','土'],d=new Date();return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}（${days[d.getDay()]}）`;}
+function getRangeDays(){return parseInt(document.getElementById('rangeFilter').value)||0;}
 
 function getStaff(pol){
   if(!pol||pol==='—')return '—';
@@ -242,7 +260,6 @@ function getStaff(pol){
 }
 function mkChip(s){return `<span class="chip ${CHIP_CLS[s]||'none'}">${s||'—'}</span>`;}
 
-// POL lookup 공통 함수
 async function fetchPolMap(regionGuids){
   const polMap={};
   await Promise.all(regionGuids.map(async g=>{
@@ -252,23 +269,38 @@ async function fetchPolMap(regionGuids){
   return polMap;
 }
 
-// === 통관 로드 ===
-async function loadTsukan(){
-  const tm=localDateStr(1);
-  const filter=`cr49f_cy_cut ge ${tm}T00:00:00Z and cr49f_cy_cut le ${tm}T23:59:59Z`;
-  try{
-    const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_invoice_no,cr49f_booking_no,cr49f_cy_cut,crcf9_bl_pol_text,_cr49f_region_japan_id_value&$orderby=cr49f_cy_cut asc&$top=200`);
-    const bookings=res.value||[];
+// 범위 힌트 업데이트
+function updateRangeHint(rangeDays){
+  const tmStart=fmtDate(localDateStr(1));
+  const tmEnd=fmtDate(localDateStr(1+rangeDays));
+  const cotEnd=fmtDate(localDateStr(rangeDays));
+  const yday=fmtDate(localDateStr(-1));
+  const today=fmtDate(localDateStr(0));
 
-    // POL 폴백: bl_pol_text가 없는 건만 region_japan lookup
+  document.getElementById('tsukanDateLabel').textContent=
+    rangeDays===0 ? `(CY_CUT: ${tmStart})` : `(CY_CUT: ${tmStart} 〜 ${tmEnd})`;
+  document.getElementById('cotecnaDateLabel').textContent=
+    rangeDays===0 ? `(WORK_DATE: ${yday} 〜 ${today})` : `(WORK_DATE: ${yday} 〜 ${cotEnd})`;
+  document.getElementById('rangeHint').textContent=
+    rangeDays===0
+      ? '通関: CY_CUT 明日分 ｜ COTECNA: 当日・前日分'
+      : `通関: 明日〜${rangeDays+1}日後 ｜ COTECNA: 前日〜${rangeDays}日後`;
+}
+
+// === 통관 로드 ===
+async function loadTsukan(rangeDays){
+  const tmStart=localDateStr(1);
+  const tmEnd=localDateStr(1+rangeDays);
+  const filter=`cr49f_cy_cut ge ${tmStart}T00:00:00Z and cr49f_cy_cut le ${tmEnd}T23:59:59Z`;
+  try{
+    const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_invoice_no,cr49f_booking_no,cr49f_cy_cut,crcf9_bl_pol_text,_cr49f_region_japan_id_value&$orderby=cr49f_cy_cut asc&$top=500`);
+    const bookings=res.value||[];
     const missingGuids=[...new Set(bookings.filter(b=>!(b.crcf9_bl_pol_text||'').trim()).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
     const polMap=await fetchPolMap(missingGuids);
-
     allTsukan=bookings.map(b=>{
       const pol=(b.crcf9_bl_pol_text||'').trim()||polMap[b['_cr49f_region_japan_id_value']]||'—';
-      return{cy_cut:fmtDate(b.cr49f_cy_cut),pol,iv_no:b.cr49f_invoice_no||'—',bkg_no:b.cr49f_booking_no||'—',staff:getStaff(pol)};
+      return{cy_cut:b.cr49f_cy_cut?b.cr49f_cy_cut.slice(0,10):'',cy_cut_fmt:fmtDate(b.cr49f_cy_cut),pol,iv_no:b.cr49f_invoice_no||'—',bkg_no:b.cr49f_booking_no||'—',staff:getStaff(pol)};
     });
-    document.getElementById('tsukanDateLabel').textContent=`(CY_CUT: ${fmtDate(tm)})`;
   }catch(e){
     allTsukan=[];
     document.getElementById('tsukanBody').innerHTML=`<tr class="msg-row"><td colspan="5">⚠ ${e.message}</td></tr>`;
@@ -282,64 +314,61 @@ function renderTsukan(){
   const rows=allTsukan.filter(r=>!f||r.staff===f);
   document.getElementById('tsukanCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('tsukanBody').innerHTML='<tr class="msg-row"><td colspan="5">該当データなし</td></tr>';return;}
-  document.getElementById('tsukanBody').innerHTML=rows.map(r=>`
-    <tr data-staff="${r.staff}">
-      <td class="cn">${r.cy_cut}</td><td>${r.pol}</td>
+  const today=localDateStr(0),tomorrow=localDateStr(1);
+  document.getElementById('tsukanBody').innerHTML=rows.map(r=>{
+    const isTomorrow=r.cy_cut===tomorrow;
+    const dtClass=isTomorrow?'date-today':'date-future';
+    return`<tr data-staff="${r.staff}">
+      <td class="cn ${dtClass}">${r.cy_cut_fmt}</td>
+      <td>${r.pol}</td>
       <td class="iv">${r.iv_no}</td>
       <td style="font-size:11px;color:var(--text2);">${r.bkg_no}</td>
       <td class="cn">${mkChip(r.staff)}</td>
-    </tr>`).join('');
+    </tr>`;}).join('');
 }
 
 // === COTECNA 로드 ===
-async function loadCotecna(){
-  const today=localDateStr(0),yday=localDateStr(-1);
-  const filter=`crcf9_inspection eq true and crcf9_work_date ge ${yday}T00:00:00Z and crcf9_work_date le ${today}T23:59:59Z`;
+async function loadCotecna(rangeDays){
+  const yday=localDateStr(-1);
+  const endDay=localDateStr(rangeDays);
+  const filter=`crcf9_inspection eq true and crcf9_work_date ge ${yday}T00:00:00Z and crcf9_work_date le ${endDay}T23:59:59Z`;
   try{
     const res=await dvGet(`${DV_API}/crcf9_container_informations?$filter=${encodeURIComponent(filter)}&$select=crcf9_container_informationid,crcf9_partial_no,crcf9_work_date,_crcf9_booking_id_value,_crcf9_purchase_contract_id_value&$orderby=crcf9_work_date asc&$top=500`);
     const cts=res.value||[];
     if(!cts.length){allCotecna=[];renderCotecna();return;}
 
-    // BKG 일괄 취득
     const bkgGuids=[...new Set(cts.map(c=>c['_crcf9_booking_id_value']).filter(Boolean))];
     const bkgMap={};
     await Promise.all(bkgGuids.map(async g=>{
       try{bkgMap[g]=await dvGet(`${DV_API}/cr49f_bookings(${g})?$select=cr49f_invoice_no,crcf9_bl_pol_text,_cr49f_region_japan_id_value,_cr49f_sale_contract_id_value`);}catch(e){}
     }));
 
-    // [병렬] S/I → VO No / POL 폴백 / purchase_contract → packer
     const scGuids=[...new Set(Object.values(bkgMap).map(b=>b['_cr49f_sale_contract_id_value']).filter(Boolean))];
     const missingPolGuids=[...new Set(Object.values(bkgMap).filter(b=>!(b.crcf9_bl_pol_text||'').trim()).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
     const pcGuids=[...new Set(cts.map(c=>c['_crcf9_purchase_contract_id_value']).filter(Boolean))];
 
     const [voMap,polMap,pcMap]=await Promise.all([
-      // VO No
       Promise.all(scGuids.map(async g=>{
         try{const d=await dvGet(`${DV_API}/cr49f_s_is?$filter=_cr49f_sale_contract_id_value eq ${g}&$select=crcf9_vo_no&$top=1`);
           if(d.value?.length&&d.value[0].crcf9_vo_no)return[g,d.value[0].crcf9_vo_no];}catch(e){}
         return[g,''];
-      })).then(entries=>Object.fromEntries(entries.filter(e=>e[1]))),
-      // POL 폴백
+      })).then(e=>Object.fromEntries(e.filter(x=>x[1]))),
       fetchPolMap(missingPolGuids),
-      // purchase_contract
       Promise.all(pcGuids.map(async g=>{
         try{const d=await dvGet(`${DV_API}/cr49f_purchase_contracts(${g})?$select=cr49f_purchase_contractid,_cr49f_packer_id_value`);return[g,d];}catch(e){}
         return[g,null];
-      })).then(entries=>Object.fromEntries(entries.filter(e=>e[1])))
+      })).then(e=>Object.fromEntries(e.filter(x=>x[1])))
     ]);
 
-    // packer 이름 취득
     const packerGuids=[...new Set(Object.values(pcMap).map(p=>p['_cr49f_packer_id_value']).filter(Boolean))];
     const packerMap={};
     await Promise.all(packerGuids.map(async g=>{
       try{packerMap[g]=await dvGet(`${DV_API}/cr49f_packers(${g})?$select=cr49f_packer,cr49f_packer_name`);}catch(e){}
     }));
 
-    // VO_NO + Partial로 그룹화
     const groupMap={};
     cts.forEach(c=>{
-      const bkgGuid=c['_crcf9_booking_id_value'];
-      const bkg=bkgMap[bkgGuid]||{};
+      const bkg=bkgMap[c['_crcf9_booking_id_value']]||{};
       const scId=bkg['_cr49f_sale_contract_id_value'];
       const rawVo=voMap[scId]||'';
       const vm=rawVo.match(/(\d+\.\d+)/);
@@ -350,16 +379,15 @@ async function loadCotecna(){
       const pcId=c['_crcf9_purchase_contract_id_value'];
       const packerId=pcId&&pcMap[pcId]?pcMap[pcId]['_cr49f_packer_id_value']:null;
       const packerName=packerId&&packerMap[packerId]?(packerMap[packerId].cr49f_packer_name||packerMap[packerId].cr49f_packer||'—'):'—';
+      const workDate=c.crcf9_work_date?c.crcf9_work_date.slice(0,10):'';
 
       const key=`${ivNo}|${voNo}|${partial}`;
       if(!groupMap[key]){
-        groupMap[key]={work_date:fmtDate(c.crcf9_work_date),pol,iv_no:ivNo,vo_no:voNo,partial,ct_count:0,packer:packerName,staff:getStaff(pol)};
+        groupMap[key]={work_date:workDate,work_date_fmt:fmtDate(c.crcf9_work_date),pol,iv_no:ivNo,vo_no:voNo,partial,ct_count:0,packer:packerName,staff:getStaff(pol)};
       }
       groupMap[key].ct_count++;
-      // PACKER가 없으면 나중 것으로 채움
       if(groupMap[key].packer==='—'&&packerName!=='—')groupMap[key].packer=packerName;
     });
-
     allCotecna=Object.values(groupMap);
   }catch(e){
     allCotecna=[];
@@ -374,23 +402,37 @@ function renderCotecna(){
   const rows=allCotecna.filter(r=>!f||r.staff===f);
   document.getElementById('cotecnaCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('cotecnaBody').innerHTML='<tr class="msg-row"><td colspan="8">該当データなし</td></tr>';return;}
-  document.getElementById('cotecnaBody').innerHTML=rows.map(r=>`
-    <tr data-staff="${r.staff}">
-      <td class="cn">${r.work_date}</td><td>${r.pol}</td>
+  const today=localDateStr(0);
+  document.getElementById('cotecnaBody').innerHTML=rows.map(r=>{
+    const isToday=r.work_date===today;
+    const dtClass=isToday?'date-today':'date-future';
+    return`<tr data-staff="${r.staff}">
+      <td class="cn ${dtClass}">${r.work_date_fmt}</td>
+      <td>${r.pol}</td>
       <td class="iv">${r.iv_no}</td>
       <td style="font-size:11px;">${r.vo_no}</td>
       <td class="cn">${r.partial}</td>
       <td class="cn"><span class="ct-badge">${r.ct_count}</span></td>
       <td style="font-size:11px;">${r.packer}</td>
       <td class="cn">${mkChip(r.staff)}</td>
-    </tr>`).join('');
+    </tr>`;}).join('');
 }
 
 function applyFilter(){renderTsukan();renderCotecna();}
 
+async function onRangeChange(){
+  const rangeDays=getRangeDays();
+  updateRangeHint(rangeDays);
+  showLoading('データ更新中...');
+  try{await Promise.all([loadTsukan(rangeDays),loadCotecna(rangeDays)]);}
+  finally{hideLoading();}
+}
+
 async function loadAll(){
+  const rangeDays=getRangeDays();
+  updateRangeHint(rangeDays);
   showLoading('COMPASSからデータ取得中...');
-  try{await Promise.all([loadTsukan(),loadCotecna()]);}
+  try{await Promise.all([loadTsukan(rangeDays),loadCotecna(rangeDays)]);}
   finally{hideLoading();}
 }
 
