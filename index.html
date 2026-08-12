@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v2.3</title>
+<title>LEENAI 今日の作業 v2.5</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -114,7 +114,10 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 /* ── 기타 ── */
 .chip{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;}
 .ju{background:#EAF3DE;color:#3B6D11;}.zhan{background:#E6F1FB;color:#185FA5;}
-.lee{background:#FBEAF0;color:#993556;}.take{background:#FAEEDA;color:#854F0B;}.none{background:var(--surface3);color:var(--text3);}
+.lee{background:#FBEAF0;color:#993556;}.take{background:#FAEEDA;color:#854F0B;}
+.oba{background:#FFF0E6;color:#8B3A0F;font-weight:600;}
+.pak{background:#EDE8FF;color:#4A1E99;font-weight:600;}
+.none{background:var(--surface3);color:var(--text3);}
 .ct-badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;background:var(--surface3);color:var(--text2);}
 .date-today{color:var(--ok);font-weight:500;}.date-future{color:var(--text2);}
 .msg-row td{text-align:center;padding:24px;color:var(--text3);}
@@ -138,7 +141,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v2.3</div>
+  <div class="splash-ver">v2.5</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -154,7 +157,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v2.3 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v2.5 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -294,6 +297,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
         <option value="">全員</option>
         <option value="大場">大場</option>
         <option value="パク">パク</option>
+        <option value="—">未マッピング</option>
       </select>
       <div class="fdivider"></div>
       <span class="filter-label">CNTR</span>
@@ -369,7 +373,7 @@ const POL_STAFF = {
   'SENDAI':'LEE JUAH','OSAKA':'LEE JUAH','KOBE':'LEE JUAH',
   'TOKYO':'竹内 雅将','YOKOHAMA':'竹内 雅将'
 };
-const CHIP_CLS = {'JU':'ju','ZHAN':'zhan','LEE JUAH':'lee','竹内 雅将':'take'};
+const CHIP_CLS = {'JU':'ju','ZHAN':'zhan','LEE JUAH':'lee','竹内 雅将':'take','大場':'oba','パク':'pak'};
 const TS_OPTS  = ['未','ED未','ACL未'];
 const CT_OPTS  = ['未','提出'];
 
@@ -398,13 +402,13 @@ async function startDvLogin(){
   const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT,
     scope:DV_SCOPE,response_mode:'query',code_challenge:c,code_challenge_method:'S256',
     state:'dv_1',prompt:'select_account'});
-  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.3/authorize?${p}`;
+  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.5/authorize?${p}`;
 }
 async function handleDvCallback(code){
   const d=JSON.parse(sessionStorage.getItem('dv_pkce')||'{}');
   if(!d.v)return;
   sessionStorage.removeItem('dv_pkce');
-  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.3/token`,{
+  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.5/token`,{
     method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
     body:new URLSearchParams({grant_type:'authorization_code',client_id:CLIENT_ID,
       code,redirect_uri:REDIRECT,code_verifier:d.v,scope:DV_SCOPE})
@@ -426,13 +430,13 @@ async function startGraphLogin(){
   const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT,
     scope:GR_SCOPE,response_mode:'query',code_challenge:c,code_challenge_method:'S256',
     state:'graph_1'});
-  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.3/authorize?${p}`;
+  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.5/authorize?${p}`;
 }
 async function handleGraphCallback(code){
   const d=JSON.parse(sessionStorage.getItem('gr_pkce')||'{}');
   if(!d.v)return;
   sessionStorage.removeItem('gr_pkce');
-  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.3/token`,{
+  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.5/token`,{
     method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
     body:new URLSearchParams({grant_type:'authorization_code',client_id:CLIENT_ID,
       code,redirect_uri:REDIRECT,code_verifier:d.v,scope:GR_SCOPE})
@@ -588,7 +592,8 @@ const IV_IMPORTER_MAP = {
   'TL': {name:'TAILIM PAPER',  staff:'パク'},
   'YC': {name:'YUCHANG',       staff:'パク'},
   'NF': {name:'NIKKO FIBRE',   staff:'パク'},
-  'CL': {name:'CLC',           staff:'パク'},  // NCL(Y/V 구분 없음)
+  'CL': {name:'CLC(Y)',         staff:'パク'},  // NCL
+  'CV': {name:'CLC(V)',         staff:'パク'},  // NCV
   'DA': {name:'DOUBLE A',      staff:'パク'},
   'CA': {name:'CAS',           staff:'パク'},  // NCA
   'DT': {name:'DONG TIEN',     staff:'パク'},
