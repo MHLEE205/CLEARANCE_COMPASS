@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v2.6</title>
+<title>LEENAI 今日の作業 v2.7</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -141,7 +141,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v2.6</div>
+  <div class="splash-ver">v2.7</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -157,7 +157,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v2.6 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v2.7 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -964,9 +964,13 @@ async function loadCotecna(rd){
       if(grp[key].packer==='—'&&packer!=='—')grp[key].packer=packer;
     });
     allCotecna=Object.values(grp).map(g=>{
-      const maxDate=g.workDates.sort().slice(-1)[0]||'';
-      g.work_date=maxDate;
-      g.work_date_fmt=fmtDate(maxDate?maxDate+'T00:00:00Z':'');
+      const dates=g.workDates.sort();
+      const minDate=dates[0]||'';
+      const maxDate=dates[dates.length-1]||'';
+      g.work_date=maxDate; // 정렬 기준은 최대 날짜
+      g.work_date_fmt=dates.length<=1
+        ? fmtDate(minDate?minDate+'T00:00:00Z':'')
+        : `${fmtDate(minDate+'T00:00:00Z')} 〜 ${fmtDate(maxDate+'T00:00:00Z')}`;
       return g;
     });
   }catch(e){allCotecna=[];
