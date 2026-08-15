@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v2.5</title>
+<title>LEENAI 今日の作業 v2.6</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -141,7 +141,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v2.5</div>
+  <div class="splash-ver">v2.6</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -157,7 +157,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v2.5 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v2.6 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -810,7 +810,7 @@ function renderShipping(){
     const sp=getSpStatus(r.iv_no);
     const unsaved=isSpUnsaved(r.iv_no);
     const depCell=r.is_vietnam
-      ?`<td class="cn"><select class="status-sel ${sp.dep==='確認'?'st-ok':'st-no'}" onchange="onDepChange('${r.iv_no}',this.value)"><option ${sp.dep==='未'?'selected':''}>未</option><option ${sp.dep==='確認'?'selected':''}>確認</option></select></td>`
+      ?`<td class="cn"><select class="status-sel ${sp.dep==='確認'?'st-ok':sp.dep==='依頼中'?'st-ed':'st-no'}" onchange="onDepChange('${r.iv_no}',this.value)"><option ${sp.dep==='未'?'selected':''}>未</option><option ${sp.dep==='依頼中'?'selected':''}>依頼中</option><option ${sp.dep==='確認'?'selected':''}>確認</option></select></td>`
       :`<td class="cn" style="color:var(--text3);font-size:10px;">—</td>`;
     const furiCell=hasSp
       ?`<td class="cn"><select class="status-sel ${sp.furikomi==='確認済'?'st-ok':'st-no'}" onchange="onFurikomiChange('${r.iv_no}',this.value)"><option ${sp.furikomi==='未'?'selected':''}>未</option><option ${sp.furikomi==='確認済'?'selected':''}>確認済</option></select></td>`
@@ -873,16 +873,16 @@ async function fetchPolMap(guids){
 
 // ── 범위 힌트 ──
 function updateRangeHint(rd){
-  const tm=fmtDate(localDateStr(1)),te=fmtDate(localDateStr(1+rd));
+  const tm=fmtDate(localDateStr(0)),te=fmtDate(localDateStr(rd));
   const ce=fmtDate(localDateStr(rd)),yd=fmtDate(localDateStr(-1));
   document.getElementById('tsukanDateLabel').textContent=rd===0?`(CY_CUT: ${tm})`:`(CY_CUT: ${tm} 〜 ${te})`;
   document.getElementById('cotecnaDateLabel').textContent=rd===0?`(WORK_DATE: ${yd} 〜 ${fmtDate(localDateStr(0))})`:`(WORK_DATE: ${yd} 〜 ${ce})`;
-  document.getElementById('rangeHint').textContent=rd===0?'通関: CY_CUT 明日分 ｜ COTECNA: 当日・前日分':`通関: 明日〜${rd+1}日後 ｜ COTECNA: 前日〜${rd}日後`;
+  document.getElementById('rangeHint').textContent=rd===0?'通関: CY_CUT 本日分 ｜ COTECNA: 当日・前日分':`通関: 本日〜${rd}日後 ｜ COTECNA: 前日〜${rd}日後`;
 }
 
 // ── 통관 로드 ──
 async function loadTsukan(rd){
-  const s=localDateStr(1),e=localDateStr(1+rd);
+  const s=localDateStr(0),e=localDateStr(rd);
   const filter=`cr49f_cy_cut ge ${s}T00:00:00Z and cr49f_cy_cut le ${e}T23:59:59Z`;
   try{
     const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_invoice_no,cr49f_booking_no,cr49f_cy_cut,crcf9_bl_pol_text,_cr49f_region_japan_id_value&$orderby=cr49f_cy_cut asc&$top=500`);
@@ -905,7 +905,7 @@ function renderTsukan(){
   const rows=allTsukan.filter(r=>(!f||r.staff===f)&&(!p||r.pol.toUpperCase().includes(p)));
   document.getElementById('tsukanCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('tsukanBody').innerHTML='<tr class="msg-row"><td colspan="7">該当データなし</td></tr>';return;}
-  const tomorrow=localDateStr(1),hasSp=!!grToken;
+  const tomorrow=localDateStr(0),hasSp=!!grToken;
   document.getElementById('tsukanBody').innerHTML=rows.map(r=>{
     const st=getTsStatus(r.iv_no),unsaved=isTsUnsaved(r.iv_no);
     const stCls=st.tsukan_status==='ED未'?'st-ed':st.tsukan_status==='ACL未'?'st-acl':'';
@@ -957,12 +957,18 @@ async function loadCotecna(rd){
       const pkId=pcId&&pcMap[pcId]?pcMap[pcId]['_cr49f_packer_id_value']:null;
       const packer=pkId&&pkrMap[pkId]?(pkrMap[pkId].cr49f_packer_name||pkrMap[pkId].cr49f_packer||'—'):'—';
       const key=`${ivNo}|${voNo}|${partial}`;
-      if(!grp[key])grp[key]={work_date:c.crcf9_work_date?c.crcf9_work_date.slice(0,10):'',
-        work_date_fmt:fmtDate(c.crcf9_work_date),pol,iv_no:ivNo,vo_no:voNo,partial,ct_count:0,packer,staff:getStaff(pol)};
+      if(!grp[key])grp[key]={workDates:[],work_date:'',work_date_fmt:'',pol,iv_no:ivNo,vo_no:voNo,partial,ct_count:0,packer,staff:getStaff(pol)};
+      const wd=c.crcf9_work_date?c.crcf9_work_date.slice(0,10):'';
+      if(wd&&!grp[key].workDates.includes(wd))grp[key].workDates.push(wd);
       grp[key].ct_count++;
       if(grp[key].packer==='—'&&packer!=='—')grp[key].packer=packer;
     });
-    allCotecna=Object.values(grp);
+    allCotecna=Object.values(grp).map(g=>{
+      const maxDate=g.workDates.sort().slice(-1)[0]||'';
+      g.work_date=maxDate;
+      g.work_date_fmt=fmtDate(maxDate?maxDate+'T00:00:00Z':'');
+      return g;
+    });
   }catch(e){allCotecna=[];
     document.getElementById('cotecnaBody').innerHTML=`<tr class="msg-row"><td colspan="9">⚠ ${e.message}</td></tr>`;
     document.getElementById('cotecnaCnt').textContent='エラー';return;}
