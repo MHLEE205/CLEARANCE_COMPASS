@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.0</title>
+<title>LEENAI 今日の作業 v3.1</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -145,7 +145,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.0</div>
+  <div class="splash-ver">v3.1</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -161,7 +161,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.0 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.1 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -313,7 +313,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
         <option>TAIWAN</option><option>THAILAND</option><option>INDIA</option>
         <option>MALAYSIA</option>
       </select>
-      <span style="font-size:11px;color:var(--text3);margin-left:8px;">通関依頼済 ✅ かつ FD未入力のみ表示</span>
+      <span style="font-size:11px;color:var(--text3);margin-left:8px;">FD送付日未入力のみ表示</span>
       <span class="today-label" id="spTodayLabel"></span>
     </div>
 
@@ -565,7 +565,8 @@ async function loadStatusJson(){
     savedMap=JSON.parse(JSON.stringify(statusMap));
     savedCotecnaMap=JSON.parse(JSON.stringify(cotecnaMap));
     savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
-  }catch(e){statusMap={};cotecnaMap={};savedMap={};savedCotecnaMap={};}
+    savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
+  }catch(e){statusMap={};cotecnaMap={};shippingMap={};savedMap={};savedCotecnaMap={};savedShippingMap={};}
 }
 async function saveStatusJson(){
   const payload={last_updated:new Date().toISOString(),records:statusMap,cotecna:cotecnaMap,shipping:shippingMap};
@@ -615,7 +616,7 @@ function onCtStatusChange(key,val){
   if(!cotecnaMap[key])cotecnaMap[key]={report_status:'未'};
   cotecnaMap[key].report_status=val;
   cotecnaMap[key].updated_by=currentUser;cotecnaMap[key].updated_at=new Date().toISOString();
-  const sel=document.getElementById(`ctsel_${CSS.escape(key)}`);if(sel)applyCtColor(sel);
+  const sel=document.getElementById(`ctsel_${key}`);if(sel)applyCtColor(sel);
   const row=document.querySelector(`tr[data-ctkey="${key}"]`);
   if(row)row.classList.toggle('row-unsaved',isCtUnsaved(key));
   updateSaveBar();
@@ -727,10 +728,10 @@ function switchTab(name){
 
 // ── 선적서류 상태 ──
 let allShipping=[];
-let shippingMap={};  // {iv_no: {dep,furikomi,fd_text}}
+let shippingMap={};  // {iv_no: {dep,furikomi,fd_date,fd_note}}
 let savedShippingMap={};
 
-function getSpStatus(ivNo){return shippingMap[ivNo]||{dep:'未',furikomi:'未',fd_text:''};}
+function getSpStatus(ivNo){return shippingMap[ivNo]||{dep:'未',furikomi:'未',fd_date:'',fd_note:''};}
 function isSpUnsaved(ivNo){
   const c=shippingMap[ivNo]||{dep:'未',furikomi:'未',fd_date:'',fd_note:''};
   const s=savedShippingMap[ivNo]||{dep:'未',furikomi:'未',fd_date:'',fd_note:''};
@@ -743,14 +744,14 @@ function updateSpSaveBar(){
 }
 
 function onDepChange(ivNo,val){
-  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_text:''};
+  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_date:'',fd_note:''};
   shippingMap[ivNo].dep=val;shippingMap[ivNo].updated_by=currentUser;
   const row=document.querySelector(`tr[data-sp-iv="${ivNo}"]`);
   if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
   updateSpSaveBar();
 }
 function onFurikomiChange(ivNo,val){
-  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_text:''};
+  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_date:'',fd_note:''};
   shippingMap[ivNo].furikomi=val;shippingMap[ivNo].updated_by=currentUser;
   const row=document.querySelector(`tr[data-sp-iv="${ivNo}"]`);
   if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
@@ -938,6 +939,7 @@ async function saveStatus(){
     await saveStatusJson();
     savedMap=JSON.parse(JSON.stringify(statusMap));
     savedCotecnaMap=JSON.parse(JSON.stringify(cotecnaMap));
+    savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
     document.querySelectorAll('.row-unsaved').forEach(r=>r.classList.remove('row-unsaved'));
     document.querySelectorAll('.dot-unsaved').forEach(d=>d.style.display='none');
     document.getElementById('saveBar').classList.remove('show');
@@ -1138,7 +1140,7 @@ async function loadPurchase(){
       const chunk=cids.slice(i,i+10);
       const f=chunk.map(id=>`_cr49f_purchase_contract_id_value eq ${id}`).join(' or ');
       try{
-        const dr=await dvGet(`${DV_API}/cr49f_purchase_details?$filter=${encodeURIComponent(f)}&$select=_cr49f_purchase_contract_id_value,cr49f_item_idname,cr49f_quantity,cr49f_price,cr49f_remark&$top=500`);
+        const dr=await dvGet(`${DV_API}/cr49f_purchase_details?$filter=${encodeURIComponent(f)}&$select=_cr49f_purchase_contract_id_value,_cr49f_item_id_value,cr49f_quantity,cr49f_price,cr49f_remark&$top=500`);
         (dr.value||[]).forEach(d=>{
           const cid=d['_cr49f_purchase_contract_id_value'];
           if(!detailMap[cid])detailMap[cid]=[];
@@ -1155,13 +1157,21 @@ async function loadPurchase(){
         pcPackerNameMap[g]=d.cr49f_packer_name||'—';}catch(e){}
     }));
 
+    // ITEM 마스터 취득
+    const pcItemGuids=[...new Set(Object.values(detailMap).flat().map(d=>d['_cr49f_item_id_value']).filter(Boolean))];
+    const pcItemMap={};
+    await Promise.all(pcItemGuids.map(async g=>{
+      try{const d=await dvGet(`${DV_API}/cr49f_items(${g})?$select=cr49f_item`);
+        pcItemMap[g]=d.cr49f_item||'—';}catch(e){}
+    }));
+
     allPurchase=contracts.map(c=>{
       const details=detailMap[c.cr49f_purchase_contractid]||[];
       return{
         no:c.cr49f_purchase_contract_no||'—',
         date:fmtDate(c.cr49f_contract_date),
         packer:c.cr49f_packer_idname||pcPackerNameMap[c['_cr49f_packer_id_value']]||'—',
-        items:details.map(d=>d.cr49f_item_idname||'—').filter((v,i,a)=>a.indexOf(v)===i).join(' / '),
+        items:details.map(d=>pcItemMap[d['_cr49f_item_id_value']]||'—').filter((v,i,a)=>a.indexOf(v)===i).join(' / '),
         qty:details.reduce((s,d)=>s+(d.cr49f_quantity||0),0),
         price:details.length?details[0].cr49f_price||0:0,
         remark:details.map(d=>d.cr49f_remark||'').filter(Boolean).join(' / '),
@@ -1215,7 +1225,7 @@ async function loadSale(){
       const chunk=cids.slice(i,i+10);
       const f=chunk.map(id=>`_cr49f_sale_contract_id_value eq ${id}`).join(' or ');
       try{
-        const dr=await dvGet(`${DV_API}/cr49f_sale_details?$filter=${encodeURIComponent(f)}&$select=_cr49f_sale_contract_id_value,cr49f_item_idname,cr49f_quantity,cr49f_price&$top=500`);
+        const dr=await dvGet(`${DV_API}/cr49f_sale_details?$filter=${encodeURIComponent(f)}&$select=_cr49f_sale_contract_id_value,_cr49f_item_id_value,cr49f_quantity,cr49f_price&$top=500`);
         (dr.value||[]).forEach(d=>{
           const cid=d['_cr49f_sale_contract_id_value'];
           if(!sdMap[cid])sdMap[cid]=[];
@@ -1238,12 +1248,30 @@ async function loadSale(){
       }catch(e){}
     }
 
-    // Buyer 국가 취득 (crcf9_country 필드)
+    // Buyer 이름+국가 취득
     const buyerGuids=[...new Set(contracts.map(c=>c['_cr49f_buyer_id_value']).filter(Boolean))];
     const buyerCountryMap={};
+    const buyerNameMap={};
     await Promise.all(buyerGuids.map(async g=>{
       try{const d=await dvGet(`${DV_API}/cr49f_buyers(${g})?$select=cr49f_buyer,crcf9_country`);
-        if(d.crcf9_country)buyerCountryMap[g]=d.crcf9_country;}catch(e){}
+        if(d.crcf9_country)buyerCountryMap[g]=d.crcf9_country;
+        if(d.cr49f_buyer)buyerNameMap[g]=d.cr49f_buyer;}catch(e){}
+    }));
+
+    // POD 이름 취득
+    const podGuids=[...new Set(contracts.map(c=>c['_cr49f_pod1_value']).filter(Boolean))];
+    const podNameMap={};
+    await Promise.all(podGuids.map(async g=>{
+      try{const d=await dvGet(`${DV_API}/cr49f_regions(${g})?$select=cr49f_pod`);
+        if(d.cr49f_pod)podNameMap[g]=d.cr49f_pod;}catch(e){}
+    }));
+
+    // ITEM 마스터 취득
+    const scItemGuids=[...new Set(Object.values(sdMap).flat().map(d=>d['_cr49f_item_id_value']).filter(Boolean))];
+    const scItemMap={};
+    await Promise.all(scItemGuids.map(async g=>{
+      try{const d=await dvGet(`${DV_API}/cr49f_items(${g})?$select=cr49f_item`);
+        scItemMap[g]=d.cr49f_item||'—';}catch(e){}
     }));
 
     allSale=contracts.map(c=>{
@@ -1252,10 +1280,10 @@ async function loadSale(){
       return{
         no:c.cr49f_sale_contract_no||'—',
         date:fmtDate(c.cr49f_sale_contract_date),
-        country:c.cr49f_country_idname||buyerCountryMap[c['_cr49f_buyer_id_value']]||'—',
-        buyer:c.cr49f_buyer_idname||'—',
-        pod:c.cr49f_pod1name||c.cr49f_pod1_valuename||'—',
-        items:details.map(d=>d.cr49f_item_idname||'—').filter((v,i,a)=>a.indexOf(v)===i).join(' / '),
+        country:buyerCountryMap[c['_cr49f_buyer_id_value']]||'—',
+        buyer:buyerNameMap[c['_cr49f_buyer_id_value']]||'—',
+        pod:podNameMap[c['_cr49f_pod1_value']]||'—',
+        items:details.map(d=>scItemMap[d['_cr49f_item_id_value']]||'—').filter((v,i,a)=>a.indexOf(v)===i).join(' / '),
         qty:details.reduce((s,d)=>s+(d.cr49f_quantity||0),0),
         price:details.length?details[0].cr49f_price||0:0,
         latest_shipment:fmtDate(c.cr49f_latest_shipment),
