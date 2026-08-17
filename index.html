@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.1</title>
+<title>LEENAI 今日の作業 v3.2</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -145,7 +145,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.1</div>
+  <div class="splash-ver">v3.2</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -161,7 +161,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.1 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.2 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -364,7 +364,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <span class="filter-label">期間</span>
       <select class="filter-sel" id="pcPeriod" onchange="onPcPeriodChange()">
         <option value="14">直近2週間</option>
-        <option value="30">直近1ヶ月</option>
+        <option value="30" selected>直近1ヶ月</option>
         <option value="90">直近3ヶ月</option>
       </select>
       <div class="fdivider"></div>
@@ -407,7 +407,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <span class="filter-label">期間</span>
       <select class="filter-sel" id="scPeriod" onchange="onScPeriodChange()">
         <option value="14">直近2週間</option>
-        <option value="30">直近1ヶ月</option>
+        <option value="30" selected>直近1ヶ月</option>
         <option value="90">直近3ヶ月</option>
       </select>
       <div class="fdivider"></div>
@@ -1122,7 +1122,7 @@ let allPurchase=[], allSale=[];
 
 // 구매계약 로드
 async function loadPurchase(){
-  const days=parseInt(document.getElementById('pcPeriod').value)||14;
+  const days=parseInt(document.getElementById('pcPeriod').value)||30;
   const from=localDateStr(-days);
   document.getElementById('pcTodayLabel').textContent=todayLbl();
   document.getElementById('pcDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 〜 ${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
@@ -1165,18 +1165,18 @@ async function loadPurchase(){
         pcItemMap[g]=d.cr49f_item||'—';}catch(e){}
     }));
 
-    allPurchase=contracts.map(c=>{
+    allPurchase=contracts.flatMap(c=>{
       const details=detailMap[c.cr49f_purchase_contractid]||[];
-      return{
-        no:c.cr49f_purchase_contract_no||'—',
-        date:fmtDate(c.cr49f_contract_date),
-        packer:c.cr49f_packer_idname||pcPackerNameMap[c['_cr49f_packer_id_value']]||'—',
-        items:details.map(d=>pcItemMap[d['_cr49f_item_id_value']]||'—').filter((v,i,a)=>a.indexOf(v)===i).join(' / '),
-        qty:details.reduce((s,d)=>s+(d.cr49f_quantity||0),0),
-        price:details.length?details[0].cr49f_price||0:0,
-        remark:details.map(d=>d.cr49f_remark||'').filter(Boolean).join(' / '),
-        latest_vanning:fmtDate(c.cr49f_latest_vanning)
-      };
+      const packer=c.cr49f_packer_idname||pcPackerNameMap[c['_cr49f_packer_id_value']]||'—';
+      const base={no:c.cr49f_purchase_contract_no||'—',date:fmtDate(c.cr49f_contract_date),
+        packer,latest_vanning:fmtDate(c.cr49f_latest_vanning)};
+      if(!details.length)return[{...base,item:'—',qty:0,price:0,remark:'—'}];
+      return details.map(d=>({...base,
+        item:pcItemMap[d['_cr49f_item_id_value']]||'—',
+        qty:d.cr49f_quantity||0,
+        price:d.cr49f_price||0,
+        remark:d.cr49f_remark||'—'
+      }));
     });
   }catch(e){
     document.getElementById('pcBody').innerHTML=`<tr class="msg-row"><td colspan="8">⚠ ${e.message}</td></tr>`;
@@ -1187,27 +1187,31 @@ async function loadPurchase(){
 
 function renderPurchase(){
   const kw=(document.getElementById('pcSearch')?.value||'').toLowerCase();
-  const rows=allPurchase.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.packer.toLowerCase().includes(kw)||r.items.toLowerCase().includes(kw));
+  const rows=allPurchase.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.packer.toLowerCase().includes(kw)||r.item.toLowerCase().includes(kw));
   document.getElementById('pcCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('pcBody').innerHTML='<tr class="msg-row"><td colspan="8">該当データなし</td></tr>';return;}
-  document.getElementById('pcBody').innerHTML=rows.map(r=>`
-    <tr>
+  // 같은 계약번호끼리 배경 그룹화
+  let pcGrpIdx=0,pcPrevNo='';
+  document.getElementById('pcBody').innerHTML=rows.map(r=>{
+    if(r.no!==pcPrevNo){pcGrpIdx++;pcPrevNo=r.no;}
+    const bg=pcGrpIdx%2===0?'background:var(--surface2);':'';
+    return`<tr style="${bg}">
       <td style="font-weight:500;color:var(--accent);">${r.no}</td>
       <td class="cn">${r.date}</td>
       <td>${r.packer}</td>
-      <td>${r.items}</td>
+      <td>${r.item}</td>
       <td class="cn">${r.qty?r.qty.toFixed(2):'—'}</td>
-      <td class="cn">${r.price?'¥'+r.price.toLocaleString():' —'}</td>
+      <td class="cn">${r.price?'¥'+r.price.toLocaleString():'—'}</td>
       <td style="font-size:11px;color:var(--text2);">${r.remark||'—'}</td>
       <td class="cn">${r.latest_vanning}</td>
-    </tr>`).join('');
+    </tr>`;}).join('');
 }
 
 async function onPcPeriodChange(){allPurchase=[];await loadPurchase();}
 
 // 판매계약 로드
 async function loadSale(){
-  const days=parseInt(document.getElementById('scPeriod').value)||14;
+  const days=parseInt(document.getElementById('scPeriod').value)||30;
   const from=localDateStr(-days);
   document.getElementById('scTodayLabel').textContent=todayLbl();
   document.getElementById('scDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 〜 ${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
@@ -1274,21 +1278,20 @@ async function loadSale(){
         scItemMap[g]=d.cr49f_item||'—';}catch(e){}
     }));
 
-    allSale=contracts.map(c=>{
+    allSale=contracts.flatMap(c=>{
       const details=sdMap[c.cr49f_sale_contractid]||[];
       const hasSi=!!(siMap[c.cr49f_sale_contractid]);
-      return{
-        no:c.cr49f_sale_contract_no||'—',
-        date:fmtDate(c.cr49f_sale_contract_date),
+      const base={no:c.cr49f_sale_contract_no||'—',date:fmtDate(c.cr49f_sale_contract_date),
         country:buyerCountryMap[c['_cr49f_buyer_id_value']]||'—',
         buyer:buyerNameMap[c['_cr49f_buyer_id_value']]||'—',
         pod:podNameMap[c['_cr49f_pod1_value']]||'—',
-        items:details.map(d=>scItemMap[d['_cr49f_item_id_value']]||'—').filter((v,i,a)=>a.indexOf(v)===i).join(' / '),
-        qty:details.reduce((s,d)=>s+(d.cr49f_quantity||0),0),
-        price:details.length?details[0].cr49f_price||0:0,
-        latest_shipment:fmtDate(c.cr49f_latest_shipment),
-        si:hasSi
-      };
+        latest_shipment:fmtDate(c.cr49f_latest_shipment),si:hasSi};
+      if(!details.length)return[{...base,item:'—',qty:0,price:0}];
+      return details.map(d=>({...base,
+        item:scItemMap[d['_cr49f_item_id_value']]||'—',
+        qty:d.cr49f_quantity||0,
+        price:d.cr49f_price||0
+      }));
     });
   }catch(e){
     document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="10">⚠ ${e.message}</td></tr>`;
@@ -1299,22 +1302,25 @@ async function loadSale(){
 
 function renderSale(){
   const kw=(document.getElementById('scSearch')?.value||'').toLowerCase();
-  const rows=allSale.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.buyer.toLowerCase().includes(kw)||r.items.toLowerCase().includes(kw));
+  const rows=allSale.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.buyer.toLowerCase().includes(kw)||r.item.toLowerCase().includes(kw));
   document.getElementById('scCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('scBody').innerHTML='<tr class="msg-row"><td colspan="10">該当データなし</td></tr>';return;}
-  document.getElementById('scBody').innerHTML=rows.map(r=>`
-    <tr>
+  let scGrpIdx=0,scPrevNo='';
+  document.getElementById('scBody').innerHTML=rows.map(r=>{
+    if(r.no!==scPrevNo){scGrpIdx++;scPrevNo=r.no;}
+    const bg=scGrpIdx%2===0?'background:var(--surface2);':'';
+    return`<tr style="${bg}">
       <td style="font-weight:500;color:var(--accent);">${r.no}</td>
       <td class="cn">${r.date}</td>
       <td class="cn">${r.country}</td>
       <td>${r.buyer}</td>
       <td>${r.pod}</td>
-      <td>${r.items}</td>
+      <td>${r.item}</td>
       <td class="cn">${r.qty?r.qty.toFixed(2):'—'}</td>
-      <td class="cn">${r.price?'$'+r.price.toLocaleString():' —'}</td>
+      <td class="cn">${r.price?'$'+r.price.toLocaleString():'—'}</td>
       <td class="cn">${r.latest_shipment}</td>
       <td class="cn">${r.si?'<span class="si-done">入力済</span>':'<span class="si-no">未</span>'}</td>
-    </tr>`).join('');
+    </tr>`;}).join('');
 }
 
 async function onScPeriodChange(){allSale=[];await loadSale();}
