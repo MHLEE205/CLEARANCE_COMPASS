@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v2.8</title>
+<title>LEENAI 今日の作業 v2.9</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -14,6 +14,10 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;background:var
 .tab-btn{padding:10px 20px;font-size:13px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
 .tab-btn.on{color:var(--accent);border-bottom:2px solid var(--accent);font-weight:500;}
 .tab-btn:hover:not(.on){color:var(--text);}
+th.th-pc{background:#2D4878;color:rgba(255,255,255,.9);}
+th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
+.si-done{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;background:#E8F4E0;color:#2D6B1E;}
+.si-no{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;background:var(--surface3);color:var(--text3);}
 .tab-content{display:none;}
 .tab-content.on{display:block;}
 
@@ -141,7 +145,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v2.8</div>
+  <div class="splash-ver">v2.9</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -157,7 +161,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v2.8 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v2.9 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -173,6 +177,8 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="tab-bar">
     <div class="tab-btn on" id="tab-today" onclick="switchTab('today')">📅 今日の作業</div>
     <div class="tab-btn" id="tab-shipping" onclick="switchTab('shipping')">📄 船積書類</div>
+    <div class="tab-btn" id="tab-purchase" onclick="switchTab('purchase')">📋 購買契約</div>
+    <div class="tab-btn" id="tab-sale" onclick="switchTab('sale')">📊 販売契約</div>
   </div>
 
   <!-- 今日の作業 탭 -->
@@ -351,6 +357,94 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
     </div>
   </div><!-- /main -->
   </div><!-- /tab-content shipping -->
+  <!-- 購買契約 탭 -->
+  <div class="tab-content" id="content-purchase">
+  <div class="main">
+    <div class="filter-bar">
+      <span class="filter-label">期間</span>
+      <select class="filter-sel" id="pcPeriod" onchange="onPcPeriodChange()">
+        <option value="14">直近2週間</option>
+        <option value="30">直近1ヶ月</option>
+        <option value="90">直近3ヶ月</option>
+      </select>
+      <div class="fdivider"></div>
+      <span class="filter-label">検索</span>
+      <input type="text" class="filter-sel" id="pcSearch" placeholder="契約番号 / PACKER / ITEM" style="width:220px;" oninput="renderPurchase()">
+      <span style="font-size:11px;color:var(--text3);margin-left:8px;">契約日降順 | 最新が上</span>
+      <span class="today-label" id="pcTodayLabel"></span>
+    </div>
+    <div class="section">
+      <div class="sec-hdr" style="background:rgba(45,70,120,.08);">
+        <span class="sec-title" style="color:#2D4878;">📋 購買契約</span>
+        <span class="sec-date" id="pcDateLabel"></span>
+        <span class="sec-cnt" style="background:#E8EEF8;color:#2D4878;" id="pcCnt">—</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th class="th-pc" style="width:110px;">契約番号</th>
+            <th class="th-pc" style="width:82px;">契約日</th>
+            <th class="th-pc" style="width:130px;">PACKER</th>
+            <th class="th-pc" style="width:80px;">ITEM</th>
+            <th class="th-pc" style="width:72px;">QTY(MT)</th>
+            <th class="th-pc" style="width:80px;">単価(¥/kg)</th>
+            <th class="th-pc" style="width:150px;">備考</th>
+            <th class="th-pc" style="width:90px;">最終作業日</th>
+          </tr></thead>
+          <tbody id="pcBody">
+            <tr class="msg-row"><td colspan="8"><span class="spinner"></span>読み込み中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  </div><!-- /tab-content purchase -->
+
+  <!-- 販売契約 탭 -->
+  <div class="tab-content" id="content-sale">
+  <div class="main">
+    <div class="filter-bar">
+      <span class="filter-label">期間</span>
+      <select class="filter-sel" id="scPeriod" onchange="onScPeriodChange()">
+        <option value="14">直近2週間</option>
+        <option value="30">直近1ヶ月</option>
+        <option value="90">直近3ヶ月</option>
+      </select>
+      <div class="fdivider"></div>
+      <span class="filter-label">検索</span>
+      <input type="text" class="filter-sel" id="scSearch" placeholder="契約番号 / Buyer / ITEM" style="width:220px;" oninput="renderSale()">
+      <span style="font-size:11px;color:var(--text3);margin-left:8px;">契約日降順 | 最新が上</span>
+      <span class="today-label" id="scTodayLabel"></span>
+    </div>
+    <div class="section">
+      <div class="sec-hdr" style="background:rgba(70,100,45,.08);">
+        <span class="sec-title" style="color:#2D6B1E;">📊 販売契約</span>
+        <span class="sec-date" id="scDateLabel"></span>
+        <span class="sec-cnt" style="background:#E8F4E0;color:#2D6B1E;" id="scCnt">—</span>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead><tr>
+            <th class="th-sc" style="width:110px;">契約番号</th>
+            <th class="th-sc" style="width:82px;">契約日</th>
+            <th class="th-sc" style="width:80px;">国</th>
+            <th class="th-sc" style="width:120px;">Buyer</th>
+            <th class="th-sc" style="width:110px;">POD</th>
+            <th class="th-sc" style="width:80px;">ITEM</th>
+            <th class="th-sc" style="width:72px;">QTY(MT)</th>
+            <th class="th-sc" style="width:80px;">単価($/MT)</th>
+            <th class="th-sc" style="width:90px;">最終船積日</th>
+            <th class="th-sc" style="width:60px;">SI</th>
+          </tr></thead>
+          <tbody id="scBody">
+            <tr class="msg-row"><td colspan="10"><span class="spinner"></span>読み込み中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+  </div><!-- /tab-content sale -->
+
 
 </div><!-- /mainView -->
 
@@ -622,11 +716,13 @@ function getShipStaff(ivNo){
   return{name:'—',staff:'—'};
 }
 function switchTab(name){
-  ['today','shipping'].forEach(t=>{
+  ['today','shipping','purchase','sale'].forEach(t=>{
     document.getElementById(`tab-${t}`).classList.toggle('on',t===name);
     document.getElementById(`content-${t}`).classList.toggle('on',t===name);
   });
   if(name==='shipping'&&allShipping.length===0&&dvToken)loadShipping();
+  if(name==='purchase'&&allPurchase.length===0&&dvToken)loadPurchase();
+  if(name==='sale'&&allSale.length===0&&dvToken)loadSale();
 }
 
 // ── 선적서류 상태 ──
@@ -1019,6 +1115,166 @@ async function loadAll(){
   try{await loadStatusJson();await Promise.all([loadTsukan(rd),loadCotecna(rd)]);}
   finally{hideLoading();}
 }
+// ── 구매/판매계약 ──
+let allPurchase=[], allSale=[];
+
+// 구매계약 로드
+async function loadPurchase(){
+  const days=parseInt(document.getElementById('pcPeriod').value)||14;
+  const from=localDateStr(-days);
+  document.getElementById('pcTodayLabel').textContent=todayLbl();
+  document.getElementById('pcDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 〜 ${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
+  document.getElementById('pcBody').innerHTML=`<tr class="msg-row"><td colspan="8"><span class="spinner"></span>読み込み中...</td></tr>`;
+  try{
+    // 구매계약 헤더 취득
+    const filter=`cr49f_contract_date ge ${from}T00:00:00Z`;
+    const res=await dvGet(`${DV_API}/cr49f_purchase_contracts?$filter=${encodeURIComponent(filter)}&$select=cr49f_purchase_contractid,cr49f_purchase_contract_no,cr49f_contract_date,cr49f_latest_vanning,cr49f_packer_idname&$orderby=cr49f_contract_date desc&$top=200`);
+    const contracts=res.value||[];
+
+    // 구매상세 취득 (한꺼번에)
+    const cids=contracts.map(c=>c.cr49f_purchase_contractid).filter(Boolean);
+    const detailMap={};
+    for(let i=0;i<cids.length;i+=10){
+      const chunk=cids.slice(i,i+10);
+      const f=chunk.map(id=>`_cr49f_purchase_contract_id_value eq ${id}`).join(' or ');
+      try{
+        const dr=await dvGet(`${DV_API}/cr49f_purchase_details?$filter=${encodeURIComponent(f)}&$select=_cr49f_purchase_contract_id_value,cr49f_item_idname,cr49f_quantity,cr49f_price,cr49f_remark&$top=500`);
+        (dr.value||[]).forEach(d=>{
+          const cid=d['_cr49f_purchase_contract_id_value'];
+          if(!detailMap[cid])detailMap[cid]=[];
+          detailMap[cid].push(d);
+        });
+      }catch(e){}
+    }
+
+    allPurchase=contracts.map(c=>{
+      const details=detailMap[c.cr49f_purchase_contractid]||[];
+      return{
+        no:c.cr49f_purchase_contract_no||'—',
+        date:fmtDate(c.cr49f_contract_date),
+        packer:c.cr49f_packer_idname||'—',
+        items:details.map(d=>d.cr49f_item_idname||'—').filter((v,i,a)=>a.indexOf(v)===i).join(' / '),
+        qty:details.reduce((s,d)=>s+(d.cr49f_quantity||0),0),
+        price:details.length?details[0].cr49f_price||0:0,
+        remark:details.map(d=>d.cr49f_remark||'').filter(Boolean).join(' / '),
+        latest_vanning:fmtDate(c.cr49f_latest_vanning)
+      };
+    });
+  }catch(e){
+    document.getElementById('pcBody').innerHTML=`<tr class="msg-row"><td colspan="8">⚠ ${e.message}</td></tr>`;
+    document.getElementById('pcCnt').textContent='エラー';return;
+  }
+  renderPurchase();
+}
+
+function renderPurchase(){
+  const kw=(document.getElementById('pcSearch')?.value||'').toLowerCase();
+  const rows=allPurchase.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.packer.toLowerCase().includes(kw)||r.items.toLowerCase().includes(kw));
+  document.getElementById('pcCnt').textContent=`${rows.length}件`;
+  if(!rows.length){document.getElementById('pcBody').innerHTML='<tr class="msg-row"><td colspan="8">該当データなし</td></tr>';return;}
+  document.getElementById('pcBody').innerHTML=rows.map(r=>`
+    <tr>
+      <td style="font-weight:500;color:var(--accent);">${r.no}</td>
+      <td class="cn">${r.date}</td>
+      <td>${r.packer}</td>
+      <td>${r.items}</td>
+      <td class="cn">${r.qty?r.qty.toFixed(2):'—'}</td>
+      <td class="cn">${r.price?'¥'+r.price.toLocaleString():' —'}</td>
+      <td style="font-size:11px;color:var(--text2);">${r.remark||'—'}</td>
+      <td class="cn">${r.latest_vanning}</td>
+    </tr>`).join('');
+}
+
+async function onPcPeriodChange(){allPurchase=[];await loadPurchase();}
+
+// 판매계약 로드
+async function loadSale(){
+  const days=parseInt(document.getElementById('scPeriod').value)||14;
+  const from=localDateStr(-days);
+  document.getElementById('scTodayLabel').textContent=todayLbl();
+  document.getElementById('scDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 〜 ${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
+  document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="10"><span class="spinner"></span>読み込み中...</td></tr>`;
+  try{
+    // 판매계약 헤더 취득
+    const filter=`cr49f_sale_contract_date ge ${from}T00:00:00Z`;
+    const res=await dvGet(`${DV_API}/cr49f_sale_contracts?$filter=${encodeURIComponent(filter)}&$select=cr49f_sale_contractid,cr49f_sale_contract_no,cr49f_sale_contract_date,cr49f_latest_shipment,cr49f_buyer_idname,cr49f_country_idname,cr49f_pod1name&$orderby=cr49f_sale_contract_date desc&$top=200`);
+    const contracts=res.value||[];
+
+    // 판매상세 취득
+    const cids=contracts.map(c=>c.cr49f_sale_contractid).filter(Boolean);
+    const sdMap={};
+    for(let i=0;i<cids.length;i+=10){
+      const chunk=cids.slice(i,i+10);
+      const f=chunk.map(id=>`_cr49f_sale_contract_id_value eq ${id}`).join(' or ');
+      try{
+        const dr=await dvGet(`${DV_API}/cr49f_sale_details?$filter=${encodeURIComponent(f)}&$select=_cr49f_sale_contract_id_value,cr49f_item_idname,cr49f_quantity,cr49f_price&$top=500`);
+        (dr.value||[]).forEach(d=>{
+          const cid=d['_cr49f_sale_contract_id_value'];
+          if(!sdMap[cid])sdMap[cid]=[];
+          sdMap[cid].push(d);
+        });
+      }catch(e){}
+    }
+
+    // SI 입력 여부 취득
+    const siMap={};
+    for(let i=0;i<cids.length;i+=10){
+      const chunk=cids.slice(i,i+10);
+      const f=chunk.map(id=>`_cr49f_sale_contract_id_value eq ${id}`).join(' or ');
+      try{
+        const sr=await dvGet(`${DV_API}/cr49f_s_is?$filter=${encodeURIComponent(f)}&$select=_cr49f_sale_contract_id_value&$top=500`);
+        (sr.value||[]).forEach(s=>{
+          const cid=s['_cr49f_sale_contract_id_value'];
+          siMap[cid]=(siMap[cid]||0)+1;
+        });
+      }catch(e){}
+    }
+
+    allSale=contracts.map(c=>{
+      const details=sdMap[c.cr49f_sale_contractid]||[];
+      const hasSi=!!(siMap[c.cr49f_sale_contractid]);
+      return{
+        no:c.cr49f_sale_contract_no||'—',
+        date:fmtDate(c.cr49f_sale_contract_date),
+        country:c.cr49f_country_idname||'—',
+        buyer:c.cr49f_buyer_idname||'—',
+        pod:c.cr49f_pod1name||'—',
+        items:details.map(d=>d.cr49f_item_idname||'—').filter((v,i,a)=>a.indexOf(v)===i).join(' / '),
+        qty:details.reduce((s,d)=>s+(d.cr49f_quantity||0),0),
+        price:details.length?details[0].cr49f_price||0:0,
+        latest_shipment:fmtDate(c.cr49f_latest_shipment),
+        si:hasSi
+      };
+    });
+  }catch(e){
+    document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="10">⚠ ${e.message}</td></tr>`;
+    document.getElementById('scCnt').textContent='エラー';return;
+  }
+  renderSale();
+}
+
+function renderSale(){
+  const kw=(document.getElementById('scSearch')?.value||'').toLowerCase();
+  const rows=allSale.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.buyer.toLowerCase().includes(kw)||r.items.toLowerCase().includes(kw));
+  document.getElementById('scCnt').textContent=`${rows.length}件`;
+  if(!rows.length){document.getElementById('scBody').innerHTML='<tr class="msg-row"><td colspan="10">該当データなし</td></tr>';return;}
+  document.getElementById('scBody').innerHTML=rows.map(r=>`
+    <tr>
+      <td style="font-weight:500;color:var(--accent);">${r.no}</td>
+      <td class="cn">${r.date}</td>
+      <td class="cn">${r.country}</td>
+      <td>${r.buyer}</td>
+      <td>${r.pod}</td>
+      <td>${r.items}</td>
+      <td class="cn">${r.qty?r.qty.toFixed(2):'—'}</td>
+      <td class="cn">${r.price?'$'+r.price.toLocaleString():' —'}</td>
+      <td class="cn">${r.latest_shipment}</td>
+      <td class="cn">${r.si?'<span class="si-done">入力済</span>':'<span class="si-no">未</span>'}</td>
+    </tr>`).join('');
+}
+
+async function onScPeriodChange(){allSale=[];await loadSale();}
+
 async function reloadData(){
   showLoading('データを更新中...');
   try{
