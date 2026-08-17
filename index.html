@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.8</title>
+<title>LEENAI 今日の作業 v3.9</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -160,7 +160,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.8</div>
+  <div class="splash-ver">v3.9</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -176,7 +176,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.8 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.9 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -754,20 +754,44 @@ function applyCtColor(sel){
   else sel.classList.add('st-no');
 }
 
-// ── IV prefix → Importer → 담당자 매핑 (master_staff.json から動的ロード) ──
-let shippingStaffData=[]; // [{code, importer, staff}]
+// ── IV prefix → Importer → 담당자 매핑 (하드코딩) ──
+const IV_IMPORTER_MAP = {
+  'RA':{name:'R. A.',staff:'大場'},'MG':{name:'MEGA SURYA',staff:'大場'},
+  'IK':{name:'INDAH KIAT',staff:'大場'},'TJ':{name:'TJIWI KIMIA',staff:'大場'},
+  'HA':{name:'HANKUK PAPER',staff:'大場'},'NA':{name:'NATURA',staff:'大場'},
+  'PC':{name:'PAPER COREA',staff:'大場'},'RE':{name:'RE',staff:'大場'},
+  'SG':{name:'SAIGON',staff:'大場'},'KN':{name:'KHOI NGUYEN',staff:'大場'},
+  'SI':{name:'SINO PAPER',staff:'大場'},'TP':{name:'THAI PAPER',staff:'大場'},
+  'TA':{name:'Thuan An',staff:'大場'},'KO':{name:'KOA(M)',staff:'大場'},
+  'DD':{name:'DDT',staff:'大場'},'HK':{name:'HKB',staff:'大場'},
+  'DO':{name:'DOHACO',staff:'大場'},'SK':{name:'SIAM KRAFT',staff:'大場'},
+  'CR':{name:'CORELEX',staff:'大場'},'VT':{name:'VIET TRI',staff:'大場'},
+  'TH':{name:'THANH HOA',staff:'大場'},'XS':{name:'XSD',staff:'大場'},
+  'AS':{name:'ASIA PAPER',staff:'パク'},'DH':{name:'DAEHAN PAPER',staff:'パク'},
+  'DW':{name:'DAEWANG PAPER',staff:'パク'},'OW':{name:'DONGWON',staff:'パク'},
+  'HS':{name:'HANSOL',staff:'パク'},'JJ':{name:'JEONJU',staff:'パク'},
+  'JS':{name:'JUSHIN',staff:'パク'},'KL':{name:'KLEANNARA',staff:'パク'},
+  'TG':{name:'TAE GYOUNG',staff:'パク'},'KS':{name:'KISUK',staff:'パク'},
+  'TL':{name:'TAILIM PAPER',staff:'パク'},'YC':{name:'YUCHANG',staff:'パク'},
+  'NF':{name:'NIKKO FIBRE',staff:'パク'},'CL':{name:'CLC(Y)',staff:'パク'},
+  'CV':{name:'CLC(V)',staff:'パク'},'DA':{name:'DOUBLE A',staff:'パク'},
+  'CA':{name:'CAS',staff:'パク'},'DT':{name:'DONG TIEN',staff:'パク'},
+  'XM':{name:'XUAN MAI',staff:'パク'},'KC':{name:'TKC KRAFT',staff:'パク'},
+  'TQ':{name:'TAN QUANG',staff:'パク'},'NI':{name:'NIC INTERTRADE',staff:'パク'},
+  'VD':{name:'VAN DIEM',staff:'パク'},'NE':{name:'NEW TOYO',staff:'パク'},
+  'TE':{name:'THAI HIEP',staff:'パク'},'NB':{name:'NIBONG TEBAL',staff:'パク'},
+  'A':{name:'ASPEX',staff:'パク'}
+};
+const IV_CODE_KEYS=Object.keys(IV_IMPORTER_MAP).sort((a,b)=>b.length-a.length);
 function getShipStaff(ivNo){
   if(!ivNo||ivNo==='—')return{name:'—',staff:'—'};
   const body=ivNo.replace(/^N/,'');
-  // 긴 코드 우선
-  const sorted=[...shippingStaffData].sort((a,b)=>(b.code||'').length-(a.code||'').length);
-  for(const r of sorted){
-    const k=r.code||'';
-    if(k&&body.startsWith(k)&&/\d/.test(body[k.length]||''))
-      return{name:r.importer||'—',staff:r.staff||'—'};
+  for(const k of IV_CODE_KEYS){
+    if(body.startsWith(k)&&/\d/.test(body[k.length]||''))return IV_IMPORTER_MAP[k];
   }
   return{name:'—',staff:'—'};
 }
+let shippingStaffData=[];
 
 function switchTab(name){
   ['today','shipping','purchase','sale','master'].forEach(t=>{
