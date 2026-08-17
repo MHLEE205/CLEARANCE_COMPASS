@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.4</title>
+<title>LEENAI 今日の作業 v3.5</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -26,6 +26,10 @@ th.th-pc{background:#2D4878;color:rgba(255,255,255,.9);}
 .flt-item input{cursor:pointer;accent-color:var(--accent);}
 .flt-clear{font-size:10px;color:var(--text3);padding:2px 10px;cursor:pointer;border-top:1px solid var(--border);margin-top:2px;}
 .flt-clear:hover{color:var(--accent);}
+.master-sub-btn{padding:8px 20px;font-size:12px;color:var(--text2);cursor:pointer;border:none;background:transparent;border-bottom:2px solid transparent;}
+.master-sub-btn.on{color:#2D5A1E;border-bottom:2px solid #2D5A1E;font-weight:500;}
+.master-edit-input{font-size:12px;padding:3px 6px;border:1px solid var(--border);border-radius:4px;background:var(--surface2);color:var(--text);width:100%;}
+.master-del-btn{padding:2px 8px;border-radius:4px;border:1px solid var(--danger);color:var(--danger);background:transparent;cursor:pointer;font-size:11px;}
 th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .si-done{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;background:#E8F4E0;color:#2D6B1E;}
 .si-no{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;background:var(--surface3);color:var(--text3);}
@@ -156,7 +160,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.4</div>
+  <div class="splash-ver">v3.5</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -172,7 +176,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.4 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.5 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -190,6 +194,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
     <div class="tab-btn" id="tab-shipping" onclick="switchTab('shipping')">📄 船積書類</div>
     <div class="tab-btn" id="tab-purchase" onclick="switchTab('purchase')">📋 購買契約</div>
     <div class="tab-btn" id="tab-sale" onclick="switchTab('sale')">📊 販売契約</div>
+    <div class="tab-btn" id="tab-master" onclick="switchTab('master')">⚙ マスター</div>
   </div>
 
   <!-- 今日の作業 탭 -->
@@ -484,6 +489,67 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
     </div>
   </div>
   </div><!-- /tab-content sale -->
+  <!-- マスター 탭 -->
+  <div class="tab-content" id="content-master">
+  <div class="main">
+    <!-- 서브탭 -->
+    <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;">
+      <button class="master-sub-btn on" id="msub-tsukan" onclick="switchMasterSub('tsukan')">🛃 通関担当者</button>
+      <button class="master-sub-btn" id="msub-shipping" onclick="switchMasterSub('shipping')">📄 船積書類担当者</button>
+    </div>
+
+    <!-- 通関担当者 편집 -->
+    <div id="msub-content-tsukan">
+      <div class="section">
+        <div class="sec-hdr" style="background:rgba(45,90,30,.08);">
+          <span class="sec-title" style="color:#2D5A1E;">🛃 通関担当者マスター</span>
+          <span style="font-size:11px;color:var(--text3);margin-left:8px;">POL → 担当者 マッピング</span>
+          <button onclick="addTsukanRow()" style="margin-left:auto;padding:3px 12px;border-radius:6px;border:1px solid #2D5A1E;background:#2D5A1E;color:#fff;font-size:11px;cursor:pointer;">＋ 追加</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th class="th-g" style="width:160px;">POL</th>
+              <th class="th-g" style="width:180px;">担当者</th>
+              <th class="th-g" style="width:60px;"></th>
+            </tr></thead>
+            <tbody id="tsukanMasterBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 船積書類担当者 편집 -->
+    <div id="msub-content-shipping" style="display:none;">
+      <div class="section">
+        <div class="sec-hdr" style="background:rgba(26,60,120,.08);">
+          <span class="sec-title" style="color:#1A3C78;">📄 船積書類担当者マスター</span>
+          <span style="font-size:11px;color:var(--text3);margin-left:8px;">IVコード → Importer → 担当者 マッピング</span>
+          <button onclick="addShippingRow()" style="margin-left:auto;padding:3px 12px;border-radius:6px;border:1px solid #1A3C78;background:#1A3C78;color:#fff;font-size:11px;cursor:pointer;">＋ 追加</button>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th class="th-ship" style="width:80px;">IVコード</th>
+              <th class="th-ship" style="width:160px;">Importer</th>
+              <th class="th-ship" style="width:120px;">担当者</th>
+              <th class="th-ship" style="width:60px;"></th>
+            </tr></thead>
+            <tbody id="shippingMasterBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 저장 바 -->
+    <div style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
+      <span style="font-size:12px;color:var(--text2);">変更はSharePointに保存されます</span>
+      <button onclick="saveMasterJson()" style="margin-left:auto;padding:6px 24px;border-radius:6px;border:none;background:#2D5A1E;color:#fff;font-size:13px;font-weight:500;cursor:pointer;">💾 マスターを保存</button>
+      <span id="masterSaveOk" style="font-size:12px;color:var(--ok);display:none;">✅ 保存しました</span>
+    </div>
+  </div>
+  </div><!-- /tab-content master -->
+
 
 
 </div><!-- /mainView -->
@@ -500,13 +566,13 @@ const DRIVE_ID  = 'b!ZK58_9YllU-vETQD3Xz0TbOInXbVCXJHnQ2280KJBArFLeM_18EgRbSeoO-
 const JSON_PATH = '古紙/-. AI 活用/PORTAL/clearance_status.json';
 const GR_API    = 'https://graph.microsoft.com/v1.0';
 
-const POL_STAFF = {
-  'ISHIKARI':'JU','NAHA':'JU',
-  'KANAZAWA':'ZHAN','AKITA':'ZHAN','NIIGATA':'ZHAN','NAGOYA':'ZHAN',
-  'SHIMIZU':'ZHAN','MIZUSHIMA':'ZHAN','HAKATA':'ZHAN','KUMAMOTO':'ZHAN','MOJI':'ZHAN',
-  'SENDAI':'LEE JUAH','OSAKA':'LEE JUAH','KOBE':'LEE JUAH',
-  'TOKYO':'竹内 雅将','YOKOHAMA':'竹内 雅将'
-};
+// POL → 担당者 (master_staff.json から動的ロード)
+let polStaffData=[]; // [{pol, staff}]
+function getPolStaffMap(){
+  const m={};
+  polStaffData.forEach(r=>{if(r.pol&&r.staff)m[r.pol.toUpperCase()]=r.staff;});
+  return m;
+}
 const CHIP_CLS = {'JU':'ju','ZHAN':'zhan','LEE JUAH':'lee','竹内 雅将':'take','大場':'oba','パク':'pak'};
 const TS_OPTS  = ['未','ED未','ACL未'];
 const CT_OPTS  = ['未','提出'];
@@ -579,6 +645,7 @@ async function handleGraphCallback(code){
   if(data.error)throw new Error(data.error_description||data.error);
   grToken=data.access_token;
   sessionStorage.setItem('gr_token',grToken);
+  await loadMasterJson();
   showMain();
   loadAll();
 }
@@ -687,248 +754,19 @@ function applyCtColor(sel){
   else sel.classList.add('st-no');
 }
 
-// ── IV prefix → Importer → 담당자 매핑 (船積書類タブ用) ──
-// N + [코드] + [YYMM] + -[번호] 에서 코드 추출 (긴 것 우선 매칭)
-const IV_IMPORTER_MAP = {
-  // 大場 담당
-  'RA': {name:'R. A.',         staff:'大場'},
-  'MG': {name:'MEGA SURYA',    staff:'大場'},
-  'IK': {name:'INDAH KIAT',    staff:'大場'},
-  'TJ': {name:'TJIWI KIMIA',   staff:'大場'},
-  'HA': {name:'HANKUK PAPER',  staff:'大場'},  // NHA
-  'NA': {name:'NATURA',        staff:'大場'},
-  'PC': {name:'PAPER COREA',   staff:'大場'},
-  'RE': {name:'RE',            staff:'大場'},
-  'SG': {name:'SAIGON',        staff:'大場'},
-  'KN': {name:'KHOI NGUYEN',   staff:'大場'},
-  'SI': {name:'SINO PAPER',    staff:'大場'},
-  'TP': {name:'THAI PAPER',    staff:'大場'},
-  'TA': {name:'Thuan An',      staff:'大場'},
-  'KO': {name:'KOA(M)',        staff:'大場'},
-  'DD': {name:'DDT',           staff:'大場'},
-  'HK': {name:'HKB',           staff:'大場'},
-  'DO': {name:'DOHACO',        staff:'大場'},
-  'SK': {name:'SIAM KRAFT',    staff:'大場'},
-  'CR': {name:'CORELEX',       staff:'大場'},
-  'VT': {name:'VIET TRI',      staff:'大場'},
-  'TH': {name:'THANH HOA',     staff:'大場'},
-  'XS': {name:'XSD',           staff:'大場'},  // NXS
-  // パク 담당
-  'AS': {name:'ASIA PAPER',    staff:'パク'},
-  'DH': {name:'DAEHAN PAPER',  staff:'パク'},
-  'DW': {name:'DAEWANG PAPER', staff:'パク'},
-  'OW': {name:'DONGWON',       staff:'パク'},
-  'HS': {name:'HANSOL',        staff:'パク'},
-  'JJ': {name:'JEONJU',        staff:'パク'},
-  'JS': {name:'JUSHIN',        staff:'パク'},
-  'KL': {name:'KLEANNARA',     staff:'パク'},
-  'TG': {name:'TAE GYOUNG',    staff:'パク'},
-  'KS': {name:'KISUK',         staff:'パク'},
-  'TL': {name:'TAILIM PAPER',  staff:'パク'},
-  'YC': {name:'YUCHANG',       staff:'パク'},
-  'NF': {name:'NIKKO FIBRE',   staff:'パク'},
-  'CL': {name:'CLC(Y)',         staff:'パク'},  // NCL
-  'CV': {name:'CLC(V)',         staff:'パク'},  // NCV
-  'DA': {name:'DOUBLE A',      staff:'パク'},
-  'CA': {name:'CAS',           staff:'パク'},  // NCA
-  'DT': {name:'DONG TIEN',     staff:'パク'},
-  'XM': {name:'XUAN MAI',      staff:'パク'},
-  'KC': {name:'TKC KRAFT',     staff:'パク'},  // NKC
-  'TQ': {name:'TAN QUANG',     staff:'パク'},
-  'NI': {name:'NIC INTERTRADE',staff:'パク'},
-  'VD': {name:'VAN DIEM',      staff:'パク'},
-  'NE': {name:'NEW TOYO',      staff:'パク'},  // NNE
-  'TE': {name:'THAI HIEP',     staff:'パク'},
-  'NB': {name:'NIBONG TEBAL',  staff:'パク'},
-  'A':  {name:'ASPEX',         staff:'パク'},  // 1자 — 최후 매칭
-};
-// 긴 코드 우선 매칭용 정렬 키 (내림차순)
-const IV_CODE_KEYS = Object.keys(IV_IMPORTER_MAP).sort((a,b)=>b.length-a.length);
-
+// ── IV prefix → Importer → 담당자 매핑 (master_staff.json から動的ロード) ──
+let shippingStaffData=[]; // [{code, importer, staff}]
 function getShipStaff(ivNo){
   if(!ivNo||ivNo==='—')return{name:'—',staff:'—'};
-  // N 제거 후 코드 추출: NMG2607-01 → MG
   const body=ivNo.replace(/^N/,'');
-  for(const k of IV_CODE_KEYS){
-    if(body.startsWith(k)&&/\d/.test(body[k.length]||'')){
-      return IV_IMPORTER_MAP[k];
-    }
+  // 긴 코드 우선
+  const sorted=[...shippingStaffData].sort((a,b)=>(b.code||'').length-(a.code||'').length);
+  for(const r of sorted){
+    const k=r.code||'';
+    if(k&&body.startsWith(k)&&/\d/.test(body[k.length]||''))
+      return{name:r.importer||'—',staff:r.staff||'—'};
   }
   return{name:'—',staff:'—'};
-}
-function switchTab(name){
-  ['today','shipping','purchase','sale'].forEach(t=>{
-    document.getElementById(`tab-${t}`).classList.toggle('on',t===name);
-    document.getElementById(`content-${t}`).classList.toggle('on',t===name);
-  });
-  if(name==='shipping'&&allShipping.length===0&&dvToken)loadShipping();
-  if(name==='purchase'&&allPurchase.length===0&&dvToken)loadPurchase();
-  if(name==='sale'&&allSale.length===0&&dvToken)loadSale();
-}
-
-// ── 선적서류 상태 ──
-let allShipping=[];
-let shippingMap={};  // {iv_no: {dep,furikomi,fd_date,fd_note}}
-let savedShippingMap={};
-
-function getSpStatus(ivNo){return shippingMap[ivNo]||{dep:'未',furikomi:'未',fd_date:'',fd_note:''};}
-function isSpUnsaved(ivNo){
-  const c=shippingMap[ivNo]||{dep:'未',furikomi:'未',fd_date:'',fd_note:''};
-  const s=savedShippingMap[ivNo]||{dep:'未',furikomi:'未',fd_date:'',fd_note:''};
-  return c.dep!==s.dep||c.furikomi!==s.furikomi||c.fd_date!==s.fd_date||c.fd_note!==s.fd_note;
-}
-function anySpUnsaved(){return allShipping.some(r=>isSpUnsaved(r.iv_no));}
-function updateSpSaveBar(){
-  document.getElementById('spSaveBar').classList.toggle('show',anySpUnsaved());
-  document.getElementById('spSaveOk').style.display='none';
-}
-
-function onDepChange(ivNo,val){
-  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_date:'',fd_note:''};
-  shippingMap[ivNo].dep=val;shippingMap[ivNo].updated_by=currentUser;
-  const row=document.querySelector(`tr[data-sp-iv="${ivNo}"]`);
-  if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
-  updateSpSaveBar();
-}
-function onFurikomiChange(ivNo,val){
-  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_date:'',fd_note:''};
-  shippingMap[ivNo].furikomi=val;shippingMap[ivNo].updated_by=currentUser;
-  const row=document.querySelector(`tr[data-sp-iv="${ivNo}"]`);
-  if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
-  updateSpSaveBar();
-}
-function onFdDateChange(ivNo,val){
-  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_date:'',fd_note:''};
-  shippingMap[ivNo].fd_date=val;shippingMap[ivNo].updated_by=currentUser;
-  const inp=document.getElementById(`fddate_${CSS.escape(ivNo)}`);
-  if(inp)inp.classList.toggle('filled',!!val);
-  const row=document.querySelector(`tr[data-sp-iv="${ivNo}"]`);
-  if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
-  updateSpSaveBar();
-}
-function onFdNoteChange(ivNo,val){
-  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_date:'',fd_note:''};
-  shippingMap[ivNo].fd_note=val;shippingMap[ivNo].updated_by=currentUser;
-  const row=document.querySelector(`tr[data-sp-iv="${ivNo}"]`);
-  if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
-  updateSpSaveBar();
-}
-
-async function saveSpStatus(){
-  const btn=document.getElementById('spSaveBtn');
-  btn.disabled=true;btn.textContent='保存中...';
-  try{
-    // JSON 전체 재저장 (records + cotecna + shipping 통합)
-    const payload={
-      last_updated:new Date().toISOString(),
-      records:statusMap,
-      cotecna:cotecnaMap,
-      shipping:shippingMap
-    };
-    const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${filePath()}:/content`,{
-      method:'PUT',
-      headers:{Authorization:`Bearer ${grToken}`,'Content-Type':'application/json'},
-      body:JSON.stringify(payload,null,2)
-    });
-    if(!r.ok)throw new Error(`保存失敗 ${r.status}`);
-    savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
-    document.querySelectorAll('tr[data-sp-iv]').forEach(r=>r.classList.remove('row-unsaved'));
-    document.getElementById('spSaveBar').classList.remove('show');
-    document.getElementById('spSaveOk').style.display='';
-    setTimeout(()=>{document.getElementById('spSaveOk').style.display='none';},3000);
-    // FD입력된 것은 화면에서 제거
-    renderShipping();
-  }catch(e){alert('保存エラー: '+e.message);}
-  finally{btn.disabled=false;btn.textContent='💾 変更を保存';}
-}
-
-// ── 선적서류 데이터 로드 ──
-async function loadShipping(){
-  document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="15"><span class="spinner"></span>読み込み中...</td></tr>`;
-  document.getElementById('spTodayLabel').textContent=todayLbl();
-
-  // ETD 기준 90일 전 ~ 180일 후
-  const from=localDateStr(-90),to=localDateStr(180);
-  const filter=`cr49f_etd ge ${from}T00:00:00Z and cr49f_etd le ${to}T23:59:59Z`;
-  try{
-    const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_bookingid,cr49f_invoice_no,cr49f_booking_no,cr49f_etd,cr49f_eta,cr49f_cy_cut,crcf9_bl_etd,crcf9_bl_eta,_cr49f_region_japan_id_value,_cr49f_carrier_id_value,_cr49f_region_id_value&$orderby=cr49f_etd asc&$top=500`);
-    const bookings=res.value||[];
-
-    // ① fd_date 비어있음 + ETD가 30일 전 이후인 것만 표시
-    const oneMonthAgo=localDateStr(-30);
-    const targetBookings=bookings.filter(b=>{
-      const ivNo=b.cr49f_invoice_no||'';
-      const sp=shippingMap[ivNo];
-      if(sp&&(sp.fd_date||'').trim())return false; // fd_date 입력 → 제외
-      const etdRaw=(b.crcf9_bl_etd||b.cr49f_etd||'').slice(0,10);
-      return!etdRaw||etdRaw>=oneMonthAgo; // 30일 전 이후만 표시
-    });
-
-    if(!targetBookings.length){allShipping=[];renderShipping();return;}
-
-    // ② lookup 조회 (POL, 선사, 국가)
-    const rjGuids=[...new Set(targetBookings.map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
-    const crGuids=[...new Set(targetBookings.map(b=>b['_cr49f_carrier_id_value']).filter(Boolean))];
-    const rgGuids=[...new Set(targetBookings.map(b=>b['_cr49f_region_id_value']).filter(Boolean))];
-
-    const [polMap,carrierMap,regionMap]=await Promise.all([
-      fetchPolMap(rjGuids),
-      (async()=>{
-        const m={};
-        await Promise.all(crGuids.map(async g=>{
-          try{const d=await dvGet(`${DV_API}/crcf9_carriers(${g})?$select=crcf9_carrier`);m[g]=d.crcf9_carrier||'—';}catch(e){}
-        }));return m;
-      })(),
-      (async()=>{
-        const m={};
-        await Promise.all(rgGuids.map(async g=>{
-          try{const d=await dvGet(`${DV_API}/cr49f_regions(${g})?$select=cr49f_region`);m[g]=d.cr49f_region||'—';}catch(e){}
-        }));return m;
-      })()
-    ]);
-
-    // ③ CT수 배치 집계 (20건씩 OR 필터)
-    const bkgGuids=targetBookings.map(b=>b.cr49f_bookingid).filter(Boolean);
-    const ctCountMap={};
-    for(let i=0;i<bkgGuids.length;i+=20){
-      const chunk=bkgGuids.slice(i,i+20);
-      const f=chunk.map(g=>`_crcf9_booking_id_value eq ${g}`).join(' or ');
-      try{
-        const r=await dvGet(`${DV_API}/crcf9_container_informations?$filter=${encodeURIComponent(f)}&$select=_crcf9_booking_id_value&$top=500`);
-        (r.value||[]).forEach(ct=>{
-          const bg=ct['_crcf9_booking_id_value'];
-          if(bg)ctCountMap[bg]=(ctCountMap[bg]||0)+1;
-        });
-      }catch(e){}
-    }
-
-    allShipping=targetBookings.map(b=>{
-      const etdRaw=(b.crcf9_bl_etd||b.cr49f_etd||'').slice(0,10);
-      const pol=(polMap[b['_cr49f_region_japan_id_value']]||'—').replace(', JAPAN','').trim();
-      const cntr=regionMap[b['_cr49f_region_id_value']]||'—';
-      const ivNo=b.cr49f_invoice_no||'—';
-      const sp=getShipStaff(ivNo);
-      return{
-        guid:b.cr49f_bookingid,
-        iv_no:ivNo,
-        bkg_no:b.cr49f_booking_no||'—',
-        etd:fmtDate(b.crcf9_bl_etd||b.cr49f_etd),
-        etd_raw:etdRaw,
-        eta:fmtDate(b.crcf9_bl_eta||b.cr49f_eta),
-        cy_cut:fmtDate(b.cr49f_cy_cut),
-        pol, cntr,
-        ship:carrierMap[b['_cr49f_carrier_id_value']]||'—',
-        ct_count:ctCountMap[b.cr49f_bookingid]||'—',
-        importer:sp.name,
-        staff:sp.staff,
-        is_vietnam:cntr.toUpperCase().includes('VIETNAM')
-      };
-    });
-  }catch(e){
-    document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="15">⚠ ${e.message}</td></tr>`;
-    document.getElementById('spCnt').textContent='エラー';return;
-  }
-  renderShipping();
 }
 
 function renderShipping(){
@@ -998,8 +836,13 @@ function todayLbl(){const days=['日','月','火','水','木','金','土'],d=new
 function getRangeDays(){return parseInt(document.getElementById('rangeFilter').value)||0;}
 
 // ── POL 유틸 ──
-function getStaff(pol){if(!pol||pol==='—')return'—';const up=pol.toUpperCase();
-  for(const[k,v]of Object.entries(POL_STAFF))if(up.includes(k))return v;return'—';}
+function getStaff(pol){
+  if(!pol||pol==='—')return'—';
+  const up=pol.toUpperCase();
+  const pm=getPolStaffMap();
+  for(const[k,v]of Object.entries(pm))if(up.includes(k))return v;
+  return'—';
+}
 function mkChip(s){return`<span class="chip ${CHIP_CLS[s]||'none'}">${s||'—'}</span>`;}
 async function fetchPolMap(guids){
   const m={};
@@ -1023,12 +866,12 @@ async function loadTsukan(rd){
   const s=localDateStr(0),e=localDateStr(rd);
   const filter=`cr49f_cy_cut ge ${s}T00:00:00Z and cr49f_cy_cut le ${e}T23:59:59Z`;
   try{
-    const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_invoice_no,cr49f_booking_no,cr49f_cy_cut,crcf9_bl_pol_text,_cr49f_region_japan_id_value&$orderby=cr49f_cy_cut asc&$top=500`);
+    const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_invoice_no,cr49f_booking_no,cr49f_cy_cut,crcf9_delivery_location,_cr49f_region_japan_id_value&$orderby=cr49f_cy_cut asc&$top=500`);
     const bkgs=res.value||[];
-    const miss=[...new Set(bkgs.filter(b=>!(b.crcf9_bl_pol_text||'').trim()).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
+    const miss=[...new Set(bkgs.map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
     const pm=await fetchPolMap(miss);
     allTsukan=bkgs.map(b=>{
-      const pol=(b.crcf9_bl_pol_text||'').trim()||pm[b['_cr49f_region_japan_id_value']]||'—';
+      const pol=pm[b['_cr49f_region_japan_id_value']]||(b.crcf9_delivery_location?b.crcf9_delivery_location.replace(/ CY$| PORT$/,'')+', JAPAN':'')||'—';
       return{cy_cut:b.cr49f_cy_cut?b.cr49f_cy_cut.slice(0,10):'',cy_cut_fmt:fmtDate(b.cr49f_cy_cut),
         pol,iv_no:b.cr49f_invoice_no||'—',bkg_no:b.cr49f_booking_no||'—',staff:getStaff(pol)};
     });
@@ -1074,9 +917,9 @@ async function loadCotecna(rd){
     if(!cts.length){allCotecna=[];renderCotecna();return;}
     const bkgGuids=[...new Set(cts.map(c=>c['_crcf9_booking_id_value']).filter(Boolean))];
     const bkgMap={};
-    await Promise.all(bkgGuids.map(async g=>{try{bkgMap[g]=await dvGet(`${DV_API}/cr49f_bookings(${g})?$select=cr49f_invoice_no,crcf9_bl_pol_text,_cr49f_region_japan_id_value,_cr49f_sale_contract_id_value`);}catch(e){}}));
+    await Promise.all(bkgGuids.map(async g=>{try{bkgMap[g]=await dvGet(`${DV_API}/cr49f_bookings(${g})?$select=cr49f_invoice_no,crcf9_delivery_location,_cr49f_region_japan_id_value,_cr49f_sale_contract_id_value`);}catch(e){}}));
     const scGuids=[...new Set(Object.values(bkgMap).map(b=>b['_cr49f_sale_contract_id_value']).filter(Boolean))];
-    const missP=[...new Set(Object.values(bkgMap).filter(b=>!(b.crcf9_bl_pol_text||'').trim()).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
+    const missP=[...new Set(Object.values(bkgMap).map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
     const pcGuids=[...new Set(cts.map(c=>c['_crcf9_purchase_contract_id_value']).filter(Boolean))];
     const[voMap,polMap,pcMap]=await Promise.all([
       Promise.all(scGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/cr49f_s_is?$filter=_cr49f_sale_contract_id_value eq ${g}&$select=crcf9_vo_no&$top=1`);if(d.value?.length&&d.value[0].crcf9_vo_no)return[g,d.value[0].crcf9_vo_no];}catch(e){}return[g,''];})).then(e=>Object.fromEntries(e.filter(x=>x[1]))),
@@ -1092,7 +935,7 @@ async function loadCotecna(rd){
       const scId=bkg['_cr49f_sale_contract_id_value'];
       const rawVo=voMap[scId]||'';const vm=rawVo.match(/(\d+\.\d+)/);
       const voNo=vm?`X.${vm[1]}`:(rawVo||'—');
-      const pol=(bkg.crcf9_bl_pol_text||'').trim()||polMap[bkg['_cr49f_region_japan_id_value']]||'—';
+      const pol=polMap[bkg['_cr49f_region_japan_id_value']]||(bkg.crcf9_delivery_location?bkg.crcf9_delivery_location.replace(/ CY$| PORT$/,'')+', JAPAN':'')||'—';
       const ivNo=bkg.cr49f_invoice_no||'—',partial=c.crcf9_partial_no||'—';
       const pcId=c['_crcf9_purchase_contract_id_value'];
       const pkId=pcId&&pcMap[pcId]?pcMap[pcId]['_cr49f_packer_id_value']:null;
@@ -1154,7 +997,10 @@ async function onRangeChange(){
 async function loadAll(){
   const rd=getRangeDays();updateRangeHint(rd);
   showLoading('COMPASSからデータ取得中...');
-  try{await loadStatusJson();await Promise.all([loadTsukan(rd),loadCotecna(rd)]);}
+  try{
+    await Promise.all([loadStatusJson(), grToken?loadMasterJson():Promise.resolve()]);
+    await Promise.all([loadTsukan(rd),loadCotecna(rd)]);
+  }
   finally{hideLoading();}
 }
 // ── 구매/판매계약 ──
@@ -1459,6 +1305,135 @@ function renderSale(){
 }
 
 async function onScPeriodChange(){allSale=[];await loadSale();}
+
+// ── MASTER JSON ──
+const MASTER_PATH='古紙/-. AI 活用/PORTAL/master_staff.json';
+function masterFilePath(){return MASTER_PATH.split('/').map(encodeURIComponent).join('/');}
+
+// 기본값 (JSON 없을 때)
+const DEFAULT_TSUKAN=[
+  {pol:'ISHIKARI',staff:'JU'},{pol:'NAHA',staff:'JU'},
+  {pol:'KANAZAWA',staff:'ZHAN'},{pol:'AKITA',staff:'ZHAN'},{pol:'NIIGATA',staff:'ZHAN'},
+  {pol:'NAGOYA',staff:'ZHAN'},{pol:'SHIMIZU',staff:'ZHAN'},{pol:'MIZUSHIMA',staff:'ZHAN'},
+  {pol:'HAKATA',staff:'ZHAN'},{pol:'KUMAMOTO',staff:'ZHAN'},{pol:'MOJI',staff:'ZHAN'},
+  {pol:'SENDAI',staff:'LEE JUAH'},{pol:'OSAKA',staff:'LEE JUAH'},{pol:'KOBE',staff:'LEE JUAH'},
+  {pol:'TOKYO',staff:'竹内 雅将'},{pol:'YOKOHAMA',staff:'竹内 雅将'},{pol:'FUKUYAMA',staff:'ZHAN'}
+];
+const DEFAULT_SHIPPING=[
+  {code:'RA',importer:'R. A.',staff:'大場'},{code:'MG',importer:'MEGA SURYA',staff:'大場'},
+  {code:'IK',importer:'INDAH KIAT',staff:'大場'},{code:'TJ',importer:'TJIWI KIMIA',staff:'大場'},
+  {code:'HA',importer:'HANKUK PAPER',staff:'大場'},{code:'NA',importer:'NATURA',staff:'大場'},
+  {code:'PC',importer:'PAPER COREA',staff:'大場'},{code:'RE',importer:'RE',staff:'大場'},
+  {code:'SG',importer:'SAIGON',staff:'大場'},{code:'KN',importer:'KHOI NGUYEN',staff:'大場'},
+  {code:'SI',importer:'SINO PAPER',staff:'大場'},{code:'TP',importer:'THAI PAPER',staff:'大場'},
+  {code:'TA',importer:'Thuan An',staff:'大場'},{code:'KO',importer:'KOA(M)',staff:'大場'},
+  {code:'DD',importer:'DDT',staff:'大場'},{code:'HK',importer:'HKB',staff:'大場'},
+  {code:'DO',importer:'DOHACO',staff:'大場'},{code:'SK',importer:'SIAM KRAFT',staff:'大場'},
+  {code:'CR',importer:'CORELEX',staff:'大場'},{code:'VT',importer:'VIET TRI',staff:'大場'},
+  {code:'TH',importer:'THANH HOA',staff:'大場'},{code:'XS',importer:'XSD',staff:'大場'},
+  {code:'AS',importer:'ASIA PAPER',staff:'パク'},{code:'DH',importer:'DAEHAN PAPER',staff:'パク'},
+  {code:'DW',importer:'DAEWANG PAPER',staff:'パク'},{code:'OW',importer:'DONGWON',staff:'パク'},
+  {code:'HS',importer:'HANSOL',staff:'パク'},{code:'JJ',importer:'JEONJU',staff:'パク'},
+  {code:'JS',importer:'JUSHIN',staff:'パク'},{code:'KL',importer:'KLEANNARA',staff:'パク'},
+  {code:'TG',importer:'TAE GYOUNG',staff:'パク'},{code:'KS',importer:'KISUK',staff:'パク'},
+  {code:'TL',importer:'TAILIM PAPER',staff:'パク'},{code:'YC',importer:'YUCHANG',staff:'パク'},
+  {code:'NF',importer:'NIKKO FIBRE',staff:'パク'},{code:'CL',importer:'CLC(Y)',staff:'パク'},
+  {code:'CV',importer:'CLC(V)',staff:'パク'},{code:'DA',importer:'DOUBLE A',staff:'パク'},
+  {code:'CA',importer:'CAS',staff:'パク'},{code:'DT',importer:'DONG TIEN',staff:'パク'},
+  {code:'XM',importer:'XUAN MAI',staff:'パク'},{code:'KC',importer:'TKC KRAFT',staff:'パク'},
+  {code:'TQ',importer:'TAN QUANG',staff:'パク'},{code:'NI',importer:'NIC INTERTRADE',staff:'パク'},
+  {code:'VD',importer:'VAN DIEM',staff:'パク'},{code:'NE',importer:'NEW TOYO',staff:'パク'},
+  {code:'TE',importer:'THAI HIEP',staff:'パク'},{code:'NB',importer:'NIBONG TEBAL',staff:'パク'},
+  {code:'A',importer:'ASPEX',staff:'パク'}
+];
+
+async function loadMasterJson(){
+  try{
+    const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${masterFilePath()}:/content`,
+      {headers:{Authorization:`Bearer ${grToken}`}});
+    if(!r.ok)throw new Error('not found');
+    const d=await r.json();
+    polStaffData=d.tsukan_staff||DEFAULT_TSUKAN;
+    shippingStaffData=d.shipping_staff||DEFAULT_SHIPPING;
+  }catch(e){
+    // 파일 없으면 기본값 사용
+    polStaffData=[...DEFAULT_TSUKAN];
+    shippingStaffData=[...DEFAULT_SHIPPING];
+  }
+}
+
+async function saveMasterJson(){
+  const payload={
+    last_updated:new Date().toISOString(),
+    tsukan_staff:polStaffData,
+    shipping_staff:shippingStaffData
+  };
+  try{
+    const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${masterFilePath()}:/content`,{
+      method:'PUT',
+      headers:{Authorization:`Bearer ${grToken}`,'Content-Type':'application/json'},
+      body:JSON.stringify(payload,null,2)
+    });
+    if(!r.ok)throw new Error(`${r.status}`);
+    document.getElementById('masterSaveOk').style.display='';
+    setTimeout(()=>document.getElementById('masterSaveOk').style.display='none',3000);
+  }catch(e){alert('保存エラー: '+e.message);}
+}
+
+// ── MASTER 탭 서브탭 전환 ──
+function switchMasterSub(name){
+  ['tsukan','shipping'].forEach(t=>{
+    document.getElementById(`msub-${t}`)?.classList.toggle('on',t===name);
+    const c=document.getElementById(`msub-content-${t}`);
+    if(c)c.style.display=t===name?'':'none';
+  });
+}
+
+function renderMasterTabs(){
+  renderTsukanMaster();
+  renderShippingMaster();
+}
+
+// ── 通관담당자 편집 ──
+function renderTsukanMaster(){
+  const tb=document.getElementById('tsukanMasterBody');if(!tb)return;
+  tb.innerHTML=polStaffData.map((r,i)=>`
+    <tr>
+      <td><input class="master-edit-input" value="${r.pol||''}" onchange="polStaffData[${i}].pol=this.value" placeholder="POL名"></td>
+      <td><input class="master-edit-input" value="${r.staff||''}" onchange="polStaffData[${i}].staff=this.value" placeholder="担当者名"></td>
+      <td class="cn"><button class="master-del-btn" onclick="delTsukanRow(${i})">削除</button></td>
+    </tr>`).join('');
+}
+function addTsukanRow(){
+  polStaffData.push({pol:'',staff:''});
+  renderTsukanMaster();
+}
+function delTsukanRow(i){
+  if(!confirm('削除しますか?'))return;
+  polStaffData.splice(i,1);
+  renderTsukanMaster();
+}
+
+// ── 선적서류 담당자 편집 ──
+function renderShippingMaster(){
+  const tb=document.getElementById('shippingMasterBody');if(!tb)return;
+  tb.innerHTML=shippingStaffData.map((r,i)=>`
+    <tr>
+      <td><input class="master-edit-input" value="${r.code||''}" onchange="shippingStaffData[${i}].code=this.value" placeholder="IVコード(例:MG)" style="width:70px;"></td>
+      <td><input class="master-edit-input" value="${r.importer||''}" onchange="shippingStaffData[${i}].importer=this.value" placeholder="Importer名"></td>
+      <td><input class="master-edit-input" value="${r.staff||''}" onchange="shippingStaffData[${i}].staff=this.value" placeholder="大場/パク/..."></td>
+      <td class="cn"><button class="master-del-btn" onclick="delShippingRow(${i})">削除</button></td>
+    </tr>`).join('');
+}
+function addShippingRow(){
+  shippingStaffData.push({code:'',importer:'',staff:''});
+  renderShippingMaster();
+}
+function delShippingRow(i){
+  if(!confirm('削除しますか?'))return;
+  shippingStaffData.splice(i,1);
+  renderShippingMaster();
+}
 
 async function reloadData(){
   showLoading('データを更新中...');
