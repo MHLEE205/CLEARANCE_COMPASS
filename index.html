@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v2.9</title>
+<title>LEENAI 今日の作業 v3.0</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -145,7 +145,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v2.9</div>
+  <div class="splash-ver">v3.0</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -161,7 +161,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v2.9 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.0 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -1128,7 +1128,7 @@ async function loadPurchase(){
   try{
     // 구매계약 헤더 취득
     const filter=`cr49f_contract_date ge ${from}T00:00:00Z`;
-    const res=await dvGet(`${DV_API}/cr49f_purchase_contracts?$filter=${encodeURIComponent(filter)}&$select=cr49f_purchase_contractid,cr49f_purchase_contract_no,cr49f_contract_date,cr49f_latest_vanning,cr49f_packer_idname&$orderby=cr49f_contract_date desc&$top=200`);
+    const res=await dvGet(`${DV_API}/cr49f_purchase_contracts?$filter=${encodeURIComponent(filter)}&$select=cr49f_purchase_contractid,cr49f_purchase_contract_no,cr49f_contract_date,cr49f_latest_vanning,_cr49f_packer_id_value&$orderby=cr49f_contract_date desc&$top=200`);
     const contracts=res.value||[];
 
     // 구매상세 취득 (한꺼번에)
@@ -1147,12 +1147,20 @@ async function loadPurchase(){
       }catch(e){}
     }
 
+    // Packer 이름 취득
+    const pcPackerGuids=[...new Set(contracts.map(c=>c['_cr49f_packer_id_value']).filter(Boolean))];
+    const pcPackerNameMap={};
+    await Promise.all(pcPackerGuids.map(async g=>{
+      try{const d=await dvGet(`${DV_API}/cr49f_packers(${g})?$select=cr49f_packer_name`);
+        pcPackerNameMap[g]=d.cr49f_packer_name||'—';}catch(e){}
+    }));
+
     allPurchase=contracts.map(c=>{
       const details=detailMap[c.cr49f_purchase_contractid]||[];
       return{
         no:c.cr49f_purchase_contract_no||'—',
         date:fmtDate(c.cr49f_contract_date),
-        packer:c.cr49f_packer_idname||'—',
+        packer:c.cr49f_packer_idname||pcPackerNameMap[c['_cr49f_packer_id_value']]||'—',
         items:details.map(d=>d.cr49f_item_idname||'—').filter((v,i,a)=>a.indexOf(v)===i).join(' / '),
         qty:details.reduce((s,d)=>s+(d.cr49f_quantity||0),0),
         price:details.length?details[0].cr49f_price||0:0,
@@ -1197,7 +1205,7 @@ async function loadSale(){
   try{
     // 판매계약 헤더 취득
     const filter=`cr49f_sale_contract_date ge ${from}T00:00:00Z`;
-    const res=await dvGet(`${DV_API}/cr49f_sale_contracts?$filter=${encodeURIComponent(filter)}&$select=cr49f_sale_contractid,cr49f_sale_contract_no,cr49f_sale_contract_date,cr49f_latest_shipment,cr49f_buyer_idname,cr49f_country_idname,cr49f_pod1name&$orderby=cr49f_sale_contract_date desc&$top=200`);
+    const res=await dvGet(`${DV_API}/cr49f_sale_contracts?$filter=${encodeURIComponent(filter)}&$select=cr49f_sale_contractid,cr49f_sale_contract_no,cr49f_sale_contract_date,cr49f_latest_shipment,_cr49f_buyer_id_value,_cr49f_pod1_value&$orderby=cr49f_sale_contract_date desc&$top=200`);
     const contracts=res.value||[];
 
     // 판매상세 취득
@@ -1230,15 +1238,23 @@ async function loadSale(){
       }catch(e){}
     }
 
+    // Buyer 국가 취득 (crcf9_country 필드)
+    const buyerGuids=[...new Set(contracts.map(c=>c['_cr49f_buyer_id_value']).filter(Boolean))];
+    const buyerCountryMap={};
+    await Promise.all(buyerGuids.map(async g=>{
+      try{const d=await dvGet(`${DV_API}/cr49f_buyers(${g})?$select=cr49f_buyer,crcf9_country`);
+        if(d.crcf9_country)buyerCountryMap[g]=d.crcf9_country;}catch(e){}
+    }));
+
     allSale=contracts.map(c=>{
       const details=sdMap[c.cr49f_sale_contractid]||[];
       const hasSi=!!(siMap[c.cr49f_sale_contractid]);
       return{
         no:c.cr49f_sale_contract_no||'—',
         date:fmtDate(c.cr49f_sale_contract_date),
-        country:c.cr49f_country_idname||'—',
+        country:c.cr49f_country_idname||buyerCountryMap[c['_cr49f_buyer_id_value']]||'—',
         buyer:c.cr49f_buyer_idname||'—',
-        pod:c.cr49f_pod1name||'—',
+        pod:c.cr49f_pod1name||c.cr49f_pod1_valuename||'—',
         items:details.map(d=>d.cr49f_item_idname||'—').filter((v,i,a)=>a.indexOf(v)===i).join(' / '),
         qty:details.reduce((s,d)=>s+(d.cr49f_quantity||0),0),
         price:details.length?details[0].cr49f_price||0:0,
