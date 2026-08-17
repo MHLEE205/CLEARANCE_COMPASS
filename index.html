@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.11</title>
+<title>LEENAI 今日の作業 v3.12</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -160,7 +160,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.11</div>
+  <div class="splash-ver">v3.12</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -176,7 +176,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.11 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.12 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -797,6 +797,67 @@ let shippingStaffData=[];
 let allShipping=[];
 let shippingMap={};
 let savedShippingMap={};
+
+function getSpStatus(ivNo){return shippingMap[ivNo]||{dep:'未',furikomi:'未',fd_date:'',fd_note:''};}
+function isSpUnsaved(ivNo){
+  const c=shippingMap[ivNo]||{dep:'未',furikomi:'未',fd_date:'',fd_note:''};
+  const s=savedShippingMap[ivNo]||{dep:'未',furikomi:'未',fd_date:'',fd_note:''};
+  return c.dep!==s.dep||c.furikomi!==s.furikomi||c.fd_date!==s.fd_date||c.fd_note!==s.fd_note;
+}
+function anySpUnsaved(){return allShipping.some(r=>isSpUnsaved(r.iv_no));}
+function updateSpSaveBar(){
+  document.getElementById('spSaveBar').classList.toggle('show',anySpUnsaved());
+  document.getElementById('spSaveOk').style.display='none';
+}
+function onDepChange(ivNo,val){
+  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_date:'',fd_note:''};
+  shippingMap[ivNo].dep=val;shippingMap[ivNo].updated_by=currentUser;
+  const row=document.querySelector(`tr[data-sp-iv="${ivNo}"]`);
+  if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
+  updateSpSaveBar();
+}
+function onFurikomiChange(ivNo,val){
+  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_date:'',fd_note:''};
+  shippingMap[ivNo].furikomi=val;shippingMap[ivNo].updated_by=currentUser;
+  const row=document.querySelector(`tr[data-sp-iv="${ivNo}"]`);
+  if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
+  updateSpSaveBar();
+}
+function onFdDateChange(ivNo,val){
+  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_date:'',fd_note:''};
+  shippingMap[ivNo].fd_date=val;shippingMap[ivNo].updated_by=currentUser;
+  const inp=document.getElementById(`fddate_${CSS.escape(ivNo)}`);
+  if(inp)inp.classList.toggle('filled',!!val);
+  const row=document.querySelector(`tr[data-sp-iv="${ivNo}"]`);
+  if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
+  updateSpSaveBar();
+}
+function onFdNoteChange(ivNo,val){
+  if(!shippingMap[ivNo])shippingMap[ivNo]={dep:'未',furikomi:'未',fd_date:'',fd_note:''};
+  shippingMap[ivNo].fd_note=val;shippingMap[ivNo].updated_by=currentUser;
+  const row=document.querySelector(`tr[data-sp-iv="${ivNo}"]`);
+  if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
+  updateSpSaveBar();
+}
+async function saveSpStatus(){
+  const btn=document.getElementById('spSaveBtn');
+  btn.disabled=true;btn.textContent='保存中...';
+  try{
+    const payload={last_updated:new Date().toISOString(),records:statusMap,cotecna:cotecnaMap,shipping:shippingMap};
+    const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${filePath()}:/content`,{
+      method:'PUT',headers:{Authorization:`Bearer ${grToken}`,'Content-Type':'application/json'},
+      body:JSON.stringify(payload,null,2)
+    });
+    if(!r.ok)throw new Error(`保存失敗 ${r.status}`);
+    savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
+    document.querySelectorAll('tr[data-sp-iv]').forEach(r=>r.classList.remove('row-unsaved'));
+    document.getElementById('spSaveBar').classList.remove('show');
+    document.getElementById('spSaveOk').style.display='';
+    setTimeout(()=>{document.getElementById('spSaveOk').style.display='none';},3000);
+    renderShipping();
+  }catch(e){alert('保存エラー: '+e.message);}
+  finally{btn.disabled=false;btn.textContent='💾 変更を保存';}
+}
 
 function switchTab(name){
   ['today','shipping','purchase','sale','master'].forEach(t=>{
