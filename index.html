@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.6</title>
+<title>LEENAI 今日の作業 v3.7</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -138,7 +138,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 .pak{background:#EDE8FF;color:#4A1E99;font-weight:600;}
 .none{background:var(--surface3);color:var(--text3);}
 .ct-badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;background:var(--surface3);color:var(--text2);}
-.date-today{color:var(--ok);font-weight:500;}.date-future{color:var(--text2);}
+.date-today{color:var(--ok);font-weight:500;}.date-bizday{color:var(--warn);font-weight:600;background:rgba(245,158,11,.10);border-radius:4px;padding:1px 5px;}.date-future{color:var(--text2);}
 .msg-row td{text-align:center;padding:24px;color:var(--text3);}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 .spinner-lg{width:28px;height:28px;border-width:3px;}
@@ -160,7 +160,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.6</div>
+  <div class="splash-ver">v3.7</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -176,7 +176,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.6 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.7 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -769,6 +769,16 @@ function getShipStaff(ivNo){
   return{name:'—',staff:'—'};
 }
 
+function switchTab(name){
+  ['today','shipping','purchase','sale','master'].forEach(t=>{
+    document.getElementById(`tab-${t}`).classList.toggle('on',t===name);
+    document.getElementById(`content-${t}`).classList.toggle('on',t===name);
+  });
+  if(name==='shipping'&&allShipping.length===0&&dvToken)loadShipping();
+  if(name==='purchase'&&allPurchase.length===0&&dvToken)loadPurchase();
+  if(name==='sale'&&allSale.length===0&&dvToken)loadSale();
+}
+
 function renderShipping(){
   const fp=document.getElementById('spPolFilter').value.toUpperCase();
   const fs=document.getElementById('spStaffFilter').value;
@@ -834,6 +844,9 @@ function fmtDate(iso){if(!iso)return'—';const s=iso.slice(0,10).split('-');ret
 function todayLbl(){const days=['日','月','火','水','木','金','土'],d=new Date();
   return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}（${days[d.getDay()]}）`;}
 function getRangeDays(){return parseInt(document.getElementById('rangeFilter').value)||0;}
+function nextBizDay(){const d=new Date();d.setDate(d.getDate()+1);
+  while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);
+  return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
 
 // ── POL 유틸 ──
 function getStaff(pol){
@@ -886,7 +899,7 @@ function renderTsukan(){
   const rows=allTsukan.filter(r=>(!f||r.staff===f)&&(!p||r.pol.toUpperCase().includes(p)));
   document.getElementById('tsukanCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('tsukanBody').innerHTML='<tr class="msg-row"><td colspan="7">該当データなし</td></tr>';return;}
-  const tomorrow=localDateStr(0),hasSp=!!grToken;
+  const today=localDateStr(0),bizday=nextBizDay(),hasSp=!!grToken;
   document.getElementById('tsukanBody').innerHTML=rows.map(r=>{
     const st=getTsStatus(r.iv_no),unsaved=isTsUnsaved(r.iv_no);
     const stCls=st.tsukan_status==='ED未'?'st-ed':st.tsukan_status==='ACL未'?'st-acl':'';
@@ -896,8 +909,9 @@ function renderTsukan(){
          <span class="dot-unsaved" id="dot_${r.iv_no}" style="display:${unsaved?'inline-block':'none'}"></span></td>
          <td class="cn"><select class="status-sel ${stCls}" id="tssel_${r.iv_no}" onchange="onTsStatusChange('${r.iv_no}',this.value)">${opts}</select></td>`
       :`<td class="cn" colspan="2" style="font-size:11px;color:var(--text3);">SP未ログイン</td>`;
+    const dateCls=r.cy_cut===today?'date-today':r.cy_cut===bizday?'date-bizday':'date-future';
     return`<tr data-staff="${r.staff}" data-iv="${r.iv_no}" class="${unsaved?'row-unsaved':''}">
-      <td class="cn ${r.cy_cut===tomorrow?'date-today':'date-future'}">${r.cy_cut_fmt}</td>
+      <td class="cn ${dateCls}">${r.cy_cut_fmt}</td>
       <td>${r.pol}</td><td class="iv">${r.iv_no}</td>
       <td style="font-size:11px;color:var(--text2);">${r.bkg_no}</td>
       <td class="cn">${mkChip(r.staff)}</td>${clCells}</tr>`;
