@@ -1193,8 +1193,8 @@ async function loadPurchase(){
     const pcPackerGuids=[...new Set(contracts.map(c=>c['_cr49f_packer_id_value']).filter(Boolean))];
     const pcPackerNameMap={};
     await Promise.all(pcPackerGuids.map(async g=>{
-      try{const d=await dvGet(`${DV_API}/cr49f_packers(${g})?$select=cr49f_packer_name`);
-        pcPackerNameMap[g]=d.cr49f_packer_name||'—';}catch(e){}
+      try{const d=await dvGet(`${DV_API}/cr49f_packers(${g})?$select=cr49f_packer,cr49f_packer_name`);
+        pcPackerNameMap[g]={name:d.cr49f_packer_name||'',code:d.cr49f_packer||''};}catch(e){}
     }));
 
     // ITEM 마스터 취득
@@ -1207,9 +1207,11 @@ async function loadPurchase(){
 
     allPurchase=contracts.flatMap(c=>{
       const details=detailMap[c.cr49f_purchase_contractid]||[];
-      const packer=c.cr49f_packer_idname||pcPackerNameMap[c['_cr49f_packer_id_value']]||'—';
+      const pkData=pcPackerNameMap[c['_cr49f_packer_id_value']]||{};
+      const packerCode=pkData.code||'';
+      const packer=pkData.name?(packerCode?`${packerCode} (${pkData.name})`:pkData.name):c.cr49f_packer_idname||'—';
       const base={no:c.cr49f_purchase_contract_no||'—',date:fmtDate(c.cr49f_contract_date),
-        packer,latest_vanning:fmtDate(c.cr49f_latest_vanning)};
+        packer,packer_code:packerCode,latest_vanning:fmtDate(c.cr49f_latest_vanning)};
       if(!details.length)return[{...base,item:'—',qty:0,price:0,remark:'—'}];
       return details.map(d=>({...base,
         item:pcItemMap[d['_cr49f_item_id_value']]||'—',
@@ -1237,7 +1239,7 @@ function renderPurchase(){
   const pcFltItem=getActiveFlt('pc','item');
   const filtRows=rows.filter(r=>
     (!pcFltPol.size||pcFltPol.has(r.pol))&&
-    (!pcFltPacker.size||pcFltPacker.has(r.packer))&&
+    (!pcFltPacker.size||pcFltPacker.has(r.packer_code))&&
     (!pcFltItem.size||pcFltItem.has(r.item))
   );
   document.getElementById('pcCnt').textContent=`${filtRows.length}件`;
@@ -1313,7 +1315,7 @@ function buildFltPanel(panelId, btnId, values, onChange){
 }
 function buildPcFilters(){
   const pols=[...new Set(allPurchase.map(r=>r.pol).filter(v=>v&&v!=='—'))].sort();
-  const packers=[...new Set(allPurchase.map(r=>r.packer).filter(v=>v&&v!=='—'))].sort();
+  const packers=[...new Set(allPurchase.map(r=>r.packer_code).filter(v=>v&&v!=='—'))].sort();
   const items=[...new Set(allPurchase.map(r=>r.item).filter(v=>v&&v!=='—'))].sort();
   buildFltPanel('pcPolPanel','pcPolBtn',pols,renderPurchase);
   buildFltPanel('pcPackerPanel','pcPackerBtn',packers,renderPurchase);
