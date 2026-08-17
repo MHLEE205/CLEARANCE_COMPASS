@@ -1,21 +1,21 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.10</title>
+<title>LEENAI 莉頑律縺ｮ菴懈･ｭ v3.11</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
 [data-theme="leenai"]{--bg:#FAFDF7;--surface:#ffffff;--surface2:#F2F9EE;--surface3:#E8F5E0;--border:#D0E8C0;--border2:#B8DFB0;--text:#1A3A0E;--text2:#4A6A3A;--text3:#8AAA80;--accent:#2D5A1E;--accent2:#2E72C8;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh;}
-/* ── 탭 바 ── */
+/* 笏笏 夋ｭ ・・笏笏 */
 .tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 20px;position:sticky;top:52px;z-index:99;}
 .tab-btn{padding:10px 20px;font-size:13px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
 .tab-btn.on{color:var(--accent);border-bottom:2px solid var(--accent);font-weight:500;}
 .tab-btn:hover:not(.on){color:var(--text);}
 th.th-pc{background:#2D4878;color:rgba(255,255,255,.9);}
-/* ── 체크박스 필터 드롭다운 ── */
+/* 笏笏 ・ｴ增ｬ・菩侃 﨑・┣ ・罹｡ｭ・､・ｴ 笏笏 */
 .flt-wrap{position:relative;display:inline-block;}
 .flt-btn{font-size:11px;padding:3px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text2);cursor:pointer;white-space:nowrap;}
 .flt-btn.active{border-color:var(--accent);color:var(--accent);background:var(--surface);}
@@ -36,7 +36,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .tab-content{display:none;}
 .tab-content.on{display:block;}
 
-/* ── 船積書類 인라인 입력 ── */
+/* 笏笏 闊ｹ遨肴嶌鬘・・ｸ・ｼ・ｸ ・・･ 笏笏 */
 .fd-date{font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);width:106px;cursor:pointer;}
 .fd-date:focus{outline:none;border-color:var(--accent);}
 .fd-date.filled{border-color:var(--ok);color:var(--ok);background:rgba(34,197,94,.08);}
@@ -48,7 +48,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .loading-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 36px;text-align:center;}
 .loading-msg{font-size:13px;color:var(--text2);margin-top:12px;}
 
-/* ── 스플래시 (버튼 1개) ── */
+/* 笏笏 ・､嵓誤椈・・(・・款 1・・ 笏笏 */
 .splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;}
 .splash-logo{font-size:52px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;}
 .splash-logo span{background:linear-gradient(135deg,#4f8ef7,#2D5A1E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -60,7 +60,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .splash-btn{padding:11px 32px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;}
 .splash-btn:hover{opacity:.85;}
 
-/* ── 헤더 ── */
+/* 笏笏 嵭､・・笏笏 */
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .header-left{display:flex;align-items:center;gap:12px;}
 .logo{width:32px;height:32px;background:#2D5A1E;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
@@ -75,10 +75,10 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .btn-reload:hover{border-color:var(--accent);color:var(--accent);}
 .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);}
 
-/* ── 메인 ── */
+/* 笏笏 ・肥攤 笏笏 */
 .main{padding:16px 20px;max-width:1500px;margin:0 auto;}
 
-/* ── 필터바 ── */
+/* 笏笏 﨑・┣・・笏笏 */
 .filter-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .filter-label{font-size:12px;color:var(--text2);flex-shrink:0;}
 .range-sel{font-size:12px;padding:4px 10px;border:1.5px solid var(--accent);border-radius:6px;background:var(--surface2);color:var(--accent);cursor:pointer;font-weight:500;}
@@ -87,7 +87,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .filter-info{font-size:11px;color:var(--text3);}
 .today-label{font-size:13px;font-weight:500;color:var(--text);margin-left:auto;}
 
-/* ── 저장 바 (독립 줄) ── */
+/* 笏笏 ・・･ ・・(・・ｦｽ ・・ 笏笏 */
 .save-bar{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:var(--radius);padding:8px 16px;margin-bottom:12px;display:none;align-items:center;gap:10px;}
 .save-bar.show{display:flex;}
 .unsaved-msg{font-size:12px;color:var(--warn);}
@@ -96,7 +96,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .save-btn:disabled{background:var(--surface3);color:var(--text3);cursor:not-allowed;}
 .save-ok{font-size:12px;color:var(--ok);display:none;}
 
-/* ── 섹션 & 테이블 ── */
+/* 笏笏 ・ｹ・・& 奛護擽・・笏笏 */
 .section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;}
 .sec-hdr{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
 .sec-title{font-size:13px;font-weight:500;}
@@ -121,7 +121,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 .cn{text-align:center;}
 .iv{font-weight:500;color:var(--accent);}
 
-/* ── 체크리스트 UI ── */
+/* 笏笏 ・ｴ增ｬ・ｬ・､孖ｸ UI 笏笏 */
 .cl-check{width:16px;height:16px;cursor:pointer;accent-color:var(--ok);}
 .status-sel{font-size:11px;padding:2px 6px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);cursor:pointer;}
 .status-sel.st-ed{border-color:var(--warn);color:var(--warn);}
@@ -130,7 +130,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 .status-sel.st-no{border-color:var(--danger);color:var(--danger);}
 .dot-unsaved{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--warn);margin-left:4px;vertical-align:middle;}
 
-/* ── 기타 ── */
+/* 笏笏 ・ｰ夋 笏笏 */
 .chip{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;}
 .ju{background:#EAF3DE;color:#3B6D11;}.zhan{background:#E6F1FB;color:#185FA5;}
 .lee{background:#FBEAF0;color:#993556;}.take{background:#FAEEDA;color:#854F0B;}
@@ -151,69 +151,68 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 <div class="loading-overlay" id="loadingOverlay">
   <div class="loading-box">
     <div class="spinner spinner-lg"></div>
-    <div class="loading-msg" id="loadingMsg">データ取得中...</div>
+    <div class="loading-msg" id="loadingMsg">繝・・繧ｿ蜿門ｾ嶺ｸｭ...</div>
   </div>
 </div>
 
-<!-- 로그인 스플래시 (버튼 1개) -->
+<!-- ・懋ｷｸ・ｸ ・､嵓誤椈・・(・・款 1・・ -->
 <div id="loginView" class="splash">
   <div class="splash-logo">LEEN<span>AI</span></div>
-  <div class="splash-sys">今日の作業</div>
-  <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.10</div>
+  <div class="splash-sys">莉頑律縺ｮ菴懈･ｭ</div>
+  <div class="splash-title">騾夐未繝ｻCOTECNA 菴懈･ｭ邂｡逅・/div>
+  <div class="splash-ver">v3.11</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
-    このツールを使用するには<br>
-    COMPASSアカウントでのログインが必要です
-  </div>
-  <button class="splash-btn" id="loginBtn" onclick="startDvLogin()">⚡ COMPASSでログイン</button>
+    縺薙・繝・・繝ｫ繧剃ｽｿ逕ｨ縺吶ｋ縺ｫ縺ｯ<br>
+    COMPASS繧｢繧ｫ繧ｦ繝ｳ繝医〒縺ｮ繝ｭ繧ｰ繧､繝ｳ縺悟ｿ・ｦ√〒縺・  </div>
+  <button class="splash-btn" id="loginBtn" onclick="startDvLogin()">笞｡ COMPASS縺ｧ繝ｭ繧ｰ繧､繝ｳ</button>
 </div>
 
-<!-- 메인 화면 -->
+<!-- ・肥攤 嶹罷ｩｴ -->
 <div id="mainView" style="display:none;">
   <div class="header">
     <div class="header-left">
       <div class="logo">LN</div>
       <div>
-        <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.10 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-title">LEENAI 莉頑律縺ｮ菴懈･ｭ</div>
+        <div class="header-sub">v3.11 | 騾夐未繝ｻCOTECNA繝ｻ闊ｹ遨肴嶌鬘樒ｮ｡逅・/div>
       </div>
     </div>
     <div class="header-right">
-      <span class="chip-dv" id="chipDv">● COMPASS</span>
-      <span class="chip-sp" id="chipSp">● SP</span>
-      <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 ダーク</button>
-      <button class="btn btn-reload" onclick="reloadData()">🔄 データ更新</button>
-      <button class="btn btn-primary" onclick="startDvLogin()">再ログイン</button>
+      <span class="chip-dv" id="chipDv">笳・COMPASS</span>
+      <span class="chip-sp" id="chipSp">笳・SP</span>
+      <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()">嫌 繝繝ｼ繧ｯ</button>
+      <button class="btn btn-reload" onclick="reloadData()">売 繝・・繧ｿ譖ｴ譁ｰ</button>
+      <button class="btn btn-primary" onclick="startDvLogin()">蜀阪Ο繧ｰ繧､繝ｳ</button>
     </div>
   </div>
 
-  <!-- 탭 바 -->
+  <!-- 夋ｭ ・・-->
   <div class="tab-bar">
-    <div class="tab-btn on" id="tab-today" onclick="switchTab('today')">📅 今日の作業</div>
-    <div class="tab-btn" id="tab-shipping" onclick="switchTab('shipping')">📄 船積書類</div>
-    <div class="tab-btn" id="tab-purchase" onclick="switchTab('purchase')">📋 購買契約</div>
-    <div class="tab-btn" id="tab-sale" onclick="switchTab('sale')">📊 販売契約</div>
-    <div class="tab-btn" id="tab-master" onclick="switchTab('master')">⚙ マスター</div>
+    <div class="tab-btn on" id="tab-today" onclick="switchTab('today')">套 莉頑律縺ｮ菴懈･ｭ</div>
+    <div class="tab-btn" id="tab-shipping" onclick="switchTab('shipping')">塘 闊ｹ遨肴嶌鬘・/div>
+    <div class="tab-btn" id="tab-purchase" onclick="switchTab('purchase')">搭 雉ｼ雋ｷ螂醍ｴ・/div>
+    <div class="tab-btn" id="tab-sale" onclick="switchTab('sale')">投 雋ｩ螢ｲ螂醍ｴ・/div>
+    <div class="tab-btn" id="tab-master" onclick="switchTab('master')">笞・繝槭せ繧ｿ繝ｼ</div>
   </div>
 
-  <!-- 今日の作業 탭 -->
+  <!-- 莉頑律縺ｮ菴懈･ｭ 夋ｭ -->
   <div class="tab-content on" id="content-today">
   <div class="main">
-    <!-- 필터바 -->
+    <!-- 﨑・┣・・-->
     <div class="filter-bar">
-      <span class="filter-label">表示範囲</span>
+      <span class="filter-label">陦ｨ遉ｺ遽・峇</span>
       <select class="range-sel" id="rangeFilter" onchange="onRangeChange()">
-        <option value="0">今日のみ</option>
-        <option value="1">+1日</option><option value="2">+2日</option>
-        <option value="3">+3日</option><option value="4">+4日</option>
-        <option value="5">+5日</option><option value="6">+6日</option>
-        <option value="7" selected>+7日</option>
+        <option value="0">莉頑律縺ｮ縺ｿ</option>
+        <option value="1">+1譌･</option><option value="2">+2譌･</option>
+        <option value="3">+3譌･</option><option value="4">+4譌･</option>
+        <option value="5">+5譌･</option><option value="6">+6譌･</option>
+        <option value="7" selected>+7譌･</option>
       </select>
       <div class="fdivider"></div>
       <span class="filter-label">POL</span>
       <select class="filter-sel" id="polFilter" onchange="applyFilter()">
-        <option value="">全港</option>
+        <option value="">蜈ｨ貂ｯ</option>
         <option>ISHIKARI</option><option>KANAZAWA</option><option>SENDAI</option>
         <option>AKITA</option><option>NIIGATA</option><option>TOKYO</option>
         <option>YOKOHAMA</option><option>NAGOYA</option><option>SHIMIZU</option>
@@ -222,32 +221,32 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
         <option>NAHA</option>
       </select>
       <div class="fdivider"></div>
-      <span class="filter-label">担当者</span>
+      <span class="filter-label">諡・ｽ楢・/span>
       <select class="filter-sel" id="staffFilter" onchange="applyFilter()">
-        <option value="">全員</option>
-        <option value="JU">JU (朱 フナム)</option>
-        <option value="ZHAN">ZHAN (セン ガイキン)</option>
-        <option value="LEE JUAH">LEE JUAH (李 ジュア)</option>
-        <option value="竹内 雅将">竹内 雅将</option>
+        <option value="">蜈ｨ蜩｡</option>
+        <option value="JU">JU (譛ｱ 繝輔リ繝)</option>
+        <option value="ZHAN">ZHAN (繧ｻ繝ｳ 繧ｬ繧､繧ｭ繝ｳ)</option>
+        <option value="LEE JUAH">LEE JUAH (譚・繧ｸ繝･繧｢)</option>
+        <option value="遶ｹ蜀・髮・ｰ・>遶ｹ蜀・髮・ｰ・/option>
       </select>
       <div class="fdivider"></div>
-      <span class="filter-info" id="rangeHint">通関: CY_CUT 明日分 ｜ COTECNA: 当日・前日分</span>
+      <span class="filter-info" id="rangeHint">騾夐未: CY_CUT 譏取律蛻・・・COTECNA: 蠖捺律繝ｻ蜑肴律蛻・/span>
       <span class="today-label" id="todayLabel"></span>
     </div>
 
-    <!-- 저장 바 (독립 줄) -->
+    <!-- ・・･ ・・(・・ｦｽ ・・ -->
     <div class="save-bar" id="saveBar">
-      <span class="unsaved-msg">● 未保存の変更があります</span>
-      <button class="save-btn" id="saveBtn" onclick="saveStatus()">💾 変更を保存</button>
-      <span class="save-ok" id="saveOk">✅ 保存しました</span>
+      <span class="unsaved-msg">笳・譛ｪ菫晏ｭ倥・螟画峩縺後≠繧翫∪縺・/span>
+      <button class="save-btn" id="saveBtn" onclick="saveStatus()">沈 螟画峩繧剃ｿ晏ｭ・/button>
+      <span class="save-ok" id="saveOk">笨・菫晏ｭ倥＠縺ｾ縺励◆</span>
     </div>
 
-    <!-- 通関 섹션 -->
+    <!-- 騾夐未 ・ｹ・・-->
     <div class="section">
       <div class="sec-hdr" style="background:rgba(45,90,30,.08);">
-        <span class="sec-title" style="color:#2D5A1E;">🛃 通関 — 対応期間</span>
+        <span class="sec-title" style="color:#2D5A1E;">寃 騾夐未 窶・蟇ｾ蠢懈悄髢・/span>
         <span class="sec-date" id="tsukanDateLabel"></span>
-        <span class="sec-cnt cnt-green" id="tsukanCnt">—</span>
+        <span class="sec-cnt cnt-green" id="tsukanCnt">窶・/span>
       </div>
       <div class="table-wrap">
         <table>
@@ -256,23 +255,23 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
             <th class="th-g" style="width:100px;">POL</th>
             <th class="th-g" style="width:112px;">IV_NO</th>
             <th class="th-g" style="width:168px;">BKG_NO</th>
-            <th class="th-g" style="width:86px;">担当者</th>
-            <th class="th-c" style="width:76px;">通関依頼済</th>
-            <th class="th-c" style="width:96px;">通関状態</th>
+            <th class="th-g" style="width:86px;">諡・ｽ楢・/th>
+            <th class="th-c" style="width:76px;">騾夐未萓晞ｼ貂・/th>
+            <th class="th-c" style="width:96px;">騾夐未迥ｶ諷・/th>
           </tr></thead>
           <tbody id="tsukanBody">
-            <tr class="msg-row"><td colspan="7"><span class="spinner"></span>読み込み中...</td></tr>
+            <tr class="msg-row"><td colspan="7"><span class="spinner"></span>隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
 
-    <!-- COTECNA 섹션 -->
+    <!-- COTECNA ・ｹ・・-->
     <div class="section">
       <div class="sec-hdr" style="background:rgba(26,77,143,.06);">
-        <span class="sec-title" style="color:#1A4D8F;">📋 COTECNA 報告書 — 対応期間</span>
+        <span class="sec-title" style="color:#1A4D8F;">搭 COTECNA 蝣ｱ蜻頑嶌 窶・蟇ｾ蠢懈悄髢・/span>
         <span class="sec-date" id="cotecnaDateLabel"></span>
-        <span class="sec-cnt cnt-blue" id="cotecnaCnt">—</span>
+        <span class="sec-cnt cnt-blue" id="cotecnaCnt">窶・/span>
       </div>
       <div class="table-wrap">
         <table>
@@ -282,30 +281,30 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
             <th class="th-b" style="width:112px;">IV_NO</th>
             <th class="th-b" style="width:112px;">VO_NO</th>
             <th class="th-b" style="width:68px;">Partial</th>
-            <th class="th-b" style="width:52px;">CT数</th>
+            <th class="th-b" style="width:52px;">CT謨ｰ</th>
             <th class="th-b" style="width:130px;">PACKER</th>
-            <th class="th-b" style="width:86px;">担当者</th>
-            <th class="th-cb" style="width:82px;">報告書</th>
+            <th class="th-b" style="width:86px;">諡・ｽ楢・/th>
+            <th class="th-cb" style="width:82px;">蝣ｱ蜻頑嶌</th>
           </tr></thead>
           <tbody id="cotecnaBody">
-            <tr class="msg-row"><td colspan="9"><span class="spinner"></span>読み込み中...</td></tr>
+            <tr class="msg-row"><td colspan="9"><span class="spinner"></span>隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
-  <div class="powered">✦ Powered by LEENAI Automation System</div>
+  <div class="powered">笨ｦ Powered by LEENAI Automation System</div>
   </div><!-- /main -->
   </div><!-- /tab-content today -->
 
-  <!-- 船積書類 탭 -->
+  <!-- 闊ｹ遨肴嶌鬘・夋ｭ -->
   <div class="tab-content" id="content-shipping">
   <div class="main">
-    <!-- 선적 필터바 -->
+    <!-- ・・・﨑・┣・・-->
     <div class="filter-bar">
       <span class="filter-label">POL</span>
       <select class="filter-sel" id="spPolFilter" onchange="renderShipping()">
-        <option value="">全港</option>
+        <option value="">蜈ｨ貂ｯ</option>
         <option>ISHIKARI</option><option>KANAZAWA</option><option>SENDAI</option>
         <option>AKITA</option><option>NIIGATA</option><option>TOKYO</option>
         <option>YOKOHAMA</option><option>NAGOYA</option><option>SHIMIZU</option>
@@ -314,38 +313,38 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
         <option>NAHA</option>
       </select>
       <div class="fdivider"></div>
-      <span class="filter-label">担当者</span>
+      <span class="filter-label">諡・ｽ楢・/span>
       <select class="filter-sel" id="spStaffFilter" onchange="renderShipping()">
-        <option value="">全員</option>
-        <option value="大場">大場</option>
-        <option value="パク">パク</option>
-        <option value="—">未マッピング</option>
+        <option value="">蜈ｨ蜩｡</option>
+        <option value="螟ｧ蝣ｴ">螟ｧ蝣ｴ</option>
+        <option value="繝代け">繝代け</option>
+        <option value="窶・>譛ｪ繝槭ャ繝斐Φ繧ｰ</option>
       </select>
       <div class="fdivider"></div>
       <span class="filter-label">CNTR</span>
       <select class="filter-sel" id="spCntrFilter" onchange="renderShipping()">
-        <option value="">全国</option>
+        <option value="">蜈ｨ蝗ｽ</option>
         <option>KOREA</option><option>INDONESIA</option><option>VIETNAM</option>
         <option>TAIWAN</option><option>THAILAND</option><option>INDIA</option>
         <option>MALAYSIA</option>
       </select>
-      <span style="font-size:11px;color:var(--text3);margin-left:8px;">FD送付日未入力のみ表示</span>
+      <span style="font-size:11px;color:var(--text3);margin-left:8px;">FD騾∽ｻ俶律譛ｪ蜈･蜉帙・縺ｿ陦ｨ遉ｺ</span>
       <span class="today-label" id="spTodayLabel"></span>
     </div>
 
-    <!-- 저장 바 (선적 전용) -->
+    <!-- ・・･ ・・(・・・・・圸) -->
     <div class="save-bar" id="spSaveBar">
-      <span class="unsaved-msg">● 未保存の変更があります</span>
-      <button class="save-btn" id="spSaveBtn" onclick="saveSpStatus()">💾 変更を保存</button>
-      <span class="save-ok" id="spSaveOk">✅ 保存しました</span>
+      <span class="unsaved-msg">笳・譛ｪ菫晏ｭ倥・螟画峩縺後≠繧翫∪縺・/span>
+      <button class="save-btn" id="spSaveBtn" onclick="saveSpStatus()">沈 螟画峩繧剃ｿ晏ｭ・/button>
+      <span class="save-ok" id="spSaveOk">笨・菫晏ｭ倥＠縺ｾ縺励◆</span>
     </div>
 
-    <!-- 船積書類 테이블 -->
+    <!-- 闊ｹ遨肴嶌鬘・奛護擽・・-->
     <div class="section">
       <div class="sec-hdr" style="background:rgba(26,60,120,.06);">
-        <span class="sec-title" style="color:#1A3C78;">📄 船積書類 — FD未完了一覧</span>
-        <span class="sec-date" style="font-size:11px;color:var(--text3);">(通関依頼済 / FD送付日未入力)</span>
-        <span class="sec-cnt" style="background:#E8EEF8;color:#1A3C78;" id="spCnt">—</span>
+        <span class="sec-title" style="color:#1A3C78;">塘 闊ｹ遨肴嶌鬘・窶・FD譛ｪ螳御ｺ・ｸ隕ｧ</span>
+        <span class="sec-date" style="font-size:11px;color:var(--text3);">(騾夐未萓晞ｼ貂・/ FD騾∽ｻ俶律譛ｪ蜈･蜉・</span>
+        <span class="sec-cnt" style="background:#E8EEF8;color:#1A3C78;" id="spCnt">窶・/span>
       </div>
       <div class="table-wrap">
         <table>
@@ -355,73 +354,73 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
             <th class="th-ship" style="width:72px;">CY_CUT</th>
             <th class="th-ship" style="width:88px;">POL</th>
             <th class="th-ship" style="width:108px;">IV_NO</th>
-            <th class="th-ship" style="width:44px;">BKG本</th>
+            <th class="th-ship" style="width:44px;">BKG譛ｬ</th>
             <th class="th-ship" style="width:76px;">CNTR</th>
             <th class="th-ship" style="width:100px;">SHIP</th>
             <th class="th-ship" style="width:148px;">BKG_NO</th>
-            <th class="th-ship" style="width:72px;">担当者</th>
+            <th class="th-ship" style="width:72px;">諡・ｽ楢・/th>
             <th class="th-sp-chk" style="width:64px;">DEP</th>
-            <th class="th-sp-chk" style="width:72px;">振込</th>
-            <th class="th-sp-fd" style="width:110px;">FD送付日</th>
-            <th class="th-sp-fd" style="width:110px;">備考</th>
+            <th class="th-sp-chk" style="width:72px;">謖ｯ霎ｼ</th>
+            <th class="th-sp-fd" style="width:110px;">FD騾∽ｻ俶律</th>
+            <th class="th-sp-fd" style="width:110px;">蛯呵・/th>
           </tr></thead>
           <tbody id="spBody">
-            <tr class="msg-row"><td colspan="15"><span class="spinner"></span>読み込み中...</td></tr>
+            <tr class="msg-row"><td colspan="15"><span class="spinner"></span>隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div><!-- /main -->
   </div><!-- /tab-content shipping -->
-  <!-- 購買契約 탭 -->
+  <!-- 雉ｼ雋ｷ螂醍ｴ・夋ｭ -->
   <div class="tab-content" id="content-purchase">
   <div class="main">
     <div class="filter-bar">
-      <span class="filter-label">期間</span>
+      <span class="filter-label">譛滄俣</span>
       <select class="filter-sel" id="pcPeriod" onchange="onPcPeriodChange()">
-        <option value="14">直近2週間</option>
-        <option value="30" selected>直近1ヶ月</option>
-        <option value="90">直近3ヶ月</option>
+        <option value="14">逶ｴ霑・騾ｱ髢・/option>
+        <option value="30" selected>逶ｴ霑・繝ｶ譛・/option>
+        <option value="90">逶ｴ霑・繝ｶ譛・/option>
       </select>
       <div class="fdivider"></div>
-      <span class="filter-label">検索</span>
+      <span class="filter-label">讀懃ｴ｢</span>
       <div class="flt-wrap">
-        <button class="flt-btn" id="pcPolBtn" onclick="toggleFlt('pcPolPanel',event)">POL ▾</button>
-        <div class="flt-panel" id="pcPolPanel"><div class="flt-clear" onclick="clearFlt('pc','pol')">クリア</div></div>
+        <button class="flt-btn" id="pcPolBtn" onclick="toggleFlt('pcPolPanel',event)">POL 笆ｾ</button>
+        <div class="flt-panel" id="pcPolPanel"><div class="flt-clear" onclick="clearFlt('pc','pol')">繧ｯ繝ｪ繧｢</div></div>
       </div>
       <div class="flt-wrap">
-        <button class="flt-btn" id="pcPackerBtn" onclick="toggleFlt('pcPackerPanel',event)">PACKER ▾</button>
-        <div class="flt-panel" id="pcPackerPanel"><div class="flt-clear" onclick="clearFlt('pc','packer')">クリア</div></div>
+        <button class="flt-btn" id="pcPackerBtn" onclick="toggleFlt('pcPackerPanel',event)">PACKER 笆ｾ</button>
+        <div class="flt-panel" id="pcPackerPanel"><div class="flt-clear" onclick="clearFlt('pc','packer')">繧ｯ繝ｪ繧｢</div></div>
       </div>
       <div class="flt-wrap">
-        <button class="flt-btn" id="pcItemBtn" onclick="toggleFlt('pcItemPanel',event)">ITEM ▾</button>
-        <div class="flt-panel" id="pcItemPanel"><div class="flt-clear" onclick="clearFlt('pc','item')">クリア</div></div>
+        <button class="flt-btn" id="pcItemBtn" onclick="toggleFlt('pcItemPanel',event)">ITEM 笆ｾ</button>
+        <div class="flt-panel" id="pcItemPanel"><div class="flt-clear" onclick="clearFlt('pc','item')">繧ｯ繝ｪ繧｢</div></div>
       </div>
-      <input type="text" class="filter-sel" id="pcSearch" placeholder="フリー検索" style="width:160px;" oninput="renderPurchase()">
-      <span style="font-size:11px;color:var(--text3);margin-left:8px;">契約日降順 | 最新が上</span>
+      <input type="text" class="filter-sel" id="pcSearch" placeholder="繝輔Μ繝ｼ讀懃ｴ｢" style="width:160px;" oninput="renderPurchase()">
+      <span style="font-size:11px;color:var(--text3);margin-left:8px;">螂醍ｴ・律髯埼・| 譛譁ｰ縺御ｸ・/span>
       <span class="today-label" id="pcTodayLabel"></span>
     </div>
     <div class="section">
       <div class="sec-hdr" style="background:rgba(45,70,120,.08);">
-        <span class="sec-title" style="color:#2D4878;">📋 購買契約</span>
+        <span class="sec-title" style="color:#2D4878;">搭 雉ｼ雋ｷ螂醍ｴ・/span>
         <span class="sec-date" id="pcDateLabel"></span>
-        <span class="sec-cnt" style="background:#E8EEF8;color:#2D4878;" id="pcCnt">—</span>
+        <span class="sec-cnt" style="background:#E8EEF8;color:#2D4878;" id="pcCnt">窶・/span>
       </div>
       <div class="table-wrap">
         <table>
           <thead><tr>
-            <th class="th-pc" style="width:110px;">契約番号</th>
-            <th class="th-pc" style="width:82px;">契約日</th>
+            <th class="th-pc" style="width:110px;">螂醍ｴ・分蜿ｷ</th>
+            <th class="th-pc" style="width:82px;">螂醍ｴ・律</th>
             <th class="th-pc" style="width:130px;">PACKER</th>
             <th class="th-pc" style="width:70px;">POL</th>
             <th class="th-pc" style="width:80px;">ITEM</th>
             <th class="th-pc" style="width:72px;">QTY(MT)</th>
-            <th class="th-pc" style="width:80px;">単価(¥/kg)</th>
-            <th class="th-pc" style="width:150px;">備考</th>
-            <th class="th-pc" style="width:90px;">最終作業日</th>
+            <th class="th-pc" style="width:80px;">蜊倅ｾ｡(ﾂ･/kg)</th>
+            <th class="th-pc" style="width:150px;">蛯呵・/th>
+            <th class="th-pc" style="width:90px;">譛邨ゆｽ懈･ｭ譌･</th>
           </tr></thead>
           <tbody id="pcBody">
-            <tr class="msg-row"><td colspan="8"><span class="spinner"></span>読み込み中...</td></tr>
+            <tr class="msg-row"><td colspan="8"><span class="spinner"></span>隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</td></tr>
           </tbody>
         </table>
       </div>
@@ -429,88 +428,88 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   </div>
   </div><!-- /tab-content purchase -->
 
-  <!-- 販売契約 탭 -->
+  <!-- 雋ｩ螢ｲ螂醍ｴ・夋ｭ -->
   <div class="tab-content" id="content-sale">
   <div class="main">
     <div class="filter-bar">
-      <span class="filter-label">期間</span>
+      <span class="filter-label">譛滄俣</span>
       <select class="filter-sel" id="scPeriod" onchange="onScPeriodChange()">
-        <option value="14">直近2週間</option>
-        <option value="30" selected>直近1ヶ月</option>
-        <option value="90">直近3ヶ月</option>
+        <option value="14">逶ｴ霑・騾ｱ髢・/option>
+        <option value="30" selected>逶ｴ霑・繝ｶ譛・/option>
+        <option value="90">逶ｴ霑・繝ｶ譛・/option>
       </select>
       <div class="fdivider"></div>
-      <span class="filter-label">検索</span>
+      <span class="filter-label">讀懃ｴ｢</span>
       <div class="flt-wrap">
-        <button class="flt-btn" id="scCountryBtn" onclick="toggleFlt('scCountryPanel',event)">国 ▾</button>
-        <div class="flt-panel" id="scCountryPanel"><div class="flt-clear" onclick="clearFlt('sc','country')">クリア</div></div>
+        <button class="flt-btn" id="scCountryBtn" onclick="toggleFlt('scCountryPanel',event)">蝗ｽ 笆ｾ</button>
+        <div class="flt-panel" id="scCountryPanel"><div class="flt-clear" onclick="clearFlt('sc','country')">繧ｯ繝ｪ繧｢</div></div>
       </div>
       <div class="flt-wrap">
-        <button class="flt-btn" id="scBuyerBtn" onclick="toggleFlt('scBuyerPanel',event)">Buyer ▾</button>
-        <div class="flt-panel" id="scBuyerPanel"><div class="flt-clear" onclick="clearFlt('sc','buyer')">クリア</div></div>
+        <button class="flt-btn" id="scBuyerBtn" onclick="toggleFlt('scBuyerPanel',event)">Buyer 笆ｾ</button>
+        <div class="flt-panel" id="scBuyerPanel"><div class="flt-clear" onclick="clearFlt('sc','buyer')">繧ｯ繝ｪ繧｢</div></div>
       </div>
       <div class="flt-wrap">
-        <button class="flt-btn" id="scPodBtn" onclick="toggleFlt('scPodPanel',event)">POD ▾</button>
-        <div class="flt-panel" id="scPodPanel"><div class="flt-clear" onclick="clearFlt('sc','pod')">クリア</div></div>
+        <button class="flt-btn" id="scPodBtn" onclick="toggleFlt('scPodPanel',event)">POD 笆ｾ</button>
+        <div class="flt-panel" id="scPodPanel"><div class="flt-clear" onclick="clearFlt('sc','pod')">繧ｯ繝ｪ繧｢</div></div>
       </div>
       <div class="flt-wrap">
-        <button class="flt-btn" id="scItemBtn" onclick="toggleFlt('scItemPanel',event)">ITEM ▾</button>
-        <div class="flt-panel" id="scItemPanel"><div class="flt-clear" onclick="clearFlt('sc','item')">クリア</div></div>
+        <button class="flt-btn" id="scItemBtn" onclick="toggleFlt('scItemPanel',event)">ITEM 笆ｾ</button>
+        <div class="flt-panel" id="scItemPanel"><div class="flt-clear" onclick="clearFlt('sc','item')">繧ｯ繝ｪ繧｢</div></div>
       </div>
-      <input type="text" class="filter-sel" id="scSearch" placeholder="フリー検索" style="width:160px;" oninput="renderSale()">
-      <span style="font-size:11px;color:var(--text3);margin-left:8px;">契約日降順 | 最新が上</span>
+      <input type="text" class="filter-sel" id="scSearch" placeholder="繝輔Μ繝ｼ讀懃ｴ｢" style="width:160px;" oninput="renderSale()">
+      <span style="font-size:11px;color:var(--text3);margin-left:8px;">螂醍ｴ・律髯埼・| 譛譁ｰ縺御ｸ・/span>
       <span class="today-label" id="scTodayLabel"></span>
     </div>
     <div class="section">
       <div class="sec-hdr" style="background:rgba(70,100,45,.08);">
-        <span class="sec-title" style="color:#2D6B1E;">📊 販売契約</span>
+        <span class="sec-title" style="color:#2D6B1E;">投 雋ｩ螢ｲ螂醍ｴ・/span>
         <span class="sec-date" id="scDateLabel"></span>
-        <span class="sec-cnt" style="background:#E8F4E0;color:#2D6B1E;" id="scCnt">—</span>
+        <span class="sec-cnt" style="background:#E8F4E0;color:#2D6B1E;" id="scCnt">窶・/span>
       </div>
       <div class="table-wrap">
         <table>
           <thead><tr>
-            <th class="th-sc" style="width:110px;">契約番号</th>
-            <th class="th-sc" style="width:82px;">契約日</th>
-            <th class="th-sc" style="width:80px;">国</th>
+            <th class="th-sc" style="width:110px;">螂醍ｴ・分蜿ｷ</th>
+            <th class="th-sc" style="width:82px;">螂醍ｴ・律</th>
+            <th class="th-sc" style="width:80px;">蝗ｽ</th>
             <th class="th-sc" style="width:120px;">Buyer</th>
             <th class="th-sc" style="width:110px;">POD</th>
             <th class="th-sc" style="width:80px;">ITEM</th>
             <th class="th-sc" style="width:72px;">QTY(MT)</th>
-            <th class="th-sc" style="width:80px;">単価($/MT)</th>
-            <th class="th-sc" style="width:90px;">最終船積日</th>
+            <th class="th-sc" style="width:80px;">蜊倅ｾ｡($/MT)</th>
+            <th class="th-sc" style="width:90px;">譛邨り飴遨肴律</th>
             <th class="th-sc" style="width:60px;">SI</th>
           </tr></thead>
           <tbody id="scBody">
-            <tr class="msg-row"><td colspan="10"><span class="spinner"></span>読み込み中...</td></tr>
+            <tr class="msg-row"><td colspan="10"><span class="spinner"></span>隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
   </div>
   </div><!-- /tab-content sale -->
-  <!-- マスター 탭 -->
+  <!-- 繝槭せ繧ｿ繝ｼ 夋ｭ -->
   <div class="tab-content" id="content-master">
   <div class="main">
-    <!-- 서브탭 -->
+    <!-- ・罹ｸ醐Ο -->
     <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;">
-      <button class="master-sub-btn on" id="msub-tsukan" onclick="switchMasterSub('tsukan')">🛃 通関担当者</button>
-      <button class="master-sub-btn" id="msub-shipping" onclick="switchMasterSub('shipping')">📄 船積書類担当者</button>
+      <button class="master-sub-btn on" id="msub-tsukan" onclick="switchMasterSub('tsukan')">寃 騾夐未諡・ｽ楢・/button>
+      <button class="master-sub-btn" id="msub-shipping" onclick="switchMasterSub('shipping')">塘 闊ｹ遨肴嶌鬘樊球蠖楢・/button>
     </div>
 
-    <!-- 通関担当者 편집 -->
+    <!-- 騾夐未諡・ｽ楢・寬ｸ・・-->
     <div id="msub-content-tsukan">
       <div class="section">
         <div class="sec-hdr" style="background:rgba(45,90,30,.08);">
-          <span class="sec-title" style="color:#2D5A1E;">🛃 通関担当者マスター</span>
-          <span style="font-size:11px;color:var(--text3);margin-left:8px;">POL → 担当者 マッピング</span>
-          <button onclick="addTsukanRow()" style="margin-left:auto;padding:3px 12px;border-radius:6px;border:1px solid #2D5A1E;background:#2D5A1E;color:#fff;font-size:11px;cursor:pointer;">＋ 追加</button>
+          <span class="sec-title" style="color:#2D5A1E;">寃 騾夐未諡・ｽ楢・・繧ｹ繧ｿ繝ｼ</span>
+          <span style="font-size:11px;color:var(--text3);margin-left:8px;">POL 竊・諡・ｽ楢・繝槭ャ繝斐Φ繧ｰ</span>
+          <button onclick="addTsukanRow()" style="margin-left:auto;padding:3px 12px;border-radius:6px;border:1px solid #2D5A1E;background:#2D5A1E;color:#fff;font-size:11px;cursor:pointer;">・・霑ｽ蜉</button>
         </div>
         <div class="table-wrap">
           <table>
             <thead><tr>
               <th class="th-g" style="width:160px;">POL</th>
-              <th class="th-g" style="width:180px;">担当者</th>
+              <th class="th-g" style="width:180px;">諡・ｽ楢・/th>
               <th class="th-g" style="width:60px;"></th>
             </tr></thead>
             <tbody id="tsukanMasterBody"></tbody>
@@ -519,20 +518,20 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       </div>
     </div>
 
-    <!-- 船積書類担当者 편집 -->
+    <!-- 闊ｹ遨肴嶌鬘樊球蠖楢・寬ｸ・・-->
     <div id="msub-content-shipping" style="display:none;">
       <div class="section">
         <div class="sec-hdr" style="background:rgba(26,60,120,.08);">
-          <span class="sec-title" style="color:#1A3C78;">📄 船積書類担当者マスター</span>
-          <span style="font-size:11px;color:var(--text3);margin-left:8px;">IVコード → Importer → 担当者 マッピング</span>
-          <button onclick="addShippingRow()" style="margin-left:auto;padding:3px 12px;border-radius:6px;border:1px solid #1A3C78;background:#1A3C78;color:#fff;font-size:11px;cursor:pointer;">＋ 追加</button>
+          <span class="sec-title" style="color:#1A3C78;">塘 闊ｹ遨肴嶌鬘樊球蠖楢・・繧ｹ繧ｿ繝ｼ</span>
+          <span style="font-size:11px;color:var(--text3);margin-left:8px;">IV繧ｳ繝ｼ繝・竊・Importer 竊・諡・ｽ楢・繝槭ャ繝斐Φ繧ｰ</span>
+          <button onclick="addShippingRow()" style="margin-left:auto;padding:3px 12px;border-radius:6px;border:1px solid #1A3C78;background:#1A3C78;color:#fff;font-size:11px;cursor:pointer;">・・霑ｽ蜉</button>
         </div>
         <div class="table-wrap">
           <table>
             <thead><tr>
-              <th class="th-ship" style="width:80px;">IVコード</th>
+              <th class="th-ship" style="width:80px;">IV繧ｳ繝ｼ繝・/th>
               <th class="th-ship" style="width:160px;">Importer</th>
-              <th class="th-ship" style="width:120px;">担当者</th>
+              <th class="th-ship" style="width:120px;">諡・ｽ楢・/th>
               <th class="th-ship" style="width:60px;"></th>
             </tr></thead>
             <tbody id="shippingMasterBody"></tbody>
@@ -541,11 +540,11 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       </div>
     </div>
 
-    <!-- 저장 바 -->
+    <!-- ・・･ ・・-->
     <div style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
-      <span style="font-size:12px;color:var(--text2);">変更はSharePointに保存されます</span>
-      <button onclick="saveMasterJson()" style="margin-left:auto;padding:6px 24px;border-radius:6px;border:none;background:#2D5A1E;color:#fff;font-size:13px;font-weight:500;cursor:pointer;">💾 マスターを保存</button>
-      <span id="masterSaveOk" style="font-size:12px;color:var(--ok);display:none;">✅ 保存しました</span>
+      <span style="font-size:12px;color:var(--text2);">螟画峩縺ｯSharePoint縺ｫ菫晏ｭ倥＆繧後∪縺・/span>
+      <button onclick="saveMasterJson()" style="margin-left:auto;padding:6px 24px;border-radius:6px;border:none;background:#2D5A1E;color:#fff;font-size:13px;font-weight:500;cursor:pointer;">沈 繝槭せ繧ｿ繝ｼ繧剃ｿ晏ｭ・/button>
+      <span id="masterSaveOk" style="font-size:12px;color:var(--ok);display:none;">笨・菫晏ｭ倥＠縺ｾ縺励◆</span>
     </div>
   </div>
   </div><!-- /tab-content master -->
@@ -555,7 +554,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 </div><!-- /mainView -->
 
 <script>
-// ── 상수 ──
+// 笏笏 ・・・ 笏笏
 const CLIENT_ID = 'f071a165-5e9b-44bf-b6a1-baba654524db';
 const TENANT_ID = 'a56988ff-c2b8-4df8-9727-889ad4205198';
 const REDIRECT  = 'https://mhlee205.github.io/CLEARANCE_COMPASS/';
@@ -563,21 +562,21 @@ const DV_API    = 'https://orgde512c6f.crm7.dynamics.com/api/data/v9.2';
 const DV_SCOPE  = 'https://orgde512c6f.crm7.dynamics.com/user_impersonation offline_access';
 const GR_SCOPE  = 'https://graph.microsoft.com/Files.ReadWrite offline_access';
 const DRIVE_ID  = 'b!ZK58_9YllU-vETQD3Xz0TbOInXbVCXJHnQ2280KJBArFLeM_18EgRbSeoO-TW__U';
-const JSON_PATH = '古紙/-. AI 活用/PORTAL/clearance_status.json';
+const JSON_PATH = '蜿､邏・-. AI 豢ｻ逕ｨ/PORTAL/clearance_status.json';
 const GR_API    = 'https://graph.microsoft.com/v1.0';
 
-// POL → 担당者 (master_staff.json から動的ロード)
+// POL 竊・諡・胸閠・(master_staff.json 縺九ｉ蜍慕噪繝ｭ繝ｼ繝・
 let polStaffData=[]; // [{pol, staff}]
 function getPolStaffMap(){
   const m={};
   polStaffData.forEach(r=>{if(r.pol&&r.staff)m[r.pol.toUpperCase()]=r.staff;});
   return m;
 }
-const CHIP_CLS = {'JU':'ju','ZHAN':'zhan','LEE JUAH':'lee','竹内 雅将':'take','大場':'oba','パク':'pak'};
-const TS_OPTS  = ['未','ED未','ACL未'];
-const CT_OPTS  = ['未','提出'];
+const CHIP_CLS = {'JU':'ju','ZHAN':'zhan','LEE JUAH':'lee','遶ｹ蜀・髮・ｰ・:'take','螟ｧ蝣ｴ':'oba','繝代け':'pak'};
+const TS_OPTS  = ['譛ｪ','ED譛ｪ','ACL譛ｪ'];
+const CT_OPTS  = ['譛ｪ','謠仙・'];
 
-// ── 상태 ──
+// 笏笏 ・・・ 笏笏
 let dvToken = null, grToken = null;
 let allTsukan = [], allCotecna = [];
 let statusMap = {};   // { iv_no: {tsukan_irai, tsukan_status} }
@@ -585,17 +584,17 @@ let cotecnaMap = {};  // { key: {report_status} }
 let savedMap = {}, savedCotecnaMap = {};
 let currentUser = '';
 
-// ── 로딩 ──
-function showLoading(m='データ取得中...'){document.getElementById('loadingMsg').textContent=m;document.getElementById('loadingOverlay').classList.add('show');}
+// 笏笏 ・罹畠 笏笏
+function showLoading(m='繝・・繧ｿ蜿門ｾ嶺ｸｭ...'){document.getElementById('loadingMsg').textContent=m;document.getElementById('loadingOverlay').classList.add('show');}
 function hideLoading(){document.getElementById('loadingOverlay').classList.remove('show');}
 
-// ── PKCE ──
+// 笏笏 PKCE 笏笏
 function rnd(n){const a=new Uint8Array(n);crypto.getRandomValues(a);return a;}
 function b64url(b){return btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
 async function sha256(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));}
 async function pkceParams(){const v=b64url(rnd(32));return{v,c:b64url(await sha256(v))};}
 
-// ── Dataverse 로그인 ──
+// 笏笏 Dataverse ・懋ｷｸ・ｸ 笏笏
 async function startDvLogin(){
   const {v,c}=await pkceParams();
   sessionStorage.setItem('dv_pkce',JSON.stringify({v}));
@@ -618,12 +617,12 @@ async function handleDvCallback(code){
   dvToken=data.access_token;
   sessionStorage.setItem('dv_token',dvToken);
   try{const pl=JSON.parse(atob(dvToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
-    currentUser=pl.name||pl.preferred_username||'担当者';}catch(e){}
-  // DV 완료 → 자동으로 Graph 로그인
+    currentUser=pl.name||pl.preferred_username||'諡・ｽ楢・;}catch(e){}
+  // DV ・・｣・竊・・尖徐・ｼ・・Graph ・懋ｷｸ・ｸ
   await startGraphLogin();
 }
 
-// ── Graph 로그인 ──
+// 笏笏 Graph ・懋ｷｸ・ｸ 笏笏
 async function startGraphLogin(){
   const {v,c}=await pkceParams();
   sessionStorage.setItem('gr_pkce',JSON.stringify({v}));
@@ -650,7 +649,7 @@ async function handleGraphCallback(code){
   loadAll();
 }
 
-// ── DV API ──
+// 笏笏 DV API 笏笏
 async function dvGet(url){
   const r=await fetch(url,{headers:{Authorization:`Bearer ${dvToken}`,
     'OData-MaxVersion':'4.0','OData-Version':'4.0',Accept:'application/json;odata.metadata=minimal'}});
@@ -658,7 +657,7 @@ async function dvGet(url){
   return r.json();
 }
 
-// ── SharePoint JSON ──
+// 笏笏 SharePoint JSON 笏笏
 function filePath(){return JSON_PATH.split('/').map(encodeURIComponent).join('/');}
 async function loadStatusJson(){
   try{
@@ -682,45 +681,44 @@ async function saveStatusJson(){
     headers:{Authorization:`Bearer ${grToken}`,'Content-Type':'application/json'},
     body:JSON.stringify(payload,null,2)
   });
-  if(!r.ok)throw new Error(`保存失敗 ${r.status}`);
+  if(!r.ok)throw new Error(`菫晏ｭ伜､ｱ謨・${r.status}`);
 }
 
-// ── 상태 관리 (통관) ──
-function getTsStatus(ivNo){return statusMap[ivNo]||{tsukan_irai:false,tsukan_status:'未'};}
+// 笏笏 ・・・ ・・ｬ (奝ｵ・) 笏笏
+function getTsStatus(ivNo){return statusMap[ivNo]||{tsukan_irai:false,tsukan_status:'譛ｪ'};}
 function isTsUnsaved(ivNo){
-  const c=statusMap[ivNo]||{tsukan_irai:false,tsukan_status:'未'};
-  const s=savedMap[ivNo]||{tsukan_irai:false,tsukan_status:'未'};
+  const c=statusMap[ivNo]||{tsukan_irai:false,tsukan_status:'譛ｪ'};
+  const s=savedMap[ivNo]||{tsukan_irai:false,tsukan_status:'譛ｪ'};
   return c.tsukan_irai!==s.tsukan_irai||c.tsukan_status!==s.tsukan_status;
 }
 function onCheckChange(ivNo,checked){
-  if(!statusMap[ivNo])statusMap[ivNo]={tsukan_irai:false,tsukan_status:'未'};
+  if(!statusMap[ivNo])statusMap[ivNo]={tsukan_irai:false,tsukan_status:'譛ｪ'};
   statusMap[ivNo].tsukan_irai=checked;
-  // 체크 ON → 자동으로 ED未 / 체크 OFF → 未に戻す
-  statusMap[ivNo].tsukan_status=checked?'ED未':'未';
+  // ・ｴ增ｬ ON 竊・・尖徐・ｼ・・ED譛ｪ / ・ｴ增ｬ OFF 竊・譛ｪ縺ｫ謌ｻ縺・  statusMap[ivNo].tsukan_status=checked?'ED譛ｪ':'譛ｪ';
   statusMap[ivNo].updated_by=currentUser;statusMap[ivNo].updated_at=new Date().toISOString();
-  // 셀렉트 표시도 즉시 업데이트
+  // ・・駕敢 岺懍亨・・・餓亨 ・・魂・ｴ孖ｸ
   const sel=document.getElementById(`tssel_${CSS.escape(ivNo)}`);
   if(sel){sel.value=statusMap[ivNo].tsukan_status;applyTsColor(sel);}
   updateUnsavedRow(ivNo);updateSaveBar();
 }
 function onTsStatusChange(ivNo,val){
-  if(!statusMap[ivNo])statusMap[ivNo]={tsukan_irai:false,tsukan_status:'未'};
+  if(!statusMap[ivNo])statusMap[ivNo]={tsukan_irai:false,tsukan_status:'譛ｪ'};
   statusMap[ivNo].tsukan_status=val;
   statusMap[ivNo].updated_by=currentUser;statusMap[ivNo].updated_at=new Date().toISOString();
   const sel=document.getElementById(`tssel_${CSS.escape(ivNo)}`);if(sel)applyTsColor(sel);
   updateUnsavedRow(ivNo);updateSaveBar();
 }
 
-// ── 상태 관리 (COTECNA) ──
+// 笏笏 ・・・ ・・ｬ (COTECNA) 笏笏
 function ctKey(row){return`${row.iv_no}|${row.vo_no}|${row.partial}`;}
-function getCtStatus(key){return cotecnaMap[key]||{report_status:'未'};}
+function getCtStatus(key){return cotecnaMap[key]||{report_status:'譛ｪ'};}
 function isCtUnsaved(key){
-  const c=cotecnaMap[key]||{report_status:'未'};
-  const s=savedCotecnaMap[key]||{report_status:'未'};
+  const c=cotecnaMap[key]||{report_status:'譛ｪ'};
+  const s=savedCotecnaMap[key]||{report_status:'譛ｪ'};
   return c.report_status!==s.report_status;
 }
 function onCtStatusChange(key,val){
-  if(!cotecnaMap[key])cotecnaMap[key]={report_status:'未'};
+  if(!cotecnaMap[key])cotecnaMap[key]={report_status:'譛ｪ'};
   cotecnaMap[key].report_status=val;
   cotecnaMap[key].updated_by=currentUser;cotecnaMap[key].updated_at=new Date().toISOString();
   const sel=document.getElementById(`ctsel_${key}`);if(sel)applyCtColor(sel);
@@ -745,53 +743,58 @@ function updateSaveBar(){
 
 function applyTsColor(sel){
   sel.className='status-sel';
-  if(sel.value==='ED未')sel.classList.add('st-ed');
-  else if(sel.value==='ACL未')sel.classList.add('st-acl');
+  if(sel.value==='ED譛ｪ')sel.classList.add('st-ed');
+  else if(sel.value==='ACL譛ｪ')sel.classList.add('st-acl');
 }
 function applyCtColor(sel){
   sel.className='status-sel';
-  if(sel.value==='提出')sel.classList.add('st-ok');
+  if(sel.value==='謠仙・')sel.classList.add('st-ok');
   else sel.classList.add('st-no');
 }
 
-// ── IV prefix → Importer → 담당자 매핑 (하드코딩) ──
+// 笏笏 IV prefix 竊・Importer 竊・・ｴ・ｹ・・・､﨑・(﨑俯糖・罷畠) 笏笏
 const IV_IMPORTER_MAP = {
-  'RA':{name:'R. A.',staff:'大場'},'MG':{name:'MEGA SURYA',staff:'大場'},
-  'IK':{name:'INDAH KIAT',staff:'大場'},'TJ':{name:'TJIWI KIMIA',staff:'大場'},
-  'HA':{name:'HANKUK PAPER',staff:'大場'},'NA':{name:'NATURA',staff:'大場'},
-  'PC':{name:'PAPER COREA',staff:'大場'},'RE':{name:'RE',staff:'大場'},
-  'SG':{name:'SAIGON',staff:'大場'},'KN':{name:'KHOI NGUYEN',staff:'大場'},
-  'SI':{name:'SINO PAPER',staff:'大場'},'TP':{name:'THAI PAPER',staff:'大場'},
-  'TA':{name:'Thuan An',staff:'大場'},'KO':{name:'KOA(M)',staff:'大場'},
-  'DD':{name:'DDT',staff:'大場'},'HK':{name:'HKB',staff:'大場'},
-  'DO':{name:'DOHACO',staff:'大場'},'SK':{name:'SIAM KRAFT',staff:'大場'},
-  'CR':{name:'CORELEX',staff:'大場'},'VT':{name:'VIET TRI',staff:'大場'},
-  'TH':{name:'THANH HOA',staff:'大場'},'XS':{name:'XSD',staff:'大場'},
-  'AS':{name:'ASIA PAPER',staff:'パク'},'DH':{name:'DAEHAN PAPER',staff:'パク'},
-  'DW':{name:'DAEWANG PAPER',staff:'パク'},'OW':{name:'DONGWON',staff:'パク'},
-  'HS':{name:'HANSOL',staff:'パク'},'JJ':{name:'JEONJU',staff:'パク'},
-  'JS':{name:'JUSHIN',staff:'パク'},'KL':{name:'KLEANNARA',staff:'パク'},
-  'TG':{name:'TAE GYOUNG',staff:'パク'},'KS':{name:'KISUK',staff:'パク'},
-  'TL':{name:'TAILIM PAPER',staff:'パク'},'YC':{name:'YUCHANG',staff:'パク'},
-  'NF':{name:'NIKKO FIBRE',staff:'パク'},'CL':{name:'CLC(Y)',staff:'パク'},
-  'CV':{name:'CLC(V)',staff:'パク'},'DA':{name:'DOUBLE A',staff:'パク'},
-  'CA':{name:'CAS',staff:'パク'},'DT':{name:'DONG TIEN',staff:'パク'},
-  'XM':{name:'XUAN MAI',staff:'パク'},'KC':{name:'TKC KRAFT',staff:'パク'},
-  'TQ':{name:'TAN QUANG',staff:'パク'},'NI':{name:'NIC INTERTRADE',staff:'パク'},
-  'VD':{name:'VAN DIEM',staff:'パク'},'NE':{name:'NEW TOYO',staff:'パク'},
-  'TE':{name:'THAI HIEP',staff:'パク'},'NB':{name:'NIBONG TEBAL',staff:'パク'},
-  'A':{name:'ASPEX',staff:'パク'}
+  'RA':{name:'R. A.',staff:'螟ｧ蝣ｴ'},'MG':{name:'MEGA SURYA',staff:'螟ｧ蝣ｴ'},
+  'IK':{name:'INDAH KIAT',staff:'螟ｧ蝣ｴ'},'TJ':{name:'TJIWI KIMIA',staff:'螟ｧ蝣ｴ'},
+  'HA':{name:'HANKUK PAPER',staff:'螟ｧ蝣ｴ'},'NA':{name:'NATURA',staff:'螟ｧ蝣ｴ'},
+  'PC':{name:'PAPER COREA',staff:'螟ｧ蝣ｴ'},'RE':{name:'RE',staff:'螟ｧ蝣ｴ'},
+  'SG':{name:'SAIGON',staff:'螟ｧ蝣ｴ'},'KN':{name:'KHOI NGUYEN',staff:'螟ｧ蝣ｴ'},
+  'SI':{name:'SINO PAPER',staff:'螟ｧ蝣ｴ'},'TP':{name:'THAI PAPER',staff:'螟ｧ蝣ｴ'},
+  'TA':{name:'Thuan An',staff:'螟ｧ蝣ｴ'},'KO':{name:'KOA(M)',staff:'螟ｧ蝣ｴ'},
+  'DD':{name:'DDT',staff:'螟ｧ蝣ｴ'},'HK':{name:'HKB',staff:'螟ｧ蝣ｴ'},
+  'DO':{name:'DOHACO',staff:'螟ｧ蝣ｴ'},'SK':{name:'SIAM KRAFT',staff:'螟ｧ蝣ｴ'},
+  'CR':{name:'CORELEX',staff:'螟ｧ蝣ｴ'},'VT':{name:'VIET TRI',staff:'螟ｧ蝣ｴ'},
+  'TH':{name:'THANH HOA',staff:'螟ｧ蝣ｴ'},'XS':{name:'XSD',staff:'螟ｧ蝣ｴ'},
+  'AS':{name:'ASIA PAPER',staff:'繝代け'},'DH':{name:'DAEHAN PAPER',staff:'繝代け'},
+  'DW':{name:'DAEWANG PAPER',staff:'繝代け'},'OW':{name:'DONGWON',staff:'繝代け'},
+  'HS':{name:'HANSOL',staff:'繝代け'},'JJ':{name:'JEONJU',staff:'繝代け'},
+  'JS':{name:'JUSHIN',staff:'繝代け'},'KL':{name:'KLEANNARA',staff:'繝代け'},
+  'TG':{name:'TAE GYOUNG',staff:'繝代け'},'KS':{name:'KISUK',staff:'繝代け'},
+  'TL':{name:'TAILIM PAPER',staff:'繝代け'},'YC':{name:'YUCHANG',staff:'繝代け'},
+  'NF':{name:'NIKKO FIBRE',staff:'繝代け'},'CL':{name:'CLC(Y)',staff:'繝代け'},
+  'CV':{name:'CLC(V)',staff:'繝代け'},'DA':{name:'DOUBLE A',staff:'繝代け'},
+  'CA':{name:'CAS',staff:'繝代け'},'DT':{name:'DONG TIEN',staff:'繝代け'},
+  'XM':{name:'XUAN MAI',staff:'繝代け'},'KC':{name:'TKC KRAFT',staff:'繝代け'},
+  'TQ':{name:'TAN QUANG',staff:'繝代け'},'NI':{name:'NIC INTERTRADE',staff:'繝代け'},
+  'VD':{name:'VAN DIEM',staff:'繝代け'},'NE':{name:'NEW TOYO',staff:'繝代け'},
+  'TE':{name:'THAI HIEP',staff:'繝代け'},'NB':{name:'NIBONG TEBAL',staff:'繝代け'},
+  'A':{name:'ASPEX',staff:'繝代け'}
 };
 const IV_CODE_KEYS=Object.keys(IV_IMPORTER_MAP).sort((a,b)=>b.length-a.length);
 function getShipStaff(ivNo){
-  if(!ivNo||ivNo==='—')return{name:'—',staff:'—'};
+  if(!ivNo||ivNo==='窶・)return{name:'窶・,staff:'窶・};
   const body=ivNo.replace(/^N/,'');
   for(const k of IV_CODE_KEYS){
     if(body.startsWith(k)&&/\d/.test(body[k.length]||''))return IV_IMPORTER_MAP[k];
   }
-  return{name:'—',staff:'—'};
+  return{name:'窶・,staff:'窶・};
 }
 let shippingStaffData=[];
+
+// 笏笏 ・・・・・・・・・ ・・・笏笏
+let allShipping=[];
+let shippingMap={};
+let savedShippingMap={};
 
 function switchTab(name){
   ['today','shipping','purchase','sale','master'].forEach(t=>{
@@ -803,9 +806,9 @@ function switchTab(name){
   if(name==='sale'&&allSale.length===0&&dvToken)loadSale();
 }
 
-// ── 선적서류 데이터 로드 ──
+// 笏笏 ・・・・・・・ｰ・ｴ奓ｰ ・罹糖 笏笏
 async function loadShipping(){
-  document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="15"><span class="spinner"></span>読み込み中...</td></tr>`;
+  document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="15"><span class="spinner"></span>隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</td></tr>`;
   document.getElementById('spTodayLabel').textContent=todayLbl();
   const from=localDateStr(-30),to=localDateStr(180);
   const filter=`cr49f_etd ge ${from}T00:00:00Z and cr49f_etd le ${to}T23:59:59Z`;
@@ -826,10 +829,10 @@ async function loadShipping(){
     const rgGuids=[...new Set(targetBookings.map(b=>b['_cr49f_region_id_value']).filter(Boolean))];
     const [polMap,carrierMap,regionMap]=await Promise.all([
       fetchPolMap(rjGuids),
-      (async()=>{const m={};await Promise.all(crGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/crcf9_carriers(${g})?$select=crcf9_carrier`);m[g]=d.crcf9_carrier||'—';}catch(e){};}));return m;})(),
-      (async()=>{const m={};await Promise.all(rgGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/cr49f_regions(${g})?$select=cr49f_region`);m[g]=d.cr49f_region||'—';}catch(e){};}));return m;})()
+      (async()=>{const m={};await Promise.all(crGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/crcf9_carriers(${g})?$select=crcf9_carrier`);m[g]=d.crcf9_carrier||'窶・;}catch(e){};}));return m;})(),
+      (async()=>{const m={};await Promise.all(rgGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/cr49f_regions(${g})?$select=cr49f_region`);m[g]=d.cr49f_region||'窶・;}catch(e){};}));return m;})()
     ]);
-    // CT수 집계 — 병렬처리 (20건씩 OR 필터)
+    // CT・・・滝ｳ・窶・・瀧ｬ・俯ｦｬ (20・ｴ・ｩ OR 﨑・┣)
     const bkgGuids=targetBookings.map(b=>b.cr49f_bookingid).filter(Boolean);
     const ctCountMap={};
     const chunks=[];
@@ -843,21 +846,21 @@ async function loadShipping(){
     }));
     allShipping=targetBookings.map(b=>{
       const etdRaw=(b.crcf9_bl_etd||b.cr49f_etd||'').slice(0,10);
-      const pol=(polMap[b['_cr49f_region_japan_id_value']]||'—').replace(', JAPAN','').trim();
-      const cntr=regionMap[b['_cr49f_region_id_value']]||'—';
-      const ivNo=b.cr49f_invoice_no||'—';
+      const pol=(polMap[b['_cr49f_region_japan_id_value']]||'窶・).replace(', JAPAN','').trim();
+      const cntr=regionMap[b['_cr49f_region_id_value']]||'窶・;
+      const ivNo=b.cr49f_invoice_no||'窶・;
       const sp=getShipStaff(ivNo);
-      return{guid:b.cr49f_bookingid,iv_no:ivNo,bkg_no:b.cr49f_booking_no||'—',
+      return{guid:b.cr49f_bookingid,iv_no:ivNo,bkg_no:b.cr49f_booking_no||'窶・,
         etd:fmtDate(b.crcf9_bl_etd||b.cr49f_etd),etd_raw:etdRaw,
         eta:fmtDate(b.crcf9_bl_eta||b.cr49f_eta),cy_cut:fmtDate(b.cr49f_cy_cut),
-        pol,cntr,ship:carrierMap[b['_cr49f_carrier_id_value']]||'—',
-        ct_count:ctCountMap[b.cr49f_bookingid]||'—',
+        pol,cntr,ship:carrierMap[b['_cr49f_carrier_id_value']]||'窶・,
+        ct_count:ctCountMap[b.cr49f_bookingid]||'窶・,
         importer:sp.name,staff:sp.staff,
         is_vietnam:cntr.toUpperCase().includes('VIETNAM')};
     });
   }catch(e){
-    document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="15">⚠ ${e.message}</td></tr>`;
-    document.getElementById('spCnt').textContent='エラー';return;
+    document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="15">笞 ${e.message}</td></tr>`;
+    document.getElementById('spCnt').textContent='繧ｨ繝ｩ繝ｼ';return;
   }
   renderShipping();
 }
@@ -872,21 +875,21 @@ function renderShipping(){
     (!fs||r.staff===fs)&&
     (!fc||r.cntr.toUpperCase().includes(fc))
   ).sort((a,b)=>(a.etd_raw||'').localeCompare(b.etd_raw||''));
-  document.getElementById('spCnt').textContent=`${rows.length}件`;
-  if(!rows.length){document.getElementById('spBody').innerHTML='<tr class="msg-row"><td colspan="15">該当データなし</td></tr>';return;}
+  document.getElementById('spCnt').textContent=`${rows.length}莉ｶ`;
+  if(!rows.length){document.getElementById('spBody').innerHTML='<tr class="msg-row"><td colspan="15">隧ｲ蠖薙ョ繝ｼ繧ｿ縺ｪ縺・/td></tr>';return;}
   document.getElementById('spBody').innerHTML=rows.map(r=>{
     const sp=getSpStatus(r.iv_no);
     const unsaved=isSpUnsaved(r.iv_no);
     const depCell=r.is_vietnam
-      ?`<td class="cn"><select class="status-sel ${sp.dep==='確認'?'st-ok':sp.dep==='依頼中'?'st-ed':'st-no'}" onchange="onDepChange('${r.iv_no}',this.value)"><option ${sp.dep==='未'?'selected':''}>未</option><option ${sp.dep==='依頼中'?'selected':''}>依頼中</option><option ${sp.dep==='確認'?'selected':''}>確認</option></select></td>`
-      :`<td class="cn" style="color:var(--text3);font-size:10px;">—</td>`;
+      ?`<td class="cn"><select class="status-sel ${sp.dep==='遒ｺ隱・?'st-ok':sp.dep==='萓晞ｼ荳ｭ'?'st-ed':'st-no'}" onchange="onDepChange('${r.iv_no}',this.value)"><option ${sp.dep==='譛ｪ'?'selected':''}>譛ｪ</option><option ${sp.dep==='萓晞ｼ荳ｭ'?'selected':''}>萓晞ｼ荳ｭ</option><option ${sp.dep==='遒ｺ隱・?'selected':''}>遒ｺ隱・/option></select></td>`
+      :`<td class="cn" style="color:var(--text3);font-size:10px;">窶・/td>`;
     const furiCell=hasSp
-      ?`<td class="cn"><select class="status-sel ${sp.furikomi==='確認済'?'st-ok':'st-no'}" onchange="onFurikomiChange('${r.iv_no}',this.value)"><option ${sp.furikomi==='未'?'selected':''}>未</option><option ${sp.furikomi==='確認済'?'selected':''}>確認済</option></select></td>`
-      :`<td class="cn">—</td>`;
+      ?`<td class="cn"><select class="status-sel ${sp.furikomi==='遒ｺ隱肴ｸ・?'st-ok':'st-no'}" onchange="onFurikomiChange('${r.iv_no}',this.value)"><option ${sp.furikomi==='譛ｪ'?'selected':''}>譛ｪ</option><option ${sp.furikomi==='遒ｺ隱肴ｸ・?'selected':''}>遒ｺ隱肴ｸ・/option></select></td>`
+      :`<td class="cn">窶・/td>`;
     const fdCell=hasSp
       ?`<td><input type="date" class="fd-date ${sp.fd_date?'filled':''}" id="fddate_${r.iv_no}" value="${sp.fd_date||''}" onchange="onFdDateChange('${r.iv_no}',this.value)"></td>
-         <td><input type="text" class="fd-note" value="${sp.fd_note||''}" placeholder="メモ" onchange="onFdNoteChange('${r.iv_no}',this.value)"></td>`
-      :`<td style="color:var(--text3);font-size:10px;" colspan="2">SP未ログイン</td>`;
+         <td><input type="text" class="fd-note" value="${sp.fd_note||''}" placeholder="繝｡繝｢" onchange="onFdNoteChange('${r.iv_no}',this.value)"></td>`
+      :`<td style="color:var(--text3);font-size:10px;" colspan="2">SP譛ｪ繝ｭ繧ｰ繧､繝ｳ</td>`;
     return`<tr data-sp-iv="${r.iv_no}" class="${unsaved?'row-unsaved':''}">
       <td class="cn">${r.etd}</td>
       <td class="cn">${r.eta}</td>
@@ -905,7 +908,7 @@ function renderShipping(){
 
 async function saveStatus(){
   const btn=document.getElementById('saveBtn');
-  btn.disabled=true;btn.textContent='保存中...';
+  btn.disabled=true;btn.textContent='菫晏ｭ倅ｸｭ...';
   try{
     await saveStatusJson();
     savedMap=JSON.parse(JSON.stringify(statusMap));
@@ -916,48 +919,48 @@ async function saveStatus(){
     document.getElementById('saveBar').classList.remove('show');
     document.getElementById('saveOk').style.display='';
     setTimeout(()=>{document.getElementById('saveOk').style.display='none';},3000);
-  }catch(e){alert('保存エラー: '+e.message);}
-  finally{btn.disabled=false;btn.textContent='💾 変更を保存';}
+  }catch(e){alert('菫晏ｭ倥お繝ｩ繝ｼ: '+e.message);}
+  finally{btn.disabled=false;btn.textContent='沈 螟画峩繧剃ｿ晏ｭ・;}
 }
 
-// ── 날짜 유틸 ──
+// 笏笏 ・・・・寀ｸ 笏笏
 function localDateStr(off=0){const d=new Date();d.setDate(d.getDate()+off);
   return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
-function fmtDate(iso){if(!iso)return'—';const s=iso.slice(0,10).split('-');return`${s[0]}/${s[1]}/${s[2]}`;}
-function todayLbl(){const days=['日','月','火','水','木','金','土'],d=new Date();
-  return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}（${days[d.getDay()]}）`;}
+function fmtDate(iso){if(!iso)return'窶・;const s=iso.slice(0,10).split('-');return`${s[0]}/${s[1]}/${s[2]}`;}
+function todayLbl(){const days=['譌･','譛・,'轣ｫ','豌ｴ','譛ｨ','驥・,'蝨・],d=new Date();
+  return`${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')}・・{days[d.getDay()]}・荏;}
 function getRangeDays(){return parseInt(document.getElementById('rangeFilter').value)||0;}
 function nextBizDay(){const d=new Date();d.setDate(d.getDate()+1);
   while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);
   return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
 
-// ── POL 유틸 ──
+// 笏笏 POL ・寀ｸ 笏笏
 function getStaff(pol){
-  if(!pol||pol==='—')return'—';
+  if(!pol||pol==='窶・)return'窶・;
   const up=pol.toUpperCase();
   const pm=getPolStaffMap();
   for(const[k,v]of Object.entries(pm))if(up.includes(k))return v;
-  return'—';
+  return'窶・;
 }
-function mkChip(s){return`<span class="chip ${CHIP_CLS[s]||'none'}">${s||'—'}</span>`;}
+function mkChip(s){return`<span class="chip ${CHIP_CLS[s]||'none'}">${s||'窶・}</span>`;}
 async function fetchPolMap(guids){
   const m={};
   await Promise.all(guids.map(async g=>{
     try{const d=await dvGet(`${DV_API}/crcf9_region_japans(${g})?$select=crcf9_pol,crcf9_region_japan`);
-      m[g]=d.crcf9_pol||d.crcf9_region_japan||'—';}catch(e){}
+      m[g]=d.crcf9_pol||d.crcf9_region_japan||'窶・;}catch(e){}
   }));return m;
 }
 
-// ── 범위 힌트 ──
+// 笏笏 ・肥怱 德醐敢 笏笏
 function updateRangeHint(rd){
   const tm=fmtDate(localDateStr(0)),te=fmtDate(localDateStr(rd));
   const ce=fmtDate(localDateStr(rd)),yd=fmtDate(localDateStr(-1));
-  document.getElementById('tsukanDateLabel').textContent=rd===0?`(CY_CUT: ${tm})`:`(CY_CUT: ${tm} 〜 ${te})`;
-  document.getElementById('cotecnaDateLabel').textContent=rd===0?`(WORK_DATE: ${yd} 〜 ${fmtDate(localDateStr(0))})`:`(WORK_DATE: ${yd} 〜 ${ce})`;
-  document.getElementById('rangeHint').textContent=rd===0?'通関: CY_CUT 本日分 ｜ COTECNA: 当日・前日分':`通関: 本日〜${rd}日後 ｜ COTECNA: 前日〜${rd}日後`;
+  document.getElementById('tsukanDateLabel').textContent=rd===0?`(CY_CUT: ${tm})`:`(CY_CUT: ${tm} 縲・${te})`;
+  document.getElementById('cotecnaDateLabel').textContent=rd===0?`(WORK_DATE: ${yd} 縲・${fmtDate(localDateStr(0))})`:`(WORK_DATE: ${yd} 縲・${ce})`;
+  document.getElementById('rangeHint').textContent=rd===0?'騾夐未: CY_CUT 譛ｬ譌･蛻・・・COTECNA: 蠖捺律繝ｻ蜑肴律蛻・:`騾夐未: 譛ｬ譌･縲・{rd}譌･蠕・・・COTECNA: 蜑肴律縲・{rd}譌･蠕形;
 }
 
-// ── 통관 로드 ──
+// 笏笏 奝ｵ・ ・罹糖 笏笏
 async function loadTsukan(rd){
   const s=localDateStr(0),e=localDateStr(rd);
   const filter=`cr49f_cy_cut ge ${s}T00:00:00Z and cr49f_cy_cut le ${e}T23:59:59Z`;
@@ -967,31 +970,31 @@ async function loadTsukan(rd){
     const miss=[...new Set(bkgs.map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
     const pm=await fetchPolMap(miss);
     allTsukan=bkgs.map(b=>{
-      const pol=pm[b['_cr49f_region_japan_id_value']]||(b.crcf9_delivery_location?b.crcf9_delivery_location.replace(/ CY$| PORT$/,'')+', JAPAN':'')||'—';
+      const pol=pm[b['_cr49f_region_japan_id_value']]||(b.crcf9_delivery_location?b.crcf9_delivery_location.replace(/ CY$| PORT$/,'')+', JAPAN':'')||'窶・;
       return{cy_cut:b.cr49f_cy_cut?b.cr49f_cy_cut.slice(0,10):'',cy_cut_fmt:fmtDate(b.cr49f_cy_cut),
-        pol,iv_no:b.cr49f_invoice_no||'—',bkg_no:b.cr49f_booking_no||'—',staff:getStaff(pol)};
+        pol,iv_no:b.cr49f_invoice_no||'窶・,bkg_no:b.cr49f_booking_no||'窶・,staff:getStaff(pol)};
     });
   }catch(e){allTsukan=[];
-    document.getElementById('tsukanBody').innerHTML=`<tr class="msg-row"><td colspan="7">⚠ ${e.message}</td></tr>`;
-    document.getElementById('tsukanCnt').textContent='エラー';return;}
+    document.getElementById('tsukanBody').innerHTML=`<tr class="msg-row"><td colspan="7">笞 ${e.message}</td></tr>`;
+    document.getElementById('tsukanCnt').textContent='繧ｨ繝ｩ繝ｼ';return;}
   renderTsukan();
 }
 function renderTsukan(){
   const f=document.getElementById('staffFilter').value;
   const p=document.getElementById('polFilter').value.toUpperCase();
   const rows=allTsukan.filter(r=>(!f||r.staff===f)&&(!p||r.pol.toUpperCase().includes(p)));
-  document.getElementById('tsukanCnt').textContent=`${rows.length}件`;
-  if(!rows.length){document.getElementById('tsukanBody').innerHTML='<tr class="msg-row"><td colspan="7">該当データなし</td></tr>';return;}
+  document.getElementById('tsukanCnt').textContent=`${rows.length}莉ｶ`;
+  if(!rows.length){document.getElementById('tsukanBody').innerHTML='<tr class="msg-row"><td colspan="7">隧ｲ蠖薙ョ繝ｼ繧ｿ縺ｪ縺・/td></tr>';return;}
   const today=localDateStr(0),bizday=nextBizDay(),hasSp=!!grToken;
   document.getElementById('tsukanBody').innerHTML=rows.map(r=>{
     const st=getTsStatus(r.iv_no),unsaved=isTsUnsaved(r.iv_no);
-    const stCls=st.tsukan_status==='ED未'?'st-ed':st.tsukan_status==='ACL未'?'st-acl':'';
+    const stCls=st.tsukan_status==='ED譛ｪ'?'st-ed':st.tsukan_status==='ACL譛ｪ'?'st-acl':'';
     const opts=TS_OPTS.map(o=>`<option${o===st.tsukan_status?' selected':''}>${o}</option>`).join('');
     const clCells=hasSp
       ?`<td class="cn"><input type="checkbox" class="cl-check" ${st.tsukan_irai?'checked':''} onchange="onCheckChange('${r.iv_no}',this.checked)">
          <span class="dot-unsaved" id="dot_${r.iv_no}" style="display:${unsaved?'inline-block':'none'}"></span></td>
          <td class="cn"><select class="status-sel ${stCls}" id="tssel_${r.iv_no}" onchange="onTsStatusChange('${r.iv_no}',this.value)">${opts}</select></td>`
-      :`<td class="cn" colspan="2" style="font-size:11px;color:var(--text3);">SP未ログイン</td>`;
+      :`<td class="cn" colspan="2" style="font-size:11px;color:var(--text3);">SP譛ｪ繝ｭ繧ｰ繧､繝ｳ</td>`;
     const dateCls=r.cy_cut===today?'date-today':r.cy_cut===bizday?'date-bizday':'date-future';
     return`<tr data-staff="${r.staff}" data-iv="${r.iv_no}" class="${unsaved?'row-unsaved':''}">
       <td class="cn ${dateCls}">${r.cy_cut_fmt}</td>
@@ -1001,11 +1004,11 @@ function renderTsukan(){
   }).join('');
 }
 
-// ── COTECNA 로드 ──
+// 笏笏 COTECNA ・罹糖 笏笏
 async function loadCotecna(rd){
   const today=localDateStr(0),yday=localDateStr(-1),end=localDateStr(rd);
-  // 검색은 7일 전부터 (복수일 작업 처음 날짜까지 취득하기 위해)
-  // 표시는 그룹의 最大 work_date が어제以降のもののみ
+  // ・・餓捩 7・ｼ ・・ｶ奓ｰ (・ｵ・們攵 ・卓羅 ・們搆 ・・懋ｹ護ｧ ・ｨ・晨葺・ｰ ・・紛)
+  // 岺懍亨・・・ｸ・ｹ・・譛螟ｧ work_date 縺護牟・應ｻ･髯阪・繧ゅ・縺ｮ縺ｿ
   const searchFrom=localDateStr(-7);
   const filter=`crcf9_inspection eq true and crcf9_work_date ge ${searchFrom}T00:00:00Z and crcf9_work_date le ${end}T23:59:59Z`;
   try{
@@ -1031,48 +1034,47 @@ async function loadCotecna(rd){
       const bkg=bkgMap[c['_crcf9_booking_id_value']]||{};
       const scId=bkg['_cr49f_sale_contract_id_value'];
       const rawVo=voMap[scId]||'';const vm=rawVo.match(/(\d+\.\d+)/);
-      const voNo=vm?`X.${vm[1]}`:(rawVo||'—');
-      const pol=polMap[bkg['_cr49f_region_japan_id_value']]||(bkg.crcf9_delivery_location?bkg.crcf9_delivery_location.replace(/ CY$| PORT$/,'')+', JAPAN':'')||'—';
-      const ivNo=bkg.cr49f_invoice_no||'—',partial=c.crcf9_partial_no||'—';
+      const voNo=vm?`X.${vm[1]}`:(rawVo||'窶・);
+      const pol=polMap[bkg['_cr49f_region_japan_id_value']]||(bkg.crcf9_delivery_location?bkg.crcf9_delivery_location.replace(/ CY$| PORT$/,'')+', JAPAN':'')||'窶・;
+      const ivNo=bkg.cr49f_invoice_no||'窶・,partial=c.crcf9_partial_no||'窶・;
       const pcId=c['_crcf9_purchase_contract_id_value'];
       const pkId=pcId&&pcMap[pcId]?pcMap[pcId]['_cr49f_packer_id_value']:null;
-      const packer=pkId&&pkrMap[pkId]?(pkrMap[pkId].cr49f_packer_name||pkrMap[pkId].cr49f_packer||'—'):'—';
+      const packer=pkId&&pkrMap[pkId]?(pkrMap[pkId].cr49f_packer_name||pkrMap[pkId].cr49f_packer||'窶・):'窶・;
       const key=`${ivNo}|${voNo}|${partial}`;
       if(!grp[key])grp[key]={workDates:[],work_date:'',work_date_fmt:'',pol,iv_no:ivNo,vo_no:voNo,partial,ct_count:0,packer,staff:getStaff(pol)};
       const wd=c.crcf9_work_date?c.crcf9_work_date.slice(0,10):'';
       if(wd&&!grp[key].workDates.includes(wd))grp[key].workDates.push(wd);
       grp[key].ct_count++;
-      if(grp[key].packer==='—'&&packer!=='—')grp[key].packer=packer;
+      if(grp[key].packer==='窶・&&packer!=='窶・)grp[key].packer=packer;
     });
     allCotecna=Object.values(grp).map(g=>{
       const dates=g.workDates.sort();
       const minDate=dates[0]||'';
       const maxDate=dates[dates.length-1]||'';
-      g.work_date=maxDate; // 정렬 기준은 최대 날짜
-      g.work_date_fmt=dates.length<=1
+      g.work_date=maxDate; // ・簿ｬ ・ｰ・・ ・罹劇 ・・・      g.work_date_fmt=dates.length<=1
         ? fmtDate(minDate?minDate+'T00:00:00Z':'')
-        : `${fmtDate(minDate+'T00:00:00Z')} 〜 ${fmtDate(maxDate+'T00:00:00Z')}`;
+        : `${fmtDate(minDate+'T00:00:00Z')} 縲・${fmtDate(maxDate+'T00:00:00Z')}`;
       return g;
-    }).filter(g=>g.work_date>=yday); // 最大作業日が昨日以降のみ表示
+    }).filter(g=>g.work_date>=yday); // 譛螟ｧ菴懈･ｭ譌･縺梧乖譌･莉･髯阪・縺ｿ陦ｨ遉ｺ
   }catch(e){allCotecna=[];
-    document.getElementById('cotecnaBody').innerHTML=`<tr class="msg-row"><td colspan="9">⚠ ${e.message}</td></tr>`;
-    document.getElementById('cotecnaCnt').textContent='エラー';return;}
+    document.getElementById('cotecnaBody').innerHTML=`<tr class="msg-row"><td colspan="9">笞 ${e.message}</td></tr>`;
+    document.getElementById('cotecnaCnt').textContent='繧ｨ繝ｩ繝ｼ';return;}
   renderCotecna();
 }
 function renderCotecna(){
   const f=document.getElementById('staffFilter').value;
   const p=document.getElementById('polFilter').value.toUpperCase();
   const rows=allCotecna.filter(r=>(!f||r.staff===f)&&(!p||r.pol.toUpperCase().includes(p)));
-  document.getElementById('cotecnaCnt').textContent=`${rows.length}件`;
-  if(!rows.length){document.getElementById('cotecnaBody').innerHTML='<tr class="msg-row"><td colspan="9">該当データなし</td></tr>';return;}
+  document.getElementById('cotecnaCnt').textContent=`${rows.length}莉ｶ`;
+  if(!rows.length){document.getElementById('cotecnaBody').innerHTML='<tr class="msg-row"><td colspan="9">隧ｲ蠖薙ョ繝ｼ繧ｿ縺ｪ縺・/td></tr>';return;}
   const today=localDateStr(0),hasSp=!!grToken;
   document.getElementById('cotecnaBody').innerHTML=rows.map(r=>{
     const key=ctKey(r),st=getCtStatus(key),unsaved=isCtUnsaved(key);
-    const ctCls=st.report_status==='提出'?'st-ok':'st-no';
+    const ctCls=st.report_status==='謠仙・'?'st-ok':'st-no';
     const ctOpts=CT_OPTS.map(o=>`<option${o===st.report_status?' selected':''}>${o}</option>`).join('');
     const ctCell=hasSp
       ?`<td class="cn"><select class="status-sel ${ctCls}" id="ctsel_${key}" onchange="onCtStatusChange('${key}',this.value)">${ctOpts}</select></td>`
-      :`<td class="cn" style="font-size:11px;color:var(--text3);">—</td>`;
+      :`<td class="cn" style="font-size:11px;color:var(--text3);">窶・/td>`;
     return`<tr data-staff="${r.staff}" data-ctkey="${key}" class="${unsaved?'row-unsaved':''}">
       <td class="cn ${r.work_date===today?'date-today':'date-future'}">${r.work_date_fmt}</td>
       <td>${r.pol}</td><td class="iv">${r.iv_no}</td>
@@ -1088,35 +1090,34 @@ function renderCotecna(){
 function applyFilter(){renderTsukan();renderCotecna();}
 async function onRangeChange(){
   const rd=getRangeDays();updateRangeHint(rd);
-  showLoading('データ更新中...');
+  showLoading('繝・・繧ｿ譖ｴ譁ｰ荳ｭ...');
   try{await Promise.all([loadTsukan(rd),loadCotecna(rd)]);}finally{hideLoading();}
 }
 async function loadAll(){
   const rd=getRangeDays();updateRangeHint(rd);
-  showLoading('COMPASSからデータ取得中...');
+  showLoading('COMPASS縺九ｉ繝・・繧ｿ蜿門ｾ嶺ｸｭ...');
   try{
     await Promise.all([loadStatusJson(), grToken?loadMasterJson():Promise.resolve()]);
     await Promise.all([loadTsukan(rd),loadCotecna(rd)]);
   }
   finally{hideLoading();}
 }
-// ── 구매/판매계약 ──
+// 笏笏 ・ｬ・､/甯尖ｧ､・・平 笏笏
 let allPurchase=[], allSale=[];
 
-// 구매계약 로드
+// ・ｬ・､・・平 ・罹糖
 async function loadPurchase(){
   const days=parseInt(document.getElementById('pcPeriod').value)||30;
   const from=localDateStr(-days);
   document.getElementById('pcTodayLabel').textContent=todayLbl();
-  document.getElementById('pcDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 〜 ${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
-  document.getElementById('pcBody').innerHTML=`<tr class="msg-row"><td colspan="8"><span class="spinner"></span>読み込み中...</td></tr>`;
+  document.getElementById('pcDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 縲・${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
+  document.getElementById('pcBody').innerHTML=`<tr class="msg-row"><td colspan="8"><span class="spinner"></span>隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</td></tr>`;
   try{
-    // 구매계약 헤더 취득
-    const filter=`cr49f_contract_date ge ${from}T00:00:00Z`;
+    // ・ｬ・､・・平 嵭､・・・ｨ・・    const filter=`cr49f_contract_date ge ${from}T00:00:00Z`;
     const res=await dvGet(`${DV_API}/cr49f_purchase_contracts?$filter=${encodeURIComponent(filter)}&$select=cr49f_purchase_contractid,cr49f_purchase_contract_no,cr49f_contract_date,cr49f_latest_vanning,_cr49f_packer_id_value&$orderby=cr49f_contract_date desc&$top=200`);
     const contracts=res.value||[];
 
-    // 구매상세 취득 (한꺼번에)
+    // ・ｬ・､・・┷ ・ｨ・・(﨑懋ｺｼ・溢乱)
     const cids=contracts.map(c=>c.cr49f_purchase_contractid).filter(Boolean);
     const detailMap={};
     for(let i=0;i<cids.length;i+=10){
@@ -1132,41 +1133,39 @@ async function loadPurchase(){
       }catch(e){}
     }
 
-    // Packer 이름 취득
-    const pcPackerGuids=[...new Set(contracts.map(c=>c['_cr49f_packer_id_value']).filter(Boolean))];
+    // Packer ・ｴ・・・ｨ・・    const pcPackerGuids=[...new Set(contracts.map(c=>c['_cr49f_packer_id_value']).filter(Boolean))];
     const pcPackerNameMap={};
     await Promise.all(pcPackerGuids.map(async g=>{
       try{const d=await dvGet(`${DV_API}/cr49f_packers(${g})?$select=cr49f_packer,cr49f_packer_name`);
         pcPackerNameMap[g]={name:d.cr49f_packer_name||'',code:d.cr49f_packer||''};}catch(e){}
     }));
 
-    // ITEM 마스터 취득
-    const pcItemGuids=[...new Set(Object.values(detailMap).flat().map(d=>d['_cr49f_item_id_value']).filter(Boolean))];
+    // ITEM ・溢侃奓ｰ ・ｨ・・    const pcItemGuids=[...new Set(Object.values(detailMap).flat().map(d=>d['_cr49f_item_id_value']).filter(Boolean))];
     const pcItemMap={};
     await Promise.all(pcItemGuids.map(async g=>{
       try{const d=await dvGet(`${DV_API}/cr49f_items(${g})?$select=cr49f_item`);
-        pcItemMap[g]=d.cr49f_item||'—';}catch(e){}
+        pcItemMap[g]=d.cr49f_item||'窶・;}catch(e){}
     }));
 
     allPurchase=contracts.flatMap(c=>{
       const details=detailMap[c.cr49f_purchase_contractid]||[];
       const pkData=pcPackerNameMap[c['_cr49f_packer_id_value']]||{};
       const packerCode=pkData.code||'';
-      const packer=pkData.name?(packerCode?`${packerCode} (${pkData.name})`:pkData.name):c.cr49f_packer_idname||'—';
-      const base={no:c.cr49f_purchase_contract_no||'—',date:fmtDate(c.cr49f_contract_date),
+      const packer=pkData.name?(packerCode?`${packerCode} (${pkData.name})`:pkData.name):c.cr49f_packer_idname||'窶・;
+      const base={no:c.cr49f_purchase_contract_no||'窶・,date:fmtDate(c.cr49f_contract_date),
         packer,packer_code:packerCode,latest_vanning:fmtDate(c.cr49f_latest_vanning)};
-      if(!details.length)return[{...base,item:'—',qty:0,price:0,remark:'—'}];
+      if(!details.length)return[{...base,item:'窶・,qty:0,price:0,remark:'窶・}];
       return details.map(d=>({...base,
-        item:pcItemMap[d['_cr49f_item_id_value']]||'—',
+        item:pcItemMap[d['_cr49f_item_id_value']]||'窶・,
         qty:d.cr49f_quantity||0,
         price:d.cr49f_price||0,
-        remark:d.cr49f_remark||'—',
-        pol:d.cr49f_loading_port||'—'
+        remark:d.cr49f_remark||'窶・,
+        pol:d.cr49f_loading_port||'窶・
       }));
     });
   }catch(e){
-    document.getElementById('pcBody').innerHTML=`<tr class="msg-row"><td colspan="9">⚠ ${e.message}</td></tr>`;
-    document.getElementById('pcCnt').textContent='エラー';return;
+    document.getElementById('pcBody').innerHTML=`<tr class="msg-row"><td colspan="9">笞 ${e.message}</td></tr>`;
+    document.getElementById('pcCnt').textContent='繧ｨ繝ｩ繝ｼ';return;
   }
   buildPcFilters();
   renderPurchase();
@@ -1175,9 +1174,8 @@ async function loadPurchase(){
 function renderPurchase(){
   const kw=(document.getElementById('pcSearch')?.value||'').toLowerCase();
   const rows=allPurchase.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.packer.toLowerCase().includes(kw)||r.item.toLowerCase().includes(kw));
-  // pcCnt는 필터 적용 후 filtRows에서 업데이트
-  // 같은 계약번호끼리 배경 그룹화
-  const pcFltPol=getActiveFlt('pc','pol');
+  // pcCnt・・﨑・┣ ・・圸 弡・filtRows・川・ ・・魂・ｴ孖ｸ
+  // ・呷捩 ・・平・逸从・ｼ・ｬ ・ｰ・ｽ ・ｸ・ｹ嶹・  const pcFltPol=getActiveFlt('pc','pol');
   const pcFltPacker=getActiveFlt('pc','packer');
   const pcFltItem=getActiveFlt('pc','item');
   const filtRows=rows.filter(r=>
@@ -1185,7 +1183,7 @@ function renderPurchase(){
     (!pcFltPacker.size||pcFltPacker.has(r.packer_code))&&
     (!pcFltItem.size||pcFltItem.has(r.item))
   );
-  document.getElementById('pcCnt').textContent=`${filtRows.length}件`;
+  document.getElementById('pcCnt').textContent=`${filtRows.length}莉ｶ`;
   let pcGrpIdx=0,pcPrevNo='';
   document.getElementById('pcBody').innerHTML=filtRows.length?filtRows.map(r=>{
     if(r.no!==pcPrevNo){pcGrpIdx++;pcPrevNo=r.no;}
@@ -1196,16 +1194,16 @@ function renderPurchase(){
       <td style="font-size:11px;">${r.packer}</td>
       <td class="cn">${r.pol}</td>
       <td>${r.item}</td>
-      <td class="cn">${r.qty?r.qty.toFixed(2):'—'}</td>
-      <td class="cn">${r.price?'¥'+r.price.toLocaleString():'—'}</td>
-      <td style="font-size:11px;color:var(--text2);">${r.remark||'—'}</td>
+      <td class="cn">${r.qty?r.qty.toFixed(2):'窶・}</td>
+      <td class="cn">${r.price?'ﾂ･'+r.price.toLocaleString():'窶・}</td>
+      <td style="font-size:11px;color:var(--text2);">${r.remark||'窶・}</td>
       <td class="cn">${r.latest_vanning}</td>
-    </tr>`;}).join(''):'<tr class="msg-row"><td colspan="9">該当データなし</td></tr>';
+    </tr>`;}).join(''):'<tr class="msg-row"><td colspan="9">隧ｲ蠖薙ョ繝ｼ繧ｿ縺ｪ縺・/td></tr>';
 }
 
 async function onPcPeriodChange(){allPurchase=[];await loadPurchase();}
 
-// ── 체크박스 필터 공통 함수 ──
+// 笏笏 ・ｴ增ｬ・菩侃 﨑・┣ ・ｵ奝ｵ 﨑ｨ・・笏笏
 function toggleFlt(panelId, e){
   e.stopPropagation();
   const panel=document.getElementById(panelId);
@@ -1252,44 +1250,42 @@ function buildFltPanel(panelId, btnId, values, onChange){
   });
   const clear=document.createElement('div');
   clear.className='flt-clear';
-  clear.textContent='クリア';
+  clear.textContent='繧ｯ繝ｪ繧｢';
   clear.onclick=()=>clearFlt(panelId.startsWith('pc')?'pc':'sc', panelId.replace(/Panel$/,'').replace(/^(pc|sc)/,'').toLowerCase());
   panel.appendChild(clear);
 }
 function buildPcFilters(){
-  const pols=[...new Set(allPurchase.map(r=>r.pol).filter(v=>v&&v!=='—'))].sort();
-  const packers=[...new Set(allPurchase.map(r=>r.packer_code).filter(v=>v&&v!=='—'))].sort();
-  const items=[...new Set(allPurchase.map(r=>r.item).filter(v=>v&&v!=='—'))].sort();
+  const pols=[...new Set(allPurchase.map(r=>r.pol).filter(v=>v&&v!=='窶・))].sort();
+  const packers=[...new Set(allPurchase.map(r=>r.packer_code).filter(v=>v&&v!=='窶・))].sort();
+  const items=[...new Set(allPurchase.map(r=>r.item).filter(v=>v&&v!=='窶・))].sort();
   buildFltPanel('pcPolPanel','pcPolBtn',pols,renderPurchase);
   buildFltPanel('pcPackerPanel','pcPackerBtn',packers,renderPurchase);
   buildFltPanel('pcItemPanel','pcItemBtn',items,renderPurchase);
 }
 function buildScFilters(){
-  const countries=[...new Set(allSale.map(r=>r.country).filter(v=>v&&v!=='—'))].sort();
-  const buyers=[...new Set(allSale.map(r=>r.buyer).filter(v=>v&&v!=='—'))].sort();
-  const pods=[...new Set(allSale.map(r=>r.pod).filter(v=>v&&v!=='—'))].sort();
-  const items=[...new Set(allSale.map(r=>r.item).filter(v=>v&&v!=='—'))].sort();
+  const countries=[...new Set(allSale.map(r=>r.country).filter(v=>v&&v!=='窶・))].sort();
+  const buyers=[...new Set(allSale.map(r=>r.buyer).filter(v=>v&&v!=='窶・))].sort();
+  const pods=[...new Set(allSale.map(r=>r.pod).filter(v=>v&&v!=='窶・))].sort();
+  const items=[...new Set(allSale.map(r=>r.item).filter(v=>v&&v!=='窶・))].sort();
   buildFltPanel('scCountryPanel','scCountryBtn',countries,renderSale);
   buildFltPanel('scBuyerPanel','scBuyerBtn',buyers,renderSale);
   buildFltPanel('scPodPanel','scPodBtn',pods,renderSale);
   buildFltPanel('scItemPanel','scItemBtn',items,renderSale);
 }
 
-// 판매계약 로드
+// 甯尖ｧ､・・平 ・罹糖
 async function loadSale(){
   const days=parseInt(document.getElementById('scPeriod').value)||30;
   const from=localDateStr(-days);
   document.getElementById('scTodayLabel').textContent=todayLbl();
-  document.getElementById('scDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 〜 ${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
-  document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="10"><span class="spinner"></span>読み込み中...</td></tr>`;
+  document.getElementById('scDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 縲・${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
+  document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="10"><span class="spinner"></span>隱ｭ縺ｿ霎ｼ縺ｿ荳ｭ...</td></tr>`;
   try{
-    // 판매계약 헤더 취득
-    const filter=`cr49f_sale_contract_date ge ${from}T00:00:00Z`;
+    // 甯尖ｧ､・・平 嵭､・・・ｨ・・    const filter=`cr49f_sale_contract_date ge ${from}T00:00:00Z`;
     const res=await dvGet(`${DV_API}/cr49f_sale_contracts?$filter=${encodeURIComponent(filter)}&$select=cr49f_sale_contractid,cr49f_sale_contract_no,cr49f_sale_contract_date,cr49f_latest_shipment,_cr49f_buyer_id_value,_cr49f_pod1_value&$orderby=cr49f_sale_contract_date desc&$top=200`);
     const contracts=res.value||[];
 
-    // 판매상세 취득
-    const cids=contracts.map(c=>c.cr49f_sale_contractid).filter(Boolean);
+    // 甯尖ｧ､・・┷ ・ｨ・・    const cids=contracts.map(c=>c.cr49f_sale_contractid).filter(Boolean);
     const sdMap={};
     for(let i=0;i<cids.length;i+=10){
       const chunk=cids.slice(i,i+10);
@@ -1304,8 +1300,7 @@ async function loadSale(){
       }catch(e){}
     }
 
-    // SI 입력 여부 취득
-    const siMap={};
+    // SI ・・･ ・ｬ・ ・ｨ・・    const siMap={};
     for(let i=0;i<cids.length;i+=10){
       const chunk=cids.slice(i,i+10);
       const f=chunk.map(id=>`_cr49f_sale_contract_id_value eq ${id}`).join(' or ');
@@ -1318,8 +1313,7 @@ async function loadSale(){
       }catch(e){}
     }
 
-    // Buyer 이름+국가 취득
-    const buyerGuids=[...new Set(contracts.map(c=>c['_cr49f_buyer_id_value']).filter(Boolean))];
+    // Buyer ・ｴ・・・ｭ・ ・ｨ・・    const buyerGuids=[...new Set(contracts.map(c=>c['_cr49f_buyer_id_value']).filter(Boolean))];
     const buyerCountryMap={};
     const buyerNameMap={};
     await Promise.all(buyerGuids.map(async g=>{
@@ -1328,40 +1322,38 @@ async function loadSale(){
         if(d.cr49f_buyer)buyerNameMap[g]=d.cr49f_buyer;}catch(e){}
     }));
 
-    // POD 이름 취득
-    const podGuids=[...new Set(contracts.map(c=>c['_cr49f_pod1_value']).filter(Boolean))];
+    // POD ・ｴ・・・ｨ・・    const podGuids=[...new Set(contracts.map(c=>c['_cr49f_pod1_value']).filter(Boolean))];
     const podNameMap={};
     await Promise.all(podGuids.map(async g=>{
       try{const d=await dvGet(`${DV_API}/cr49f_regions(${g})?$select=cr49f_pod`);
         if(d.cr49f_pod)podNameMap[g]=d.cr49f_pod;}catch(e){}
     }));
 
-    // ITEM 마스터 취득
-    const scItemGuids=[...new Set(Object.values(sdMap).flat().map(d=>d['_cr49f_item_id_value']).filter(Boolean))];
+    // ITEM ・溢侃奓ｰ ・ｨ・・    const scItemGuids=[...new Set(Object.values(sdMap).flat().map(d=>d['_cr49f_item_id_value']).filter(Boolean))];
     const scItemMap={};
     await Promise.all(scItemGuids.map(async g=>{
       try{const d=await dvGet(`${DV_API}/cr49f_items(${g})?$select=cr49f_item`);
-        scItemMap[g]=d.cr49f_item||'—';}catch(e){}
+        scItemMap[g]=d.cr49f_item||'窶・;}catch(e){}
     }));
 
     allSale=contracts.flatMap(c=>{
       const details=sdMap[c.cr49f_sale_contractid]||[];
       const hasSi=!!(siMap[c.cr49f_sale_contractid]);
-      const base={no:c.cr49f_sale_contract_no||'—',date:fmtDate(c.cr49f_sale_contract_date),
-        country:buyerCountryMap[c['_cr49f_buyer_id_value']]||'—',
-        buyer:buyerNameMap[c['_cr49f_buyer_id_value']]||'—',
-        pod:podNameMap[c['_cr49f_pod1_value']]||'—',
+      const base={no:c.cr49f_sale_contract_no||'窶・,date:fmtDate(c.cr49f_sale_contract_date),
+        country:buyerCountryMap[c['_cr49f_buyer_id_value']]||'窶・,
+        buyer:buyerNameMap[c['_cr49f_buyer_id_value']]||'窶・,
+        pod:podNameMap[c['_cr49f_pod1_value']]||'窶・,
         latest_shipment:fmtDate(c.cr49f_latest_shipment),si:hasSi};
-      if(!details.length)return[{...base,item:'—',qty:0,price:0}];
+      if(!details.length)return[{...base,item:'窶・,qty:0,price:0}];
       return details.map(d=>({...base,
-        item:scItemMap[d['_cr49f_item_id_value']]||'—',
+        item:scItemMap[d['_cr49f_item_id_value']]||'窶・,
         qty:d.cr49f_quantity||0,
         price:d.cr49f_price||0
       }));
     });
   }catch(e){
-    document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="10">⚠ ${e.message}</td></tr>`;
-    document.getElementById('scCnt').textContent='エラー';return;
+    document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="10">笞 ${e.message}</td></tr>`;
+    document.getElementById('scCnt').textContent='繧ｨ繝ｩ繝ｼ';return;
   }
   buildScFilters();
   renderSale();
@@ -1370,8 +1362,8 @@ async function loadSale(){
 function renderSale(){
   const kw=(document.getElementById('scSearch')?.value||'').toLowerCase();
   const rows=allSale.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.buyer.toLowerCase().includes(kw)||r.item.toLowerCase().includes(kw));
-  document.getElementById('scCnt').textContent=`${rows.length}件`;
-  if(!rows.length){document.getElementById('scBody').innerHTML='<tr class="msg-row"><td colspan="10">該当データなし</td></tr>';return;}
+  document.getElementById('scCnt').textContent=`${rows.length}莉ｶ`;
+  if(!rows.length){document.getElementById('scBody').innerHTML='<tr class="msg-row"><td colspan="10">隧ｲ蠖薙ョ繝ｼ繧ｿ縺ｪ縺・/td></tr>';return;}
   const scFltCountry=getActiveFlt('sc','country');
   const scFltBuyer=getActiveFlt('sc','buyer');
   const scFltPod=getActiveFlt('sc','pod');
@@ -1382,7 +1374,7 @@ function renderSale(){
     (!scFltPod.size||scFltPod.has(r.pod))&&
     (!scFltItem.size||scFltItem.has(r.item))
   );
-  document.getElementById('scCnt').textContent=`${scFiltRows.length}件`;
+  document.getElementById('scCnt').textContent=`${scFiltRows.length}莉ｶ`;
   let scGrpIdx=0,scPrevNo='';
   document.getElementById('scBody').innerHTML=scFiltRows.length?scFiltRows.map(r=>{
     if(r.no!==scPrevNo){scGrpIdx++;scPrevNo=r.no;}
@@ -1394,54 +1386,54 @@ function renderSale(){
       <td>${r.buyer}</td>
       <td>${r.pod}</td>
       <td>${r.item}</td>
-      <td class="cn">${r.qty?r.qty.toFixed(2):'—'}</td>
-      <td class="cn">${r.price?'$'+r.price.toLocaleString():'—'}</td>
+      <td class="cn">${r.qty?r.qty.toFixed(2):'窶・}</td>
+      <td class="cn">${r.price?'$'+r.price.toLocaleString():'窶・}</td>
       <td class="cn">${r.latest_shipment}</td>
-      <td class="cn">${r.si?'<span class="si-done">入力済</span>':'<span class="si-no">未</span>'}</td>
-    </tr>`;}).join(''):'<tr class="msg-row"><td colspan="10">該当データなし</td></tr>';
+      <td class="cn">${r.si?'<span class="si-done">蜈･蜉帶ｸ・/span>':'<span class="si-no">譛ｪ</span>'}</td>
+    </tr>`;}).join(''):'<tr class="msg-row"><td colspan="10">隧ｲ蠖薙ョ繝ｼ繧ｿ縺ｪ縺・/td></tr>';
 }
 
 async function onScPeriodChange(){allSale=[];await loadSale();}
 
-// ── MASTER JSON ──
-const MASTER_PATH='古紙/-. AI 活用/PORTAL/master_staff.json';
+// 笏笏 MASTER JSON 笏笏
+const MASTER_PATH='蜿､邏・-. AI 豢ｻ逕ｨ/PORTAL/master_staff.json';
 function masterFilePath(){return MASTER_PATH.split('/').map(encodeURIComponent).join('/');}
 
-// 기본값 (JSON 없을 때)
+// ・ｰ・ｸ・・(JSON ・・揆 ・・
 const DEFAULT_TSUKAN=[
   {pol:'ISHIKARI',staff:'JU'},{pol:'NAHA',staff:'JU'},
   {pol:'KANAZAWA',staff:'ZHAN'},{pol:'AKITA',staff:'ZHAN'},{pol:'NIIGATA',staff:'ZHAN'},
   {pol:'NAGOYA',staff:'ZHAN'},{pol:'SHIMIZU',staff:'ZHAN'},{pol:'MIZUSHIMA',staff:'ZHAN'},
   {pol:'HAKATA',staff:'ZHAN'},{pol:'KUMAMOTO',staff:'ZHAN'},{pol:'MOJI',staff:'ZHAN'},
   {pol:'SENDAI',staff:'LEE JUAH'},{pol:'OSAKA',staff:'LEE JUAH'},{pol:'KOBE',staff:'LEE JUAH'},
-  {pol:'TOKYO',staff:'竹内 雅将'},{pol:'YOKOHAMA',staff:'竹内 雅将'},{pol:'FUKUYAMA',staff:'ZHAN'}
+  {pol:'TOKYO',staff:'遶ｹ蜀・髮・ｰ・},{pol:'YOKOHAMA',staff:'遶ｹ蜀・髮・ｰ・},{pol:'FUKUYAMA',staff:'ZHAN'}
 ];
 const DEFAULT_SHIPPING=[
-  {code:'RA',importer:'R. A.',staff:'大場'},{code:'MG',importer:'MEGA SURYA',staff:'大場'},
-  {code:'IK',importer:'INDAH KIAT',staff:'大場'},{code:'TJ',importer:'TJIWI KIMIA',staff:'大場'},
-  {code:'HA',importer:'HANKUK PAPER',staff:'大場'},{code:'NA',importer:'NATURA',staff:'大場'},
-  {code:'PC',importer:'PAPER COREA',staff:'大場'},{code:'RE',importer:'RE',staff:'大場'},
-  {code:'SG',importer:'SAIGON',staff:'大場'},{code:'KN',importer:'KHOI NGUYEN',staff:'大場'},
-  {code:'SI',importer:'SINO PAPER',staff:'大場'},{code:'TP',importer:'THAI PAPER',staff:'大場'},
-  {code:'TA',importer:'Thuan An',staff:'大場'},{code:'KO',importer:'KOA(M)',staff:'大場'},
-  {code:'DD',importer:'DDT',staff:'大場'},{code:'HK',importer:'HKB',staff:'大場'},
-  {code:'DO',importer:'DOHACO',staff:'大場'},{code:'SK',importer:'SIAM KRAFT',staff:'大場'},
-  {code:'CR',importer:'CORELEX',staff:'大場'},{code:'VT',importer:'VIET TRI',staff:'大場'},
-  {code:'TH',importer:'THANH HOA',staff:'大場'},{code:'XS',importer:'XSD',staff:'大場'},
-  {code:'AS',importer:'ASIA PAPER',staff:'パク'},{code:'DH',importer:'DAEHAN PAPER',staff:'パク'},
-  {code:'DW',importer:'DAEWANG PAPER',staff:'パク'},{code:'OW',importer:'DONGWON',staff:'パク'},
-  {code:'HS',importer:'HANSOL',staff:'パク'},{code:'JJ',importer:'JEONJU',staff:'パク'},
-  {code:'JS',importer:'JUSHIN',staff:'パク'},{code:'KL',importer:'KLEANNARA',staff:'パク'},
-  {code:'TG',importer:'TAE GYOUNG',staff:'パク'},{code:'KS',importer:'KISUK',staff:'パク'},
-  {code:'TL',importer:'TAILIM PAPER',staff:'パク'},{code:'YC',importer:'YUCHANG',staff:'パク'},
-  {code:'NF',importer:'NIKKO FIBRE',staff:'パク'},{code:'CL',importer:'CLC(Y)',staff:'パク'},
-  {code:'CV',importer:'CLC(V)',staff:'パク'},{code:'DA',importer:'DOUBLE A',staff:'パク'},
-  {code:'CA',importer:'CAS',staff:'パク'},{code:'DT',importer:'DONG TIEN',staff:'パク'},
-  {code:'XM',importer:'XUAN MAI',staff:'パク'},{code:'KC',importer:'TKC KRAFT',staff:'パク'},
-  {code:'TQ',importer:'TAN QUANG',staff:'パク'},{code:'NI',importer:'NIC INTERTRADE',staff:'パク'},
-  {code:'VD',importer:'VAN DIEM',staff:'パク'},{code:'NE',importer:'NEW TOYO',staff:'パク'},
-  {code:'TE',importer:'THAI HIEP',staff:'パク'},{code:'NB',importer:'NIBONG TEBAL',staff:'パク'},
-  {code:'A',importer:'ASPEX',staff:'パク'}
+  {code:'RA',importer:'R. A.',staff:'螟ｧ蝣ｴ'},{code:'MG',importer:'MEGA SURYA',staff:'螟ｧ蝣ｴ'},
+  {code:'IK',importer:'INDAH KIAT',staff:'螟ｧ蝣ｴ'},{code:'TJ',importer:'TJIWI KIMIA',staff:'螟ｧ蝣ｴ'},
+  {code:'HA',importer:'HANKUK PAPER',staff:'螟ｧ蝣ｴ'},{code:'NA',importer:'NATURA',staff:'螟ｧ蝣ｴ'},
+  {code:'PC',importer:'PAPER COREA',staff:'螟ｧ蝣ｴ'},{code:'RE',importer:'RE',staff:'螟ｧ蝣ｴ'},
+  {code:'SG',importer:'SAIGON',staff:'螟ｧ蝣ｴ'},{code:'KN',importer:'KHOI NGUYEN',staff:'螟ｧ蝣ｴ'},
+  {code:'SI',importer:'SINO PAPER',staff:'螟ｧ蝣ｴ'},{code:'TP',importer:'THAI PAPER',staff:'螟ｧ蝣ｴ'},
+  {code:'TA',importer:'Thuan An',staff:'螟ｧ蝣ｴ'},{code:'KO',importer:'KOA(M)',staff:'螟ｧ蝣ｴ'},
+  {code:'DD',importer:'DDT',staff:'螟ｧ蝣ｴ'},{code:'HK',importer:'HKB',staff:'螟ｧ蝣ｴ'},
+  {code:'DO',importer:'DOHACO',staff:'螟ｧ蝣ｴ'},{code:'SK',importer:'SIAM KRAFT',staff:'螟ｧ蝣ｴ'},
+  {code:'CR',importer:'CORELEX',staff:'螟ｧ蝣ｴ'},{code:'VT',importer:'VIET TRI',staff:'螟ｧ蝣ｴ'},
+  {code:'TH',importer:'THANH HOA',staff:'螟ｧ蝣ｴ'},{code:'XS',importer:'XSD',staff:'螟ｧ蝣ｴ'},
+  {code:'AS',importer:'ASIA PAPER',staff:'繝代け'},{code:'DH',importer:'DAEHAN PAPER',staff:'繝代け'},
+  {code:'DW',importer:'DAEWANG PAPER',staff:'繝代け'},{code:'OW',importer:'DONGWON',staff:'繝代け'},
+  {code:'HS',importer:'HANSOL',staff:'繝代け'},{code:'JJ',importer:'JEONJU',staff:'繝代け'},
+  {code:'JS',importer:'JUSHIN',staff:'繝代け'},{code:'KL',importer:'KLEANNARA',staff:'繝代け'},
+  {code:'TG',importer:'TAE GYOUNG',staff:'繝代け'},{code:'KS',importer:'KISUK',staff:'繝代け'},
+  {code:'TL',importer:'TAILIM PAPER',staff:'繝代け'},{code:'YC',importer:'YUCHANG',staff:'繝代け'},
+  {code:'NF',importer:'NIKKO FIBRE',staff:'繝代け'},{code:'CL',importer:'CLC(Y)',staff:'繝代け'},
+  {code:'CV',importer:'CLC(V)',staff:'繝代け'},{code:'DA',importer:'DOUBLE A',staff:'繝代け'},
+  {code:'CA',importer:'CAS',staff:'繝代け'},{code:'DT',importer:'DONG TIEN',staff:'繝代け'},
+  {code:'XM',importer:'XUAN MAI',staff:'繝代け'},{code:'KC',importer:'TKC KRAFT',staff:'繝代け'},
+  {code:'TQ',importer:'TAN QUANG',staff:'繝代け'},{code:'NI',importer:'NIC INTERTRADE',staff:'繝代け'},
+  {code:'VD',importer:'VAN DIEM',staff:'繝代け'},{code:'NE',importer:'NEW TOYO',staff:'繝代け'},
+  {code:'TE',importer:'THAI HIEP',staff:'繝代け'},{code:'NB',importer:'NIBONG TEBAL',staff:'繝代け'},
+  {code:'A',importer:'ASPEX',staff:'繝代け'}
 ];
 
 async function loadMasterJson(){
@@ -1453,7 +1445,7 @@ async function loadMasterJson(){
     polStaffData=d.tsukan_staff||DEFAULT_TSUKAN;
     shippingStaffData=d.shipping_staff||DEFAULT_SHIPPING;
   }catch(e){
-    // 파일 없으면 기본값 사용
+    // 甯護攵 ・・愍・ｴ ・ｰ・ｸ・・・ｬ・ｩ
     polStaffData=[...DEFAULT_TSUKAN];
     shippingStaffData=[...DEFAULT_SHIPPING];
   }
@@ -1474,10 +1466,10 @@ async function saveMasterJson(){
     if(!r.ok)throw new Error(`${r.status}`);
     document.getElementById('masterSaveOk').style.display='';
     setTimeout(()=>document.getElementById('masterSaveOk').style.display='none',3000);
-  }catch(e){alert('保存エラー: '+e.message);}
+  }catch(e){alert('菫晏ｭ倥お繝ｩ繝ｼ: '+e.message);}
 }
 
-// ── MASTER 탭 서브탭 전환 ──
+// 笏笏 MASTER 夋ｭ ・罹ｸ醐Ο ・・劍 笏笏
 function switchMasterSub(name){
   ['tsukan','shipping'].forEach(t=>{
     document.getElementById(`msub-${t}`)?.classList.toggle('on',t===name);
@@ -1491,14 +1483,14 @@ function renderMasterTabs(){
   renderShippingMaster();
 }
 
-// ── 通관담당자 편집 ──
+// 笏笏 騾夛ｴ・ｴ・ｹ・・寬ｸ・・笏笏
 function renderTsukanMaster(){
   const tb=document.getElementById('tsukanMasterBody');if(!tb)return;
   tb.innerHTML=polStaffData.map((r,i)=>`
     <tr>
-      <td><input class="master-edit-input" value="${r.pol||''}" onchange="polStaffData[${i}].pol=this.value" placeholder="POL名"></td>
-      <td><input class="master-edit-input" value="${r.staff||''}" onchange="polStaffData[${i}].staff=this.value" placeholder="担当者名"></td>
-      <td class="cn"><button class="master-del-btn" onclick="delTsukanRow(${i})">削除</button></td>
+      <td><input class="master-edit-input" value="${r.pol||''}" onchange="polStaffData[${i}].pol=this.value" placeholder="POL蜷・></td>
+      <td><input class="master-edit-input" value="${r.staff||''}" onchange="polStaffData[${i}].staff=this.value" placeholder="諡・ｽ楢・錐"></td>
+      <td class="cn"><button class="master-del-btn" onclick="delTsukanRow(${i})">蜑企勁</button></td>
     </tr>`).join('');
 }
 function addTsukanRow(){
@@ -1506,20 +1498,20 @@ function addTsukanRow(){
   renderTsukanMaster();
 }
 function delTsukanRow(i){
-  if(!confirm('削除しますか?'))return;
+  if(!confirm('蜑企勁縺励∪縺吶°?'))return;
   polStaffData.splice(i,1);
   renderTsukanMaster();
 }
 
-// ── 선적서류 담당자 편집 ──
+// 笏笏 ・・・・・・・ｴ・ｹ・・寬ｸ・・笏笏
 function renderShippingMaster(){
   const tb=document.getElementById('shippingMasterBody');if(!tb)return;
   tb.innerHTML=shippingStaffData.map((r,i)=>`
     <tr>
-      <td><input class="master-edit-input" value="${r.code||''}" onchange="shippingStaffData[${i}].code=this.value" placeholder="IVコード(例:MG)" style="width:70px;"></td>
-      <td><input class="master-edit-input" value="${r.importer||''}" onchange="shippingStaffData[${i}].importer=this.value" placeholder="Importer名"></td>
-      <td><input class="master-edit-input" value="${r.staff||''}" onchange="shippingStaffData[${i}].staff=this.value" placeholder="大場/パク/..."></td>
-      <td class="cn"><button class="master-del-btn" onclick="delShippingRow(${i})">削除</button></td>
+      <td><input class="master-edit-input" value="${r.code||''}" onchange="shippingStaffData[${i}].code=this.value" placeholder="IV繧ｳ繝ｼ繝・萓・MG)" style="width:70px;"></td>
+      <td><input class="master-edit-input" value="${r.importer||''}" onchange="shippingStaffData[${i}].importer=this.value" placeholder="Importer蜷・></td>
+      <td><input class="master-edit-input" value="${r.staff||''}" onchange="shippingStaffData[${i}].staff=this.value" placeholder="螟ｧ蝣ｴ/繝代け/..."></td>
+      <td class="cn"><button class="master-del-btn" onclick="delShippingRow(${i})">蜑企勁</button></td>
     </tr>`).join('');
 }
 function addShippingRow(){
@@ -1527,13 +1519,13 @@ function addShippingRow(){
   renderShippingMaster();
 }
 function delShippingRow(i){
-  if(!confirm('削除しますか?'))return;
+  if(!confirm('蜑企勁縺励∪縺吶°?'))return;
   shippingStaffData.splice(i,1);
   renderShippingMaster();
 }
 
 async function reloadData(){
-  showLoading('データを更新中...');
+  showLoading('繝・・繧ｿ繧呈峩譁ｰ荳ｭ...');
   try{
     await loadStatusJson();
     const activeTab=document.querySelector('.tab-btn.on')?.id?.replace('tab-','');
@@ -1554,7 +1546,7 @@ function showMain(){
   document.getElementById('todayLabel').textContent=todayLbl();
 }
 
-// ── 테마 ──
+// 笏笏 奛誤ｧ・笏笏
 function toggleTheme(){
   const h=document.documentElement,cur=h.getAttribute('data-theme')||'dark';
   const order=['dark','light','leenai'],next=order[(order.indexOf(cur)+1)%order.length];
@@ -1562,11 +1554,11 @@ function toggleTheme(){
 }
 function updateThemeBtn(t){
   const b=document.getElementById('themeToggleBtn');if(!b)return;
-  b.textContent={dark:'🌙 ダーク',light:'☀️ ライト',leenai:'🌿 LEENAI'}[t]||'🌙 ダーク';
+  b.textContent={dark:'嫌 繝繝ｼ繧ｯ',light:'笘・・繝ｩ繧､繝・,leenai:'諺 LEENAI'}[t]||'嫌 繝繝ｼ繧ｯ';
 }
 (function(){const s=localStorage.getItem('leenai_theme')||'dark';document.documentElement.setAttribute('data-theme',s);document.addEventListener('DOMContentLoaded',()=>updateThemeBtn(s));})();
 
-// ── 초기화 ──
+// 笏笏 ・一ｸｰ嶹・笏笏
 window.onload=async()=>{
   const sd=sessionStorage.getItem('dv_token'),sg=sessionStorage.getItem('gr_token');
   if(sd)dvToken=sd;
@@ -1576,24 +1568,24 @@ window.onload=async()=>{
     const p=new URLSearchParams(location.search);
     const code=p.get('code'),state=p.get('state')||'';
     history.replaceState({},'',location.pathname);
-    showLoading('認証中...');
+    showLoading('隱崎ｨｼ荳ｭ...');
     try{
       if(state.startsWith('graph_')){
         await handleGraphCallback(code);
       } else {
-        await handleDvCallback(code); // 완료 후 자동으로 Graph 로그인 redirect
+        await handleDvCallback(code); // ・・｣・弡・・尖徐・ｼ・・Graph ・懋ｷｸ・ｸ redirect
       }
-    }catch(e){alert('認証エラー: '+e.message);hideLoading();}
+    }catch(e){alert('隱崎ｨｼ繧ｨ繝ｩ繝ｼ: '+e.message);hideLoading();}
     return;
   }
 
   if(dvToken&&grToken){showMain();loadAll();return;}
   if(dvToken){
-    // DV만 있으면 바로 Graph 로그인으로
-    showLoading('SharePointへ接続中...');
+    // DV・・・溢愍・ｴ ・罷｡・Graph ・懋ｷｸ・ｸ・ｼ・・    showLoading('SharePoint縺ｸ謗･邯壻ｸｭ...');
     setTimeout(()=>startGraphLogin(),500);
   }
 };
 </script>
 </body>
 </html>
+
