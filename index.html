@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.12</title>
+<title>LEENAI 今日の作業 v3.13</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -32,7 +32,7 @@ th.th-pc{background:#2D4878;color:rgba(255,255,255,.9);}
 .master-del-btn{padding:2px 8px;border-radius:4px;border:1px solid var(--danger);color:var(--danger);background:transparent;cursor:pointer;font-size:11px;}
 th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .si-done{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;background:#E8F4E0;color:#2D6B1E;}
-.si-no{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;background:var(--surface3);color:var(--text3);}
+.si-no{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;background:#FEE2E2;color:#DC2626;}
 .tab-content{display:none;}
 .tab-content.on{display:block;}
 
@@ -160,7 +160,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.12</div>
+  <div class="splash-ver">v3.13</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -176,7 +176,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.12 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.13 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -457,6 +457,11 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
         <button class="flt-btn" id="scItemBtn" onclick="toggleFlt('scItemPanel',event)">ITEM ▾</button>
         <div class="flt-panel" id="scItemPanel"><div class="flt-clear" onclick="clearFlt('sc','item')">クリア</div></div>
       </div>
+      <select class="filter-sel" id="scSiFilter" onchange="renderSale()">
+        <option value="">SI 全て</option>
+        <option value="1">入力済</option>
+        <option value="0">未</option>
+      </select>
       <input type="text" class="filter-sel" id="scSearch" placeholder="フリー検索" style="width:160px;" oninput="renderSale()">
       <span style="font-size:11px;color:var(--text3);margin-left:8px;">契約日降順 | 最新が上</span>
       <span class="today-label" id="scTodayLabel"></span>
@@ -480,9 +485,10 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
             <th class="th-sc" style="width:80px;">単価($/MT)</th>
             <th class="th-sc" style="width:90px;">最終船積日</th>
             <th class="th-sc" style="width:60px;">SI</th>
+            <th class="th-sc" style="width:72px;">担当者</th>
           </tr></thead>
           <tbody id="scBody">
-            <tr class="msg-row"><td colspan="10"><span class="spinner"></span>読み込み中...</td></tr>
+            <tr class="msg-row"><td colspan="11"><span class="spinner"></span>読み込み中...</td></tr>
           </tbody>
         </table>
       </div>
@@ -783,6 +789,8 @@ const IV_IMPORTER_MAP = {
   'A':{name:'ASPEX',staff:'パク'}
 };
 const IV_CODE_KEYS=Object.keys(IV_IMPORTER_MAP).sort((a,b)=>b.length-a.length);
+const IV_NAME_TO_STAFF=Object.fromEntries(Object.values(IV_IMPORTER_MAP).map(v=>[v.name.toUpperCase(),v.staff]));
+function getBuyerStaff(buyerName){if(!buyerName||buyerName==='—')return'—';return IV_NAME_TO_STAFF[buyerName.toUpperCase()]||'—';}
 function getShipStaff(ivNo){
   if(!ivNo||ivNo==='—')return{name:'—',staff:'—'};
   const body=ivNo.replace(/^N/,'');
@@ -1347,7 +1355,7 @@ async function loadSale(){
   const from=localDateStr(-days);
   document.getElementById('scTodayLabel').textContent=todayLbl();
   document.getElementById('scDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 〜 ${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
-  document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="10"><span class="spinner"></span>読み込み中...</td></tr>`;
+  document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="11"><span class="spinner"></span>読み込み中...</td></tr>`;
   try{
     // 판매계약 헤더 취득
     const filter=`cr49f_sale_contract_date ge ${from}T00:00:00Z`;
@@ -1417,7 +1425,8 @@ async function loadSale(){
         country:buyerCountryMap[c['_cr49f_buyer_id_value']]||'—',
         buyer:buyerNameMap[c['_cr49f_buyer_id_value']]||'—',
         pod:podNameMap[c['_cr49f_pod1_value']]||'—',
-        latest_shipment:fmtDate(c.cr49f_latest_shipment),si:hasSi};
+        latest_shipment:fmtDate(c.cr49f_latest_shipment),si:hasSi,
+        staff:getBuyerStaff(buyerNameMap[c['_cr49f_buyer_id_value']]||'—')};
       if(!details.length)return[{...base,item:'—',qty:0,price:0}];
       return details.map(d=>({...base,
         item:scItemMap[d['_cr49f_item_id_value']]||'—',
@@ -1426,7 +1435,7 @@ async function loadSale(){
       }));
     });
   }catch(e){
-    document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="10">⚠ ${e.message}</td></tr>`;
+    document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="11">⚠ ${e.message}</td></tr>`;
     document.getElementById('scCnt').textContent='エラー';return;
   }
   buildScFilters();
@@ -1437,16 +1446,18 @@ function renderSale(){
   const kw=(document.getElementById('scSearch')?.value||'').toLowerCase();
   const rows=allSale.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.buyer.toLowerCase().includes(kw)||r.item.toLowerCase().includes(kw));
   document.getElementById('scCnt').textContent=`${rows.length}件`;
-  if(!rows.length){document.getElementById('scBody').innerHTML='<tr class="msg-row"><td colspan="10">該当データなし</td></tr>';return;}
+  if(!rows.length){document.getElementById('scBody').innerHTML='<tr class="msg-row"><td colspan="11">該当データなし</td></tr>';return;}
   const scFltCountry=getActiveFlt('sc','country');
   const scFltBuyer=getActiveFlt('sc','buyer');
   const scFltPod=getActiveFlt('sc','pod');
   const scFltItem=getActiveFlt('sc','item');
+  const scSiVal=document.getElementById('scSiFilter')?.value||'';
   const scFiltRows=rows.filter(r=>
     (!scFltCountry.size||scFltCountry.has(r.country))&&
     (!scFltBuyer.size||scFltBuyer.has(r.buyer))&&
     (!scFltPod.size||scFltPod.has(r.pod))&&
-    (!scFltItem.size||scFltItem.has(r.item))
+    (!scFltItem.size||scFltItem.has(r.item))&&
+    (!scSiVal||(scSiVal==='1'?r.si:!r.si))
   );
   document.getElementById('scCnt').textContent=`${scFiltRows.length}件`;
   let scGrpIdx=0,scPrevNo='';
@@ -1464,7 +1475,8 @@ function renderSale(){
       <td class="cn">${r.price?'$'+r.price.toLocaleString():'—'}</td>
       <td class="cn">${r.latest_shipment}</td>
       <td class="cn">${r.si?'<span class="si-done">入力済</span>':'<span class="si-no">未</span>'}</td>
-    </tr>`;}).join(''):'<tr class="msg-row"><td colspan="10">該当データなし</td></tr>';
+      <td class="cn">${mkChip(r.staff)}</td>
+    </tr>`;}).join(''):'<tr class="msg-row"><td colspan="11">該当データなし</td></tr>';
 }
 
 async function onScPeriodChange(){allSale=[];await loadSale();}
