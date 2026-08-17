@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.2</title>
+<title>LEENAI 今日の作業 v3.4</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -15,6 +15,17 @@ body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;background:var
 .tab-btn.on{color:var(--accent);border-bottom:2px solid var(--accent);font-weight:500;}
 .tab-btn:hover:not(.on){color:var(--text);}
 th.th-pc{background:#2D4878;color:rgba(255,255,255,.9);}
+/* ── 체크박스 필터 드롭다운 ── */
+.flt-wrap{position:relative;display:inline-block;}
+.flt-btn{font-size:11px;padding:3px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text2);cursor:pointer;white-space:nowrap;}
+.flt-btn.active{border-color:var(--accent);color:var(--accent);background:var(--surface);}
+.flt-panel{display:none;position:absolute;top:calc(100% + 4px);left:0;background:var(--surface);border:1px solid var(--border);border-radius:8px;z-index:300;min-width:160px;max-height:220px;overflow-y:auto;padding:4px;box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.flt-panel.open{display:block;}
+.flt-item{display:flex;align-items:center;gap:7px;padding:4px 10px;cursor:pointer;font-size:12px;border-radius:4px;}
+.flt-item:hover{background:var(--surface2);}
+.flt-item input{cursor:pointer;accent-color:var(--accent);}
+.flt-clear{font-size:10px;color:var(--text3);padding:2px 10px;cursor:pointer;border-top:1px solid var(--border);margin-top:2px;}
+.flt-clear:hover{color:var(--accent);}
 th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .si-done{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;background:#E8F4E0;color:#2D6B1E;}
 .si-no{display:inline-block;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:500;background:var(--surface3);color:var(--text3);}
@@ -145,7 +156,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.2</div>
+  <div class="splash-ver">v3.4</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -161,7 +172,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.2 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.4 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -369,7 +380,19 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       </select>
       <div class="fdivider"></div>
       <span class="filter-label">検索</span>
-      <input type="text" class="filter-sel" id="pcSearch" placeholder="契約番号 / PACKER / ITEM" style="width:220px;" oninput="renderPurchase()">
+      <div class="flt-wrap">
+        <button class="flt-btn" id="pcPolBtn" onclick="toggleFlt('pcPolPanel',event)">POL ▾</button>
+        <div class="flt-panel" id="pcPolPanel"><div class="flt-clear" onclick="clearFlt('pc','pol')">クリア</div></div>
+      </div>
+      <div class="flt-wrap">
+        <button class="flt-btn" id="pcPackerBtn" onclick="toggleFlt('pcPackerPanel',event)">PACKER ▾</button>
+        <div class="flt-panel" id="pcPackerPanel"><div class="flt-clear" onclick="clearFlt('pc','packer')">クリア</div></div>
+      </div>
+      <div class="flt-wrap">
+        <button class="flt-btn" id="pcItemBtn" onclick="toggleFlt('pcItemPanel',event)">ITEM ▾</button>
+        <div class="flt-panel" id="pcItemPanel"><div class="flt-clear" onclick="clearFlt('pc','item')">クリア</div></div>
+      </div>
+      <input type="text" class="filter-sel" id="pcSearch" placeholder="フリー検索" style="width:160px;" oninput="renderPurchase()">
       <span style="font-size:11px;color:var(--text3);margin-left:8px;">契約日降順 | 最新が上</span>
       <span class="today-label" id="pcTodayLabel"></span>
     </div>
@@ -385,6 +408,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
             <th class="th-pc" style="width:110px;">契約番号</th>
             <th class="th-pc" style="width:82px;">契約日</th>
             <th class="th-pc" style="width:130px;">PACKER</th>
+            <th class="th-pc" style="width:70px;">POL</th>
             <th class="th-pc" style="width:80px;">ITEM</th>
             <th class="th-pc" style="width:72px;">QTY(MT)</th>
             <th class="th-pc" style="width:80px;">単価(¥/kg)</th>
@@ -412,7 +436,23 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       </select>
       <div class="fdivider"></div>
       <span class="filter-label">検索</span>
-      <input type="text" class="filter-sel" id="scSearch" placeholder="契約番号 / Buyer / ITEM" style="width:220px;" oninput="renderSale()">
+      <div class="flt-wrap">
+        <button class="flt-btn" id="scCountryBtn" onclick="toggleFlt('scCountryPanel',event)">国 ▾</button>
+        <div class="flt-panel" id="scCountryPanel"><div class="flt-clear" onclick="clearFlt('sc','country')">クリア</div></div>
+      </div>
+      <div class="flt-wrap">
+        <button class="flt-btn" id="scBuyerBtn" onclick="toggleFlt('scBuyerPanel',event)">Buyer ▾</button>
+        <div class="flt-panel" id="scBuyerPanel"><div class="flt-clear" onclick="clearFlt('sc','buyer')">クリア</div></div>
+      </div>
+      <div class="flt-wrap">
+        <button class="flt-btn" id="scPodBtn" onclick="toggleFlt('scPodPanel',event)">POD ▾</button>
+        <div class="flt-panel" id="scPodPanel"><div class="flt-clear" onclick="clearFlt('sc','pod')">クリア</div></div>
+      </div>
+      <div class="flt-wrap">
+        <button class="flt-btn" id="scItemBtn" onclick="toggleFlt('scItemPanel',event)">ITEM ▾</button>
+        <div class="flt-panel" id="scItemPanel"><div class="flt-clear" onclick="clearFlt('sc','item')">クリア</div></div>
+      </div>
+      <input type="text" class="filter-sel" id="scSearch" placeholder="フリー検索" style="width:160px;" oninput="renderSale()">
       <span style="font-size:11px;color:var(--text3);margin-left:8px;">契約日降順 | 最新が上</span>
       <span class="today-label" id="scTodayLabel"></span>
     </div>
@@ -1140,7 +1180,7 @@ async function loadPurchase(){
       const chunk=cids.slice(i,i+10);
       const f=chunk.map(id=>`_cr49f_purchase_contract_id_value eq ${id}`).join(' or ');
       try{
-        const dr=await dvGet(`${DV_API}/cr49f_purchase_details?$filter=${encodeURIComponent(f)}&$select=_cr49f_purchase_contract_id_value,_cr49f_item_id_value,cr49f_quantity,cr49f_price,cr49f_remark&$top=500`);
+        const dr=await dvGet(`${DV_API}/cr49f_purchase_details?$filter=${encodeURIComponent(f)}&$select=_cr49f_purchase_contract_id_value,_cr49f_item_id_value,cr49f_quantity,cr49f_price,cr49f_remark,cr49f_loading_port&$top=500`);
         (dr.value||[]).forEach(d=>{
           const cid=d['_cr49f_purchase_contract_id_value'];
           if(!detailMap[cid])detailMap[cid]=[];
@@ -1175,39 +1215,120 @@ async function loadPurchase(){
         item:pcItemMap[d['_cr49f_item_id_value']]||'—',
         qty:d.cr49f_quantity||0,
         price:d.cr49f_price||0,
-        remark:d.cr49f_remark||'—'
+        remark:d.cr49f_remark||'—',
+        pol:d.cr49f_loading_port||'—'
       }));
     });
   }catch(e){
-    document.getElementById('pcBody').innerHTML=`<tr class="msg-row"><td colspan="8">⚠ ${e.message}</td></tr>`;
+    document.getElementById('pcBody').innerHTML=`<tr class="msg-row"><td colspan="9">⚠ ${e.message}</td></tr>`;
     document.getElementById('pcCnt').textContent='エラー';return;
   }
+  buildPcFilters();
   renderPurchase();
 }
 
 function renderPurchase(){
   const kw=(document.getElementById('pcSearch')?.value||'').toLowerCase();
   const rows=allPurchase.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.packer.toLowerCase().includes(kw)||r.item.toLowerCase().includes(kw));
-  document.getElementById('pcCnt').textContent=`${rows.length}件`;
-  if(!rows.length){document.getElementById('pcBody').innerHTML='<tr class="msg-row"><td colspan="8">該当データなし</td></tr>';return;}
+  // pcCnt는 필터 적용 후 filtRows에서 업데이트
   // 같은 계약번호끼리 배경 그룹화
+  const pcFltPol=getActiveFlt('pc','pol');
+  const pcFltPacker=getActiveFlt('pc','packer');
+  const pcFltItem=getActiveFlt('pc','item');
+  const filtRows=rows.filter(r=>
+    (!pcFltPol.size||pcFltPol.has(r.pol))&&
+    (!pcFltPacker.size||pcFltPacker.has(r.packer))&&
+    (!pcFltItem.size||pcFltItem.has(r.item))
+  );
+  document.getElementById('pcCnt').textContent=`${filtRows.length}件`;
   let pcGrpIdx=0,pcPrevNo='';
-  document.getElementById('pcBody').innerHTML=rows.map(r=>{
+  document.getElementById('pcBody').innerHTML=filtRows.length?filtRows.map(r=>{
     if(r.no!==pcPrevNo){pcGrpIdx++;pcPrevNo=r.no;}
     const bg=pcGrpIdx%2===0?'background:var(--surface2);':'';
     return`<tr style="${bg}">
       <td style="font-weight:500;color:var(--accent);">${r.no}</td>
       <td class="cn">${r.date}</td>
-      <td>${r.packer}</td>
+      <td style="font-size:11px;">${r.packer}</td>
+      <td class="cn">${r.pol}</td>
       <td>${r.item}</td>
       <td class="cn">${r.qty?r.qty.toFixed(2):'—'}</td>
       <td class="cn">${r.price?'¥'+r.price.toLocaleString():'—'}</td>
       <td style="font-size:11px;color:var(--text2);">${r.remark||'—'}</td>
       <td class="cn">${r.latest_vanning}</td>
-    </tr>`;}).join('');
+    </tr>`;}).join(''):'<tr class="msg-row"><td colspan="9">該当データなし</td></tr>';
 }
 
 async function onPcPeriodChange(){allPurchase=[];await loadPurchase();}
+
+// ── 체크박스 필터 공통 함수 ──
+function toggleFlt(panelId, e){
+  e.stopPropagation();
+  const panel=document.getElementById(panelId);
+  const isOpen=panel.classList.contains('open');
+  document.querySelectorAll('.flt-panel').forEach(p=>p.classList.remove('open'));
+  if(!isOpen)panel.classList.add('open');
+}
+document.addEventListener('click',()=>{
+  document.querySelectorAll('.flt-panel').forEach(p=>p.classList.remove('open'));
+});
+function getActiveFlt(tab,key){
+  const panel=document.getElementById(`${tab}${key.charAt(0).toUpperCase()+key.slice(1)}Panel`);
+  if(!panel)return new Set();
+  const checked=[...panel.querySelectorAll('input[type=checkbox]:checked')].map(c=>c.value);
+  return new Set(checked);
+}
+function clearFlt(tab,key){
+  const panel=document.getElementById(`${tab}${key.charAt(0).toUpperCase()+key.slice(1)}Panel`);
+  if(panel)panel.querySelectorAll('input[type=checkbox]').forEach(c=>{c.checked=false;});
+  const btn=document.getElementById(`${tab}${key.charAt(0).toUpperCase()+key.slice(1)}Btn`);
+  if(btn)btn.classList.remove('active');
+  tab==='pc'?renderPurchase():renderSale();
+}
+function buildFltPanel(panelId, btnId, values, onChange){
+  const panel=document.getElementById(panelId);
+  if(!panel)return;
+  const clearEl=panel.querySelector('.flt-clear');
+  panel.innerHTML='';
+  if(clearEl)panel.appendChild(clearEl);
+  values.forEach(v=>{
+    const lbl=document.createElement('label');
+    lbl.className='flt-item';
+    const chk=document.createElement('input');
+    chk.type='checkbox'; chk.value=v;
+    chk.addEventListener('change',()=>{
+      const btn=document.getElementById(btnId);
+      const anyChecked=[...panel.querySelectorAll('input:checked')].length>0;
+      if(btn)btn.classList.toggle('active',anyChecked);
+      onChange();
+    });
+    lbl.appendChild(chk);
+    lbl.appendChild(document.createTextNode(v));
+    panel.appendChild(lbl);
+  });
+  const clear=document.createElement('div');
+  clear.className='flt-clear';
+  clear.textContent='クリア';
+  clear.onclick=()=>clearFlt(panelId.startsWith('pc')?'pc':'sc', panelId.replace(/Panel$/,'').replace(/^(pc|sc)/,'').toLowerCase());
+  panel.appendChild(clear);
+}
+function buildPcFilters(){
+  const pols=[...new Set(allPurchase.map(r=>r.pol).filter(v=>v&&v!=='—'))].sort();
+  const packers=[...new Set(allPurchase.map(r=>r.packer).filter(v=>v&&v!=='—'))].sort();
+  const items=[...new Set(allPurchase.map(r=>r.item).filter(v=>v&&v!=='—'))].sort();
+  buildFltPanel('pcPolPanel','pcPolBtn',pols,renderPurchase);
+  buildFltPanel('pcPackerPanel','pcPackerBtn',packers,renderPurchase);
+  buildFltPanel('pcItemPanel','pcItemBtn',items,renderPurchase);
+}
+function buildScFilters(){
+  const countries=[...new Set(allSale.map(r=>r.country).filter(v=>v&&v!=='—'))].sort();
+  const buyers=[...new Set(allSale.map(r=>r.buyer).filter(v=>v&&v!=='—'))].sort();
+  const pods=[...new Set(allSale.map(r=>r.pod).filter(v=>v&&v!=='—'))].sort();
+  const items=[...new Set(allSale.map(r=>r.item).filter(v=>v&&v!=='—'))].sort();
+  buildFltPanel('scCountryPanel','scCountryBtn',countries,renderSale);
+  buildFltPanel('scBuyerPanel','scBuyerBtn',buyers,renderSale);
+  buildFltPanel('scPodPanel','scPodBtn',pods,renderSale);
+  buildFltPanel('scItemPanel','scItemBtn',items,renderSale);
+}
 
 // 판매계약 로드
 async function loadSale(){
@@ -1297,6 +1418,7 @@ async function loadSale(){
     document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="10">⚠ ${e.message}</td></tr>`;
     document.getElementById('scCnt').textContent='エラー';return;
   }
+  buildScFilters();
   renderSale();
 }
 
@@ -1305,8 +1427,19 @@ function renderSale(){
   const rows=allSale.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.buyer.toLowerCase().includes(kw)||r.item.toLowerCase().includes(kw));
   document.getElementById('scCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('scBody').innerHTML='<tr class="msg-row"><td colspan="10">該当データなし</td></tr>';return;}
+  const scFltCountry=getActiveFlt('sc','country');
+  const scFltBuyer=getActiveFlt('sc','buyer');
+  const scFltPod=getActiveFlt('sc','pod');
+  const scFltItem=getActiveFlt('sc','item');
+  const scFiltRows=rows.filter(r=>
+    (!scFltCountry.size||scFltCountry.has(r.country))&&
+    (!scFltBuyer.size||scFltBuyer.has(r.buyer))&&
+    (!scFltPod.size||scFltPod.has(r.pod))&&
+    (!scFltItem.size||scFltItem.has(r.item))
+  );
+  document.getElementById('scCnt').textContent=`${scFiltRows.length}件`;
   let scGrpIdx=0,scPrevNo='';
-  document.getElementById('scBody').innerHTML=rows.map(r=>{
+  document.getElementById('scBody').innerHTML=scFiltRows.length?scFiltRows.map(r=>{
     if(r.no!==scPrevNo){scGrpIdx++;scPrevNo=r.no;}
     const bg=scGrpIdx%2===0?'background:var(--surface2);':'';
     return`<tr style="${bg}">
@@ -1320,7 +1453,7 @@ function renderSale(){
       <td class="cn">${r.price?'$'+r.price.toLocaleString():'—'}</td>
       <td class="cn">${r.latest_shipment}</td>
       <td class="cn">${r.si?'<span class="si-done">入力済</span>':'<span class="si-no">未</span>'}</td>
-    </tr>`;}).join('');
+    </tr>`;}).join(''):'<tr class="msg-row"><td colspan="10">該当データなし</td></tr>';
 }
 
 async function onScPeriodChange(){allSale=[];await loadSale();}
