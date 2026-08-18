@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.16</title>
+<title>LEENAI 今日の作業 v3.17</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -162,7 +162,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.16</div>
+  <div class="splash-ver">v3.17</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -178,7 +178,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.16 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.17 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -933,6 +933,7 @@ async function loadShipping(){
       return{guid:b.cr49f_bookingid,iv_no:ivNo,bkg_no:b.cr49f_booking_no||'—',
         etd:fmtDate(b.crcf9_bl_etd||b.cr49f_etd),etd_raw:etdRaw,
         eta:fmtDate(b.crcf9_bl_eta||b.cr49f_eta),cy_cut:fmtDate(b.cr49f_cy_cut),
+        cy_cut_raw:b.cr49f_cy_cut?b.cr49f_cy_cut.slice(0,10):'',
         pol,cntr,ship:carrierMap[b['_cr49f_carrier_id_value']]||'—',
         ct_count:ctCountMap[b.cr49f_bookingid]||'—',
         importer:sp.name,staff:sp.staff,
@@ -974,7 +975,7 @@ function renderShipping(){
       <td class="cn">${r.etd}</td>
       <td class="cn">${r.eta}</td>
       <td class="cn">${r.cy_cut}</td>
-      <td class="cn">${(()=>{const ts=statusMap[r.iv_no];const ok=ts&&ts.tsukan_irai;return ok?'<span style="color:var(--ok);font-size:13px;">✅</span>':'<span style="font-size:10px;color:var(--text3);">未</span>';})()}</td>
+      <td class="cn">${(()=>{const ts=statusMap[r.iv_no];const ok=(ts&&ts.tsukan_irai)||(r.cy_cut_raw&&r.cy_cut_raw<='2026-08-17');return ok?'<span style="color:var(--ok);font-size:13px;">✅</span>':'<span style="font-size:10px;color:var(--text3);">未</span>';})()}</td>
       <td>${r.pol}</td>
       <td class="iv">${r.iv_no}</td>
       <td class="cn">${r.ct_count}</td>
