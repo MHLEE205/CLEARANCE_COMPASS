@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.18</title>
+<title>LEENAI 今日の作業 v3.19</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -141,6 +141,8 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 .none{background:var(--surface3);color:var(--text3);}
 .ct-badge{display:inline-block;padding:1px 6px;border-radius:4px;font-size:10px;font-weight:600;background:var(--surface3);color:var(--text2);}
 .date-today{color:var(--ok);font-weight:500;}.date-bizday{color:var(--warn);font-weight:600;background:rgba(245,158,11,.10);border-radius:4px;padding:1px 5px;}.date-future{color:var(--text2);}
+.row-bizday td{background:rgba(245,158,11,.12)!important;}
+.row-today-etd td{background:rgba(245,158,11,.12)!important;}
 .msg-row td{text-align:center;padding:24px;color:var(--text3);}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 .spinner-lg{width:28px;height:28px;border-width:3px;}
@@ -162,7 +164,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.18</div>
+  <div class="splash-ver">v3.19</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -178,7 +180,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.18 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.19 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -971,7 +973,9 @@ function renderShipping(){
       ?`<td><input type="date" class="fd-date ${sp.fd_date?'filled':''}" id="fddate_${r.iv_no}" value="${sp.fd_date||''}" onchange="onFdDateChange('${r.iv_no}',this.value)"></td>
          <td><input type="text" class="fd-note" value="${sp.fd_note||''}" placeholder="メモ" onchange="onFdNoteChange('${r.iv_no}',this.value)"></td>`
       :`<td style="color:var(--text3);font-size:10px;" colspan="2">SP未ログイン</td>`;
-    return`<tr data-sp-iv="${r.iv_no}" class="${unsaved?'row-unsaved':''}">
+    const spTod=localDateStr(0);
+    const spRowCls=(unsaved?'row-unsaved ':'')+(r.etd_raw===spTod?'row-today-etd':'');
+    return`<tr data-sp-iv="${r.iv_no}" class="${spRowCls}">
       <td class="cn">${r.etd}</td>
       <td class="cn">${r.eta}</td>
       <td class="cn">${r.cy_cut}</td>
@@ -1078,7 +1082,8 @@ function renderTsukan(){
          <td class="cn"><select class="status-sel ${stCls}" id="tssel_${r.iv_no}" onchange="onTsStatusChange('${r.iv_no}',this.value)">${opts}</select></td>`
       :`<td class="cn" colspan="2" style="font-size:11px;color:var(--text3);">SP未ログイン</td>`;
     const dateCls=r.cy_cut===today?'date-today':r.cy_cut===bizday?'date-bizday':'date-future';
-    return`<tr data-staff="${r.staff}" data-iv="${r.iv_no}" class="${unsaved?'row-unsaved':''}">
+    const rowCls=(unsaved?'row-unsaved ':'')+( r.cy_cut===bizday?'row-bizday':'');
+    return`<tr data-staff="${r.staff}" data-iv="${r.iv_no}" class="${rowCls}">
       <td class="cn ${dateCls}">${r.cy_cut_fmt}</td>
       <td>${r.pol}</td><td class="iv">${r.iv_no}</td>
       <td style="font-size:11px;color:var(--text2);">${r.bkg_no}</td>
