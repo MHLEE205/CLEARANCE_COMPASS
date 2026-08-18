@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.15</title>
+<title>LEENAI 今日の作業 v3.16</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -162,7 +162,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.15</div>
+  <div class="splash-ver">v3.16</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -178,7 +178,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.15 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.16 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -361,6 +361,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
             <th class="th-ship" style="width:72px;">ETD(E)</th>
             <th class="th-ship" style="width:72px;">ETA(E)</th>
             <th class="th-ship" style="width:72px;">CY_CUT</th>
+            <th class="th-sp-chk" style="width:52px;">通関</th>
             <th class="th-ship" style="width:88px;">POL</th>
             <th class="th-ship" style="width:108px;">IV_NO</th>
             <th class="th-ship" style="width:44px;">BKG本</th>
@@ -374,7 +375,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
             <th class="th-sp-fd" style="width:110px;">備考</th>
           </tr></thead>
           <tbody id="spBody">
-            <tr class="msg-row"><td colspan="15"><span class="spinner"></span>読み込み中...</td></tr>
+            <tr class="msg-row"><td colspan="16"><span class="spinner"></span>読み込み中...</td></tr>
           </tbody>
         </table>
       </div>
@@ -887,7 +888,7 @@ function switchTab(name){
 
 // ── 선적서류 데이터 로드 ──
 async function loadShipping(){
-  document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="15"><span class="spinner"></span>読み込み中...</td></tr>`;
+  document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="16"><span class="spinner"></span>読み込み中...</td></tr>`;
   document.getElementById('spTodayLabel').textContent=todayLbl();
   const from=localDateStr(-30),to=localDateStr(180);
   const filter=`cr49f_etd ge ${from}T00:00:00Z and cr49f_etd le ${to}T23:59:59Z`;
@@ -938,7 +939,7 @@ async function loadShipping(){
         is_vietnam:cntr.toUpperCase().includes('VIETNAM')};
     });
   }catch(e){
-    document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="15">⚠ ${e.message}</td></tr>`;
+    document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="16">⚠ ${e.message}</td></tr>`;
     document.getElementById('spCnt').textContent='エラー';return;
   }
   renderShipping();
@@ -955,7 +956,7 @@ function renderShipping(){
     (!fc||r.cntr.toUpperCase().includes(fc))
   ).sort((a,b)=>(a.etd_raw||'').localeCompare(b.etd_raw||''));
   document.getElementById('spCnt').textContent=`${rows.length}件`;
-  if(!rows.length){document.getElementById('spBody').innerHTML='<tr class="msg-row"><td colspan="15">該当データなし</td></tr>';return;}
+  if(!rows.length){document.getElementById('spBody').innerHTML='<tr class="msg-row"><td colspan="16">該当データなし</td></tr>';return;}
   document.getElementById('spBody').innerHTML=rows.map(r=>{
     const sp=getSpStatus(r.iv_no);
     const unsaved=isSpUnsaved(r.iv_no);
@@ -973,6 +974,7 @@ function renderShipping(){
       <td class="cn">${r.etd}</td>
       <td class="cn">${r.eta}</td>
       <td class="cn">${r.cy_cut}</td>
+      <td class="cn">${(()=>{const ts=statusMap[r.iv_no];const ok=ts&&ts.tsukan_irai;return ok?'<span style="color:var(--ok);font-size:13px;">✅</span>':'<span style="font-size:10px;color:var(--text3);">未</span>';})()}</td>
       <td>${r.pol}</td>
       <td class="iv">${r.iv_no}</td>
       <td class="cn">${r.ct_count}</td>
