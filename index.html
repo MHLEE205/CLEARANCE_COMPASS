@@ -2,20 +2,20 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.20</title>
+<title>LEENAI 今日の作業 v3.22</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
 [data-theme="leenai"]{--bg:#FAFDF7;--surface:#ffffff;--surface2:#F2F9EE;--surface3:#E8F5E0;--border:#D0E8C0;--border2:#B8DFB0;--text:#1A3A0E;--text2:#4A6A3A;--text3:#8AAA80;--accent:#2D5A1E;--accent2:#2E72C8;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh;}
-/* ── 탭 바 ── */
+/* ── タブバー ── */
 .tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 20px;position:sticky;top:52px;z-index:99;}
 .tab-btn{padding:10px 20px;font-size:13px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
 .tab-btn.on{color:var(--accent);border-bottom:2px solid var(--accent);font-weight:500;}
 .tab-btn:hover:not(.on){color:var(--text);}
 th.th-pc{background:#2D4878;color:rgba(255,255,255,.9);}
-/* ── 체크박스 필터 드롭다운 ── */
+/* ── チェックボックスフィルター ── */
 .flt-wrap{position:relative;display:inline-block;}
 .flt-btn{font-size:11px;padding:3px 10px;border:1px solid var(--border);border-radius:6px;background:var(--surface2);color:var(--text2);cursor:pointer;white-space:nowrap;}
 .flt-btn.active{border-color:var(--accent);color:var(--accent);background:var(--surface);}
@@ -38,7 +38,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .tab-content{display:none;}
 .tab-content.on{display:block;}
 
-/* ── 船積書類 인라인 입력 ── */
+/* ── 船積書類インライン入力 ── */
 .fd-date{font-size:11px;padding:2px 4px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);width:106px;cursor:pointer;}
 .fd-date:focus{outline:none;border-color:var(--accent);}
 .fd-date.filled{border-color:var(--ok);color:var(--ok);background:rgba(34,197,94,.08);}
@@ -50,7 +50,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .loading-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 36px;text-align:center;}
 .loading-msg{font-size:13px;color:var(--text2);margin-top:12px;}
 
-/* ── 스플래시 (버튼 1개) ── */
+/* ── スプラッシュ ── */
 .splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;}
 .splash-logo{font-size:52px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;}
 .splash-logo span{background:linear-gradient(135deg,#4f8ef7,#2D5A1E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
@@ -62,7 +62,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .splash-btn{padding:11px 32px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;}
 .splash-btn:hover{opacity:.85;}
 
-/* ── 헤더 ── */
+/* ── ヘッダー ── */
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .header-left{display:flex;align-items:center;gap:12px;}
 .logo{width:32px;height:32px;background:#2D5A1E;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
@@ -77,10 +77,10 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .btn-reload:hover{border-color:var(--accent);color:var(--accent);}
 .btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);}
 
-/* ── 메인 ── */
+/* ── メイン ── */
 .main{padding:16px 20px;max-width:1500px;margin:0 auto;}
 
-/* ── 필터바 ── */
+/* ── フィルターバー ── */
 .filter-bar{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:10px 16px;margin-bottom:8px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
 .filter-label{font-size:12px;color:var(--text2);flex-shrink:0;}
 .range-sel{font-size:12px;padding:4px 10px;border:1.5px solid var(--accent);border-radius:6px;background:var(--surface2);color:var(--accent);cursor:pointer;font-weight:500;}
@@ -89,7 +89,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .filter-info{font-size:11px;color:var(--text3);}
 .today-label{font-size:13px;font-weight:500;color:var(--text);margin-left:auto;}
 
-/* ── 저장 바 (독립 줄) ── */
+/* ── 保存バー ── */
 .save-bar{background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);border-radius:var(--radius);padding:8px 16px;margin-bottom:12px;display:none;align-items:center;gap:10px;}
 .save-bar.show{display:flex;}
 .unsaved-msg{font-size:12px;color:var(--warn);}
@@ -98,7 +98,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .save-btn:disabled{background:var(--surface3);color:var(--text3);cursor:not-allowed;}
 .save-ok{font-size:12px;color:var(--ok);display:none;}
 
-/* ── 섹션 & 테이블 ── */
+/* ── セクション&テーブル ── */
 .section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;}
 .sec-hdr{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
 .sec-title{font-size:13px;font-weight:500;}
@@ -123,7 +123,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 .cn{text-align:center;}
 .iv{font-weight:500;color:var(--accent);}
 
-/* ── 체크리스트 UI ── */
+/* ── チェックリストUI ── */
 .cl-check{width:16px;height:16px;cursor:pointer;accent-color:var(--ok);}
 .status-sel{font-size:11px;padding:2px 6px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);cursor:pointer;}
 .status-sel.st-ed{border-color:var(--warn);color:var(--warn);}
@@ -132,7 +132,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 .status-sel.st-no{border-color:var(--danger);color:var(--danger);}
 .dot-unsaved{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--warn);margin-left:4px;vertical-align:middle;}
 
-/* ── 기타 ── */
+/* ── その他 ── */
 .chip{display:inline-block;padding:2px 8px;border-radius:10px;font-size:10px;font-weight:500;}
 .ju{background:#EAF3DE;color:#3B6D11;}.zhan{background:#E6F1FB;color:#185FA5;}
 .lee{background:#FBEAF0;color:#993556;}.take{background:#FAEEDA;color:#854F0B;}
@@ -159,12 +159,12 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   </div>
 </div>
 
-<!-- 로그인 스플래시 (버튼 1개) -->
+<!-- ログインスプラッシュ -->
 <div id="loginView" class="splash">
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.20</div>
+  <div class="splash-ver">v3.22</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -173,14 +173,14 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <button class="splash-btn" id="loginBtn" onclick="startDvLogin()">⚡ COMPASSでログイン</button>
 </div>
 
-<!-- 메인 화면 -->
+<!-- メイン画面 -->
 <div id="mainView" style="display:none;">
   <div class="header">
     <div class="header-left">
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.20 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.22 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -192,7 +192,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
     </div>
   </div>
 
-  <!-- 탭 바 -->
+  <!-- タブバー -->
   <div class="tab-bar">
     <div class="tab-btn on" id="tab-today" onclick="switchTab('today')">🛃 通関</div>
     <div class="tab-btn" id="tab-shipping" onclick="switchTab('shipping')">📄 船積書類</div>
@@ -201,10 +201,10 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
     <div class="tab-btn" id="tab-master" onclick="switchTab('master')">⚙ マスター</div>
   </div>
 
-  <!-- 今日の作業 탭 -->
+  <!-- 通関タブ -->
   <div class="tab-content on" id="content-today">
   <div class="main">
-    <!-- 필터바 -->
+    <!-- フィルターバー -->
     <div class="filter-bar">
       <span class="filter-label">表示範囲</span>
       <select class="range-sel" id="rangeFilter" onchange="onRangeChange()">
@@ -239,14 +239,14 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <span class="today-label" id="todayLabel"></span>
     </div>
 
-    <!-- 저장 바 (독립 줄) -->
+    <!-- 保存バー -->
     <div class="save-bar" id="saveBar">
       <span class="unsaved-msg">● 未保存の変更があります</span>
       <button class="save-btn" id="saveBtn" onclick="saveStatus()">💾 変更を保存</button>
       <span class="save-ok" id="saveOk">✅ 保存しました</span>
     </div>
 
-    <!-- 通関 섹션 -->
+    <!-- 通関セクション -->
     <div class="section">
       <div class="sec-hdr" style="background:rgba(45,90,30,.08);">
         <span class="sec-title" style="color:#2D5A1E;">🛃 通関 — 対応期間</span>
@@ -271,7 +271,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       </div>
     </div>
 
-    <!-- COTECNA 섹션 -->
+    <!-- COTECNAセクション -->
     <div class="section">
       <div class="sec-hdr" style="background:rgba(26,77,143,.06);">
         <span class="sec-title" style="color:#1A4D8F;">📋 COTECNA 報告書 — 対応期間</span>
@@ -305,10 +305,10 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   </div><!-- /main -->
   </div><!-- /tab-content today -->
 
-  <!-- 船積書類 탭 -->
+  <!-- 船積書類タブ -->
   <div class="tab-content" id="content-shipping">
   <div class="main">
-    <!-- 선적 필터바 -->
+    <!-- 船積フィルターバー -->
     <div class="filter-bar">
       <span class="filter-label">POL</span>
       <select class="filter-sel" id="spPolFilter" onchange="renderShipping()">
@@ -340,7 +340,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <span class="today-label" id="spTodayLabel"></span>
     </div>
 
-    <!-- 저장 바 (선적 전용) -->
+    <!-- 保存バー(船積用) -->
     <div class="save-bar" id="spSaveBar">
       <span class="unsaved-msg">● 未保存の変更があります</span>
       <button class="save-btn" id="spSaveBtn" onclick="saveSpStatus()">💾 変更を保存</button>
@@ -352,14 +352,14 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
         <button onclick="toggleStats()" id="statsPanelBtn"
           style="font-size:11px;padding:3px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;">
-          📊 担당자別 統計を表示
+          📊 担当者別 統計を表示
         </button>
         <span style="font-size:11px;color:var(--text3);" id="statsRangeLabel"></span>
       </div>
       <div id="statsContent" style="display:none;">
         <div class="section" style="overflow-x:auto;">
           <div class="sec-hdr" style="background:rgba(45,70,120,.08);">
-            <span class="sec-title" style="color:#2D4878;">📊 担당자別 実績 (ETD基準)</span>
+            <span class="sec-title" style="color:#2D4878;">📊 担当者別 実績 (ETD基準)</span>
           </div>
           <table id="statsTable" style="border-collapse:collapse;font-size:11px;width:100%;white-space:nowrap;">
           </table>
@@ -367,7 +367,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       </div>
     </div>
 
-    <!-- 船積書類 테이블 -->
+    <!-- 船積書類テーブル -->
     <div class="section">
       <div class="sec-hdr" style="background:rgba(26,60,120,.06);">
         <span class="sec-title" style="color:#1A3C78;">📄 船積書類 — FD未完了一覧</span>
@@ -404,7 +404,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
     </div>
   </div><!-- /main -->
   </div><!-- /tab-content shipping -->
-  <!-- 購買契約 탭 -->
+  <!-- 購買契約タブ -->
   <div class="tab-content" id="content-purchase">
   <div class="main">
     <div class="filter-bar">
@@ -460,7 +460,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   </div>
   </div><!-- /tab-content purchase -->
 
-  <!-- 販売契約 탭 -->
+  <!-- 販売契約タブ -->
   <div class="tab-content" id="content-sale">
   <div class="main">
     <div class="filter-bar">
@@ -526,16 +526,16 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
     </div>
   </div>
   </div><!-- /tab-content sale -->
-  <!-- マスター 탭 -->
+  <!-- マスタータブ -->
   <div class="tab-content" id="content-master">
   <div class="main">
-    <!-- 서브탭 -->
+    <!-- サブタブ -->
     <div style="display:flex;gap:0;border-bottom:1px solid var(--border);margin-bottom:16px;">
       <button class="master-sub-btn on" id="msub-tsukan" onclick="switchMasterSub('tsukan')">🛃 通関担当者</button>
       <button class="master-sub-btn" id="msub-shipping" onclick="switchMasterSub('shipping')">📄 船積書類担当者</button>
     </div>
 
-    <!-- 通関担当者 편집 -->
+    <!-- 通関担当者編集 -->
     <div id="msub-content-tsukan">
       <div class="section">
         <div class="sec-hdr" style="background:rgba(45,90,30,.08);">
@@ -556,7 +556,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       </div>
     </div>
 
-    <!-- 船積書類担当者 편집 -->
+    <!-- 船積書類担当者編集 -->
     <div id="msub-content-shipping" style="display:none;">
       <div class="section">
         <div class="sec-hdr" style="background:rgba(26,60,120,.08);">
@@ -578,7 +578,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       </div>
     </div>
 
-    <!-- 저장 바 -->
+    <!-- 保存バー -->
     <div style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
       <span style="font-size:12px;color:var(--text2);">変更はSharePointに保存されます</span>
       <button onclick="saveMasterJson()" style="margin-left:auto;padding:6px 24px;border-radius:6px;border:none;background:#2D5A1E;color:#fff;font-size:13px;font-weight:500;cursor:pointer;">💾 マスターを保存</button>
@@ -592,7 +592,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 </div><!-- /mainView -->
 
 <script>
-// ── 상수 ──
+// ── 定数 ──
 const CLIENT_ID = 'f071a165-5e9b-44bf-b6a1-baba654524db';
 const TENANT_ID = 'a56988ff-c2b8-4df8-9727-889ad4205198';
 const REDIRECT  = 'https://mhlee205.github.io/CLEARANCE_COMPASS/';
@@ -603,7 +603,7 @@ const DRIVE_ID  = 'b!ZK58_9YllU-vETQD3Xz0TbOInXbVCXJHnQ2280KJBArFLeM_18EgRbSeoO-
 const JSON_PATH = '古紙/-. AI 活用/PORTAL/clearance_status.json';
 const GR_API    = 'https://graph.microsoft.com/v1.0';
 
-// POL → 担당者 (master_staff.json から動的ロード)
+// POL → 担当者 (master_staff.json から動的ロード)
 let polStaffData=[]; // [{pol, staff}]
 function getPolStaffMap(){
   const m={};
@@ -614,7 +614,7 @@ const CHIP_CLS = {'JU':'ju','ZHAN':'zhan','LEE JUAH':'lee','竹内 雅将':'take
 const TS_OPTS  = ['未','ED未','ACL未'];
 const CT_OPTS  = ['未','提出'];
 
-// ── 상태 ──
+// ── 状態変数 ──
 let dvToken = null, grToken = null;
 let allTsukan = [], allCotecna = [];
 let statusMap = {};   // { iv_no: {tsukan_irai, tsukan_status} }
@@ -622,7 +622,7 @@ let cotecnaMap = {};  // { key: {report_status} }
 let savedMap = {}, savedCotecnaMap = {};
 let currentUser = '';
 
-// ── 로딩 ──
+// ── ローディング ──
 function showLoading(m='データ取得中...'){document.getElementById('loadingMsg').textContent=m;document.getElementById('loadingOverlay').classList.add('show');}
 function hideLoading(){document.getElementById('loadingOverlay').classList.remove('show');}
 
@@ -632,7 +632,7 @@ function b64url(b){return btoa(String.fromCharCode(...new Uint8Array(b))).replac
 async function sha256(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));}
 async function pkceParams(){const v=b64url(rnd(32));return{v,c:b64url(await sha256(v))};}
 
-// ── Dataverse 로그인 ──
+// ── Dataverse ログイン ──
 async function startDvLogin(){
   const {v,c}=await pkceParams();
   sessionStorage.setItem('dv_pkce',JSON.stringify({v}));
@@ -656,11 +656,11 @@ async function handleDvCallback(code){
   sessionStorage.setItem('dv_token',dvToken);
   try{const pl=JSON.parse(atob(dvToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
     currentUser=pl.name||pl.preferred_username||'担当者';}catch(e){}
-  // DV 완료 → 자동으로 Graph 로그인
+  // DV完了 → 自動でGraphログイン
   await startGraphLogin();
 }
 
-// ── Graph 로그인 ──
+// ── Graph ログイン ──
 async function startGraphLogin(){
   const {v,c}=await pkceParams();
   sessionStorage.setItem('gr_pkce',JSON.stringify({v}));
@@ -722,7 +722,7 @@ async function saveStatusJson(){
   if(!r.ok)throw new Error(`保存失敗 ${r.status}`);
 }
 
-// ── 상태 관리 (통관) ──
+// ── 状態管理(通関) ──
 function getTsStatus(ivNo){return statusMap[ivNo]||{tsukan_irai:false,tsukan_status:'未'};}
 function isTsUnsaved(ivNo){
   const c=statusMap[ivNo]||{tsukan_irai:false,tsukan_status:'未'};
@@ -732,10 +732,10 @@ function isTsUnsaved(ivNo){
 function onCheckChange(ivNo,checked){
   if(!statusMap[ivNo])statusMap[ivNo]={tsukan_irai:false,tsukan_status:'未'};
   statusMap[ivNo].tsukan_irai=checked;
-  // 체크 ON → 자동으로 ED未 / 체크 OFF → 未に戻す
+  // チェックON → 自動でED未 / チェックOFF → 未に戻す
   statusMap[ivNo].tsukan_status=checked?'ED未':'未';
   statusMap[ivNo].updated_by=currentUser;statusMap[ivNo].updated_at=new Date().toISOString();
-  // 셀렉트 표시도 즉시 업데이트
+  // セレクト表示も即時更新
   const sel=document.getElementById(`tssel_${CSS.escape(ivNo)}`);
   if(sel){sel.value=statusMap[ivNo].tsukan_status;applyTsColor(sel);}
   updateUnsavedRow(ivNo);updateSaveBar();
@@ -748,7 +748,7 @@ function onTsStatusChange(ivNo,val){
   updateUnsavedRow(ivNo);updateSaveBar();
 }
 
-// ── 상태 관리 (COTECNA) ──
+// ── 状態管理(COTECNA) ──
 function ctKey(row){return`${row.iv_no}|${row.vo_no}|${row.partial}`;}
 function getCtStatus(key){return cotecnaMap[key]||{report_status:'未'};}
 function isCtUnsaved(key){
@@ -791,7 +791,7 @@ function applyCtColor(sel){
   else sel.classList.add('st-no');
 }
 
-// ── IV prefix → Importer → 담당자 매핑 (하드코딩) ──
+// ── IV prefix → Importer → 担当者マッピング ──
 const IV_IMPORTER_MAP = {
   'RA':{name:'R. A.',staff:'大場'},'MG':{name:'MEGA SURYA',staff:'大場'},
   'IK':{name:'INDAH KIAT',staff:'大場'},'TJ':{name:'TJIWI KIMIA',staff:'大場'},
@@ -832,8 +832,9 @@ function getShipStaff(ivNo){
 }
 let shippingStaffData=[];
 
-// ── 선적서류 상태 변수 ──
+// ── 船積書類状態変数 ──
 let allShipping=[];
+let allShippingAll=[]; // 統計用 — FD完了も含む全件
 let shippingMap={};
 let savedShippingMap={};
 
@@ -908,11 +909,11 @@ function switchTab(name){
   if(name==='sale'&&allSale.length===0&&dvToken)loadSale();
 }
 
-// ── 선적서류 데이터 로드 ──
+// ── 船積書類データロード ──
 async function loadShipping(){
   document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="16"><span class="spinner"></span>読み込み中...</td></tr>`;
   document.getElementById('spTodayLabel').textContent=todayLbl();
-  const from=localDateStr(-30),to=localDateStr(180);
+  const from=localDateStr(-90),to=localDateStr(180); // 統計用に90日前から
   const filter=`cr49f_etd ge ${from}T00:00:00Z and cr49f_etd le ${to}T23:59:59Z`;
   try{
     const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_bookingid,cr49f_invoice_no,cr49f_booking_no,cr49f_etd,cr49f_eta,cr49f_cy_cut,crcf9_bl_etd,crcf9_bl_eta,_cr49f_region_japan_id_value,_cr49f_carrier_id_value,_cr49f_region_id_value,_cr49f_sale_contract_id_value&$orderby=cr49f_etd asc&$top=500`);
@@ -925,22 +926,22 @@ async function loadShipping(){
       const etdRaw=(b.crcf9_bl_etd||b.cr49f_etd||'').slice(0,10);
       return!etdRaw||etdRaw>=oneMonthAgo;
     });
-    if(!targetBookings.length){allShipping=[];renderShipping();return;}
-    const rjGuids=[...new Set(targetBookings.map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
-    const crGuids=[...new Set(targetBookings.map(b=>b['_cr49f_carrier_id_value']).filter(Boolean))];
-    const rgGuids=[...new Set(targetBookings.map(b=>b['_cr49f_region_id_value']).filter(Boolean))];
+    // lookup は全bookings基準
+    const rjGuids=[...new Set(bookings.map(b=>b['_cr49f_region_japan_id_value']).filter(Boolean))];
+    const crGuids=[...new Set(bookings.map(b=>b['_cr49f_carrier_id_value']).filter(Boolean))];
+    const rgGuids=[...new Set(bookings.map(b=>b['_cr49f_region_id_value']).filter(Boolean))];
     const [polMap,carrierMap,regionMap]=await Promise.all([
       fetchPolMap(rjGuids),
       (async()=>{const m={};await Promise.all(crGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/crcf9_carriers(${g})?$select=crcf9_carrier`);m[g]=d.crcf9_carrier||'—';}catch(e){};}));return m;})(),
       (async()=>{const m={};await Promise.all(rgGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/cr49f_regions(${g})?$select=cr49f_region`);m[g]=d.cr49f_region||'—';}catch(e){};}));return m;})()
     ]);
-    // CT수 집계 — 병렬처리 (20건씩 OR 필터)
-    const bkgGuids=targetBookings.map(b=>b.cr49f_bookingid).filter(Boolean);
+    // CT数集計 — 並列処理 (統計用に全bookings基準)
+    const bkgGuids=bookings.map(b=>b.cr49f_bookingid).filter(Boolean);
     const ctCountMap={};
     const chunks=[];
     for(let i=0;i<bkgGuids.length;i+=20)chunks.push(bkgGuids.slice(i,i+20));
-    // pay_cls (TT/LC) 取得
-    const scGuids=[...new Set(targetBookings.map(b=>b['_cr49f_sale_contract_id_value']).filter(Boolean))];
+    // pay_cls (TT/LC) 取得 — 全bookings基準
+    const scGuids=[...new Set(bookings.map(b=>b['_cr49f_sale_contract_id_value']).filter(Boolean))];
     const scPayMap={};
     await Promise.all([
       ...chunks.map(async chunk=>{
@@ -955,7 +956,8 @@ async function loadShipping(){
           scPayMap[g]=d.cr49f_pay_cls||'その他';}catch(e){}
       })
     ]);
-    allShipping=targetBookings.map(b=>{
+    // booking → row変換関数
+    const toRow=b=>{
       const etdRaw=(b.crcf9_bl_etd||b.cr49f_etd||'').slice(0,10);
       const pol=(polMap[b['_cr49f_region_japan_id_value']]||'—').replace(', JAPAN','').trim();
       const cntr=regionMap[b['_cr49f_region_id_value']]||'—';
@@ -970,7 +972,11 @@ async function loadShipping(){
         importer:sp.name,staff:sp.staff,
         pay_cls:scPayMap[b['_cr49f_sale_contract_id_value']]||'その他',
         is_vietnam:cntr.toUpperCase().includes('VIETNAM')};
-    });
+    };
+    // 統計用: 全bookings (FD完了も含む)
+    allShippingAll=bookings.map(toRow);
+    // 表示用: FD未完了のみ
+    allShipping=targetBookings.length?targetBookings.map(toRow):[];
   }catch(e){
     document.getElementById('spBody').innerHTML=`<tr class="msg-row"><td colspan="16">⚠ ${e.message}</td></tr>`;
     document.getElementById('spCnt').textContent='エラー';return;
@@ -1039,7 +1045,7 @@ async function saveStatus(){
   finally{btn.disabled=false;btn.textContent='💾 変更を保存';}
 }
 
-// ── 날짜 유틸 ──
+// ── 日付ユーティリティ ──
 function localDateStr(off=0){const d=new Date();d.setDate(d.getDate()+off);
   return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
 function fmtDate(iso){if(!iso)return'—';const s=iso.slice(0,10).split('-');return`${s[0]}/${s[1]}/${s[2]}`;}
@@ -1050,7 +1056,7 @@ function nextBizDay(){const d=new Date();d.setDate(d.getDate()+1);
   while(d.getDay()===0||d.getDay()===6)d.setDate(d.getDate()+1);
   return[d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-');}
 
-// ── POL 유틸 ──
+// ── POLユーティリティ ──
 function getStaff(pol){
   if(!pol||pol==='—')return'—';
   const up=pol.toUpperCase();
@@ -1067,7 +1073,7 @@ async function fetchPolMap(guids){
   }));return m;
 }
 
-// ── 범위 힌트 ──
+// ── 範囲ヒント ──
 function updateRangeHint(rd){
   const tm=fmtDate(localDateStr(0)),te=fmtDate(localDateStr(rd));
   const ce=fmtDate(localDateStr(rd)),yd=fmtDate(localDateStr(-1));
@@ -1076,7 +1082,7 @@ function updateRangeHint(rd){
   document.getElementById('rangeHint').textContent=rd===0?'通関: CY_CUT 本日分 ｜ COTECNA: 当日・前日分':`通関: 本日〜${rd}日後 ｜ COTECNA: 前日〜${rd}日後`;
 }
 
-// ── 통관 로드 ──
+// ── 通関ロード ──
 async function loadTsukan(rd){
   const s=localDateStr(0),e=localDateStr(rd);
   const filter=`cr49f_cy_cut ge ${s}T00:00:00Z and cr49f_cy_cut le ${e}T23:59:59Z`;
@@ -1121,11 +1127,11 @@ function renderTsukan(){
   }).join('');
 }
 
-// ── COTECNA 로드 ──
+// ── COTECNAロード ──
 async function loadCotecna(rd){
   const today=localDateStr(0),yday=localDateStr(-1),end=localDateStr(rd);
-  // 검색은 7일 전부터 (복수일 작업 처음 날짜까지 취득하기 위해)
-  // 표시는 그룹의 最大 work_date が어제以降のもののみ
+  // 7日前から検索(複数日作業の開始日取得)
+  // 表示はグループの最大work_date >= 昨日のみ
   const searchFrom=localDateStr(-7);
   const filter=`crcf9_inspection eq true and crcf9_work_date ge ${searchFrom}T00:00:00Z and crcf9_work_date le ${end}T23:59:59Z`;
   try{
@@ -1168,7 +1174,7 @@ async function loadCotecna(rd){
       const dates=g.workDates.sort();
       const minDate=dates[0]||'';
       const maxDate=dates[dates.length-1]||'';
-      g.work_date=maxDate; // 정렬 기준은 최대 날짜
+      g.work_date=maxDate; // ソートは最大日付
       g.work_date_fmt=dates.length<=1
         ? fmtDate(minDate?minDate+'T00:00:00Z':'')
         : `${fmtDate(minDate+'T00:00:00Z')} 〜 ${fmtDate(maxDate+'T00:00:00Z')}`;
@@ -1220,10 +1226,10 @@ async function loadAll(){
   }
   finally{hideLoading();}
 }
-// ── 구매/판매계약 ──
+// ── 購買/販売契約 ──
 let allPurchase=[], allSale=[];
 
-// 구매계약 로드
+// 購買契約ロード
 async function loadPurchase(){
   const days=parseInt(document.getElementById('pcPeriod').value)||30;
   const from=localDateStr(-days);
@@ -1231,12 +1237,12 @@ async function loadPurchase(){
   document.getElementById('pcDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 〜 ${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
   document.getElementById('pcBody').innerHTML=`<tr class="msg-row"><td colspan="8"><span class="spinner"></span>読み込み中...</td></tr>`;
   try{
-    // 구매계약 헤더 취득
+    // 購買契約ヘッダー取得
     const filter=`cr49f_contract_date ge ${from}T00:00:00Z`;
     const res=await dvGet(`${DV_API}/cr49f_purchase_contracts?$filter=${encodeURIComponent(filter)}&$select=cr49f_purchase_contractid,cr49f_purchase_contract_no,cr49f_contract_date,cr49f_latest_vanning,_cr49f_packer_id_value&$orderby=cr49f_contract_date desc&$top=200`);
     const contracts=res.value||[];
 
-    // 구매상세 취득 (한꺼번에)
+    // 購買明細取得(一括)
     const cids=contracts.map(c=>c.cr49f_purchase_contractid).filter(Boolean);
     const detailMap={};
     for(let i=0;i<cids.length;i+=10){
@@ -1252,7 +1258,7 @@ async function loadPurchase(){
       }catch(e){}
     }
 
-    // Packer 이름 취득
+    // Packer名取得
     const pcPackerGuids=[...new Set(contracts.map(c=>c['_cr49f_packer_id_value']).filter(Boolean))];
     const pcPackerNameMap={};
     await Promise.all(pcPackerGuids.map(async g=>{
@@ -1260,7 +1266,7 @@ async function loadPurchase(){
         pcPackerNameMap[g]={name:d.cr49f_packer_name||'',code:d.cr49f_packer||''};}catch(e){}
     }));
 
-    // ITEM 마스터 취득
+    // ITEMマスター取得
     const pcItemGuids=[...new Set(Object.values(detailMap).flat().map(d=>d['_cr49f_item_id_value']).filter(Boolean))];
     const pcItemMap={};
     await Promise.all(pcItemGuids.map(async g=>{
@@ -1295,8 +1301,8 @@ async function loadPurchase(){
 function renderPurchase(){
   const kw=(document.getElementById('pcSearch')?.value||'').toLowerCase();
   const rows=allPurchase.filter(r=>!kw||r.no.toLowerCase().includes(kw)||r.packer.toLowerCase().includes(kw)||r.item.toLowerCase().includes(kw));
-  // pcCnt는 필터 적용 후 filtRows에서 업데이트
-  // 같은 계약번호끼리 배경 그룹화
+  // pcCntはフィルター適用後に更新
+  // 同じ契約番号をグループ背景
   const pcFltPol=getActiveFlt('pc','pol');
   const pcFltPacker=getActiveFlt('pc','packer');
   const pcFltItem=getActiveFlt('pc','item');
@@ -1325,7 +1331,7 @@ function renderPurchase(){
 
 async function onPcPeriodChange(){allPurchase=[];await loadPurchase();}
 
-// ── 체크박스 필터 공통 함수 ──
+// ── チェックボックスフィルター共通関数 ──
 function toggleFlt(panelId, e){
   e.stopPropagation();
   const panel=document.getElementById(panelId);
@@ -1395,7 +1401,7 @@ function buildScFilters(){
   buildFltPanel('scItemPanel','scItemBtn',items,renderSale);
 }
 
-// 판매계약 로드
+// 販売契約ロード
 async function loadSale(){
   const days=parseInt(document.getElementById('scPeriod').value)||30;
   const from=localDateStr(-days);
@@ -1403,12 +1409,12 @@ async function loadSale(){
   document.getElementById('scDateLabel').textContent=`(${fmtDate(from+'T00:00:00Z')} 〜 ${fmtDate(localDateStr(0)+'T00:00:00Z')})`;
   document.getElementById('scBody').innerHTML=`<tr class="msg-row"><td colspan="11"><span class="spinner"></span>読み込み中...</td></tr>`;
   try{
-    // 판매계약 헤더 취득
+    // 販売契約ヘッダー取得
     const filter=`cr49f_sale_contract_date ge ${from}T00:00:00Z`;
     const res=await dvGet(`${DV_API}/cr49f_sale_contracts?$filter=${encodeURIComponent(filter)}&$select=cr49f_sale_contractid,cr49f_sale_contract_no,cr49f_sale_contract_date,cr49f_latest_shipment,_cr49f_buyer_id_value,_cr49f_pod1_value&$orderby=cr49f_sale_contract_date desc&$top=200`);
     const contracts=res.value||[];
 
-    // 판매상세 취득
+    // 販売明細取得
     const cids=contracts.map(c=>c.cr49f_sale_contractid).filter(Boolean);
     const sdMap={};
     for(let i=0;i<cids.length;i+=10){
@@ -1424,7 +1430,7 @@ async function loadSale(){
       }catch(e){}
     }
 
-    // SI 입력 여부 취득
+    // SI入力有無取得
     const siMap={};
     for(let i=0;i<cids.length;i+=10){
       const chunk=cids.slice(i,i+10);
@@ -1438,7 +1444,7 @@ async function loadSale(){
       }catch(e){}
     }
 
-    // Buyer 이름+국가 취득
+    // Buyer名+国名取得
     const buyerGuids=[...new Set(contracts.map(c=>c['_cr49f_buyer_id_value']).filter(Boolean))];
     const buyerCountryMap={};
     const buyerNameMap={};
@@ -1448,7 +1454,7 @@ async function loadSale(){
         if(d.cr49f_buyer)buyerNameMap[g]=d.cr49f_buyer;}catch(e){}
     }));
 
-    // POD 이름 취득
+    // POD名取得
     const podGuids=[...new Set(contracts.map(c=>c['_cr49f_pod1_value']).filter(Boolean))];
     const podNameMap={};
     await Promise.all(podGuids.map(async g=>{
@@ -1456,7 +1462,7 @@ async function loadSale(){
         if(d.cr49f_pod)podNameMap[g]=d.cr49f_pod;}catch(e){}
     }));
 
-    // ITEM 마스터 취득
+    // ITEMマスター取得
     const scItemGuids=[...new Set(Object.values(sdMap).flat().map(d=>d['_cr49f_item_id_value']).filter(Boolean))];
     const scItemMap={};
     await Promise.all(scItemGuids.map(async g=>{
@@ -1531,16 +1537,16 @@ function toggleStats(){
   const btn=document.getElementById('statsPanelBtn');
   const isOpen=content.style.display!=='none';
   content.style.display=isOpen?'none':'';
-  btn.textContent=isOpen?'📊 担당者別 統計を表示':'📊 担당者別 統計を非表示';
+  btn.textContent=isOpen?'📊 担当者別 統計を表示':'📊 担当者別 統計を非表示';
   if(!isOpen)renderStats();
 }
 
 function renderStats(){
-  if(!allShipping.length)return;
-  const months=[...new Set(allShipping.map(r=>r.etd_raw?r.etd_raw.slice(0,7):'').filter(Boolean))].sort();
-  const staffs=[...new Set(allShipping.map(r=>r.staff||'—'))].sort();
+  if(!allShippingAll.length)return;
+  const months=[...new Set(allShippingAll.map(r=>r.etd_raw?r.etd_raw.slice(0,7):'').filter(Boolean))].sort();
+  const staffs=[...new Set(allShippingAll.map(r=>r.staff||'—'))].sort();
   const stats={};
-  allShipping.forEach(r=>{
+  allShippingAll.forEach(r=>{
     const month=r.etd_raw?r.etd_raw.slice(0,7):'';
     if(!month)return;
     const staff=r.staff||'—';
@@ -1555,7 +1561,7 @@ function renderStats(){
   }
   const th=(t,bg='#2D4878')=>`<th style="background:${bg};color:rgba(255,255,255,.9);padding:5px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.1);font-size:10px;">${t}</th>`;
   const td=(t,bold=false,color='')=>`<td style="padding:4px 8px;text-align:center;border-bottom:.5px solid var(--border);border-right:.5px solid var(--border);${bold?'font-weight:600;':''}${color?'color:'+color+';':''}">${t}</td>`;
-  let html=`<thead><tr>${th('担당者')}`;
+  let html=`<thead><tr>${th('担当者')}`;
   months.forEach(m=>{
     html+=`<th colspan="4" style="background:#1A3C78;color:rgba(255,255,255,.9);padding:5px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.2);font-size:10px;">${m.replace(/(\d{4})-(\d{2})/,'$1/$2')}</th>`;
   });
@@ -1596,11 +1602,11 @@ function renderStats(){
 
 async function onScPeriodChange(){allSale=[];await loadSale();}
 
-// ── MASTER JSON ──
+// ── マスターJSON ──
 const MASTER_PATH='古紙/-. AI 活用/PORTAL/master_staff.json';
 function masterFilePath(){return MASTER_PATH.split('/').map(encodeURIComponent).join('/');}
 
-// 기본값 (JSON 없을 때)
+// デフォルト値 (JSONなし時)
 const DEFAULT_TSUKAN=[
   {pol:'ISHIKARI',staff:'JU'},{pol:'NAHA',staff:'JU'},
   {pol:'KANAZAWA',staff:'ZHAN'},{pol:'AKITA',staff:'ZHAN'},{pol:'NIIGATA',staff:'ZHAN'},
@@ -1646,7 +1652,7 @@ async function loadMasterJson(){
     polStaffData=d.tsukan_staff||DEFAULT_TSUKAN;
     shippingStaffData=d.shipping_staff||DEFAULT_SHIPPING;
   }catch(e){
-    // 파일 없으면 기본값 사용
+    // ファイルなし → デフォルト値使用
     polStaffData=[...DEFAULT_TSUKAN];
     shippingStaffData=[...DEFAULT_SHIPPING];
   }
@@ -1670,7 +1676,7 @@ async function saveMasterJson(){
   }catch(e){alert('保存エラー: '+e.message);}
 }
 
-// ── MASTER 탭 서브탭 전환 ──
+// ── マスタータブ切替 ──
 function switchMasterSub(name){
   ['tsukan','shipping'].forEach(t=>{
     document.getElementById(`msub-${t}`)?.classList.toggle('on',t===name);
@@ -1684,7 +1690,7 @@ function renderMasterTabs(){
   renderShippingMaster();
 }
 
-// ── 通관담당자 편집 ──
+// ── 通関担当者編集 ──
 function renderTsukanMaster(){
   const tb=document.getElementById('tsukanMasterBody');if(!tb)return;
   tb.innerHTML=polStaffData.map((r,i)=>`
@@ -1704,7 +1710,7 @@ function delTsukanRow(i){
   renderTsukanMaster();
 }
 
-// ── 선적서류 담당자 편집 ──
+// ── 船積書類担当者編集 ──
 function renderShippingMaster(){
   const tb=document.getElementById('shippingMasterBody');if(!tb)return;
   tb.innerHTML=shippingStaffData.map((r,i)=>`
@@ -1747,7 +1753,7 @@ function showMain(){
   document.getElementById('todayLabel').textContent=todayLbl();
 }
 
-// ── 테마 ──
+// ── テーマ ──
 function toggleTheme(){
   const h=document.documentElement,cur=h.getAttribute('data-theme')||'dark';
   const order=['dark','light','leenai'],next=order[(order.indexOf(cur)+1)%order.length];
@@ -1759,7 +1765,7 @@ function updateThemeBtn(t){
 }
 (function(){const s=localStorage.getItem('leenai_theme')||'dark';document.documentElement.setAttribute('data-theme',s);document.addEventListener('DOMContentLoaded',()=>updateThemeBtn(s));})();
 
-// ── 초기화 ──
+// ── 初期化 ──
 window.onload=async()=>{
   const sd=sessionStorage.getItem('dv_token'),sg=sessionStorage.getItem('gr_token');
   if(sd)dvToken=sd;
@@ -1774,7 +1780,7 @@ window.onload=async()=>{
       if(state.startsWith('graph_')){
         await handleGraphCallback(code);
       } else {
-        await handleDvCallback(code); // 완료 후 자동으로 Graph 로그인 redirect
+        await handleDvCallback(code); // DV完了後 → 自動でGraphログイン
       }
     }catch(e){alert('認証エラー: '+e.message);hideLoading();}
     return;
@@ -1782,7 +1788,7 @@ window.onload=async()=>{
 
   if(dvToken&&grToken){showMain();loadAll();return;}
   if(dvToken){
-    // DV만 있으면 바로 Graph 로그인으로
+    // DVのみ → 直接Graphログイン
     showLoading('SharePointへ接続中...');
     setTimeout(()=>startGraphLogin(),500);
   }
