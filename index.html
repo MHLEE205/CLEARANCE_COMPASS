@@ -67,7 +67,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 /* ── ヘッダー ── */
 .header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
 .header-left{display:flex;align-items:center;gap:12px;}
-.logo{width:32px;height:32px;background:#2D5A1E;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:13px;font-weight:700;}
+.logo{width:auto;padding:0 10px;height:32px;background:#2D5A1E;border-radius:8px;display:flex;align-items:center;justify-content:center;color:#fff;font-size:11px;font-weight:800;letter-spacing:1.5px;}
 .header-title{font-size:15px;font-weight:500;color:var(--text);}
 .header-sub{font-size:11px;color:var(--text2);}
 .header-right{display:flex;align-items:center;gap:8px;}
@@ -264,7 +264,7 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
 <div id="mainView" style="display:none;">
   <div class="header">
     <div class="header-left">
-      <div class="logo">LN</div>
+      <div class="logo">LEENAI</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
         <div class="header-sub">v3.23 | 通関・COTECNA・船積書類管理</div>
@@ -758,6 +758,7 @@ const CT_OPTS  = ['未','提出'];
 // ── 状態変数 ──
 let dvToken = null, grToken = null;
 let allTsukan = [], allCotecna = [];
+const _dvCache = { carriers: {}, regions: {} };
 let statusMap = {};   // { iv_no: {tsukan_irai, tsukan_status} }
 let cotecnaMap = {};  // { key: {report_status} }
 let savedMap = {}, savedCotecnaMap = {};
@@ -1074,8 +1075,8 @@ async function loadShipping(){
     const rgGuids=[...new Set(bookings.map(b=>b['_cr49f_region_id_value']).filter(Boolean))];
     const [polMap,carrierMap,regionMap]=await Promise.all([
       fetchPolMap(rjGuids),
-      (async()=>{const m={};await Promise.all(crGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/crcf9_carriers(${g})?$select=crcf9_carrier`);m[g]=d.crcf9_carrier||'—';}catch(e){};}));return m;})(),
-      (async()=>{const m={};await Promise.all(rgGuids.map(async g=>{try{const d=await dvGet(`${DV_API}/cr49f_regions(${g})?$select=cr49f_region`);m[g]=d.cr49f_region||'—';}catch(e){};}));return m;})()
+      (async()=>{const m={};await Promise.all(crGuids.map(async g=>{if(_dvCache.carriers[g]){m[g]=_dvCache.carriers[g];return;}try{const d=await dvGet(`${DV_API}/crcf9_carriers(${g})?$select=crcf9_carrier`);m[g]=d.crcf9_carrier||'—';_dvCache.carriers[g]=m[g];}catch(e){};}));return m;})(),
+      (async()=>{const m={};await Promise.all(rgGuids.map(async g=>{if(_dvCache.regions[g]){m[g]=_dvCache.regions[g];return;}try{const d=await dvGet(`${DV_API}/cr49f_regions(${g})?$select=cr49f_region`);m[g]=d.cr49f_region||'—';_dvCache.regions[g]=m[g];}catch(e){};}));return m;})()
     ]);
     // CT数集計 — 並列処理 (統計用に全bookings基準)
     const bkgGuids=bookings.map(b=>b.cr49f_bookingid).filter(Boolean);
@@ -2088,13 +2089,13 @@ async function AL_loadAll(){
     );
     lg('Active BKG: '+bkgData.length,'ok');
     const crGuids=[...new Set(bkgData.map(b=>b._cr49f_carrier_id_value).filter(Boolean))];
-    (await Promise.all(crGuids.map(g=>dg(`crcf9_carriers(${g})?$select=crcf9_carrier`).catch(()=>null)))).forEach((r,i)=>{if(r)CARRIERS[crGuids[i]]=r.crcf9_carrier;});
+    (await Promise.all(crGuids.map(async g=>{if(_dvCache.carriers[g])return{crcf9_carrier:_dvCache.carriers[g]};const r=await dg(`crcf9_carriers(${g})?$select=crcf9_carrier`).catch(()=>null);if(r&&r.crcf9_carrier)_dvCache.carriers[g]=r.crcf9_carrier;return r;}))).forEach((r,i)=>{if(r&&r.crcf9_carrier)CARRIERS[crGuids[i]]=r.crcf9_carrier;});
     const bkgPolGuids=[...new Set(bkgData.map(b=>b._cr49f_region_japan_id_value).filter(Boolean))];
     const POL_NAMES={};
     (await Promise.all(bkgPolGuids.map(g=>dg(`crcf9_region_japans(${g})?$select=crcf9_pol`).catch(()=>null)))).forEach((r,i)=>{if(r)POL_NAMES[bkgPolGuids[i]]=r.crcf9_pol;});
     const bkgPodGuids=[...new Set(bkgData.map(b=>b._cr49f_region_id_value).filter(Boolean))];
     const newPodGuids=bkgPodGuids.filter(g=>!PD[g]);
-    (await Promise.all(newPodGuids.map(g=>dg(`cr49f_regions(${g})?$select=cr49f_pod,cr49f_region`).catch(()=>null)))).forEach((r,i)=>{if(r)PD[newPodGuids[i]]={p:r.cr49f_pod,r:r.cr49f_region};});
+    (await Promise.all(newPodGuids.map(async g=>{if(_dvCache.regions[g])return{cr49f_region:_dvCache.regions[g],_cached:true};const r=await dg(`cr49f_regions(${g})?$select=cr49f_pod,cr49f_region`).catch(()=>null);if(r&&r.cr49f_region)_dvCache.regions[g]=r.cr49f_region;return r;}))).forEach((r,i)=>{if(r)PD[newPodGuids[i]]={p:r.cr49f_pod||r.cr49f_region,r:r.cr49f_region};});
     const bkgMap={};
     bkgData.forEach(b=>{
       const polJp=POL_NAMES[b._cr49f_region_japan_id_value]||'?';
