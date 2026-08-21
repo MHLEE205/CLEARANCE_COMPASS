@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.19</title>
+<title>LEENAI 今日の作業 v3.20</title>
 <style>
 :root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
@@ -164,7 +164,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.19</div>
+  <div class="splash-ver">v3.20</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -180,7 +180,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.19 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.20 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -345,6 +345,26 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <span class="unsaved-msg">● 未保存の変更があります</span>
       <button class="save-btn" id="spSaveBtn" onclick="saveSpStatus()">💾 変更を保存</button>
       <span class="save-ok" id="spSaveOk">✅ 保存しました</span>
+    </div>
+
+    <!-- 統計パネル -->
+    <div id="statsPanel" style="margin-bottom:12px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;">
+        <button onclick="toggleStats()" id="statsPanelBtn"
+          style="font-size:11px;padding:3px 12px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;">
+          📊 担당자別 統計を表示
+        </button>
+        <span style="font-size:11px;color:var(--text3);" id="statsRangeLabel"></span>
+      </div>
+      <div id="statsContent" style="display:none;">
+        <div class="section" style="overflow-x:auto;">
+          <div class="sec-hdr" style="background:rgba(45,70,120,.08);">
+            <span class="sec-title" style="color:#2D4878;">📊 担당자別 実績 (ETD基準)</span>
+          </div>
+          <table id="statsTable" style="border-collapse:collapse;font-size:11px;width:100%;white-space:nowrap;">
+          </table>
+        </div>
+      </div>
     </div>
 
     <!-- 船積書類 테이블 -->
@@ -895,7 +915,7 @@ async function loadShipping(){
   const from=localDateStr(-30),to=localDateStr(180);
   const filter=`cr49f_etd ge ${from}T00:00:00Z and cr49f_etd le ${to}T23:59:59Z`;
   try{
-    const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_bookingid,cr49f_invoice_no,cr49f_booking_no,cr49f_etd,cr49f_eta,cr49f_cy_cut,crcf9_bl_etd,crcf9_bl_eta,_cr49f_region_japan_id_value,_cr49f_carrier_id_value,_cr49f_region_id_value&$orderby=cr49f_etd asc&$top=500`);
+    const res=await dvGet(`${DV_API}/cr49f_bookings?$filter=${encodeURIComponent(filter)}&$select=cr49f_bookingid,cr49f_invoice_no,cr49f_booking_no,cr49f_etd,cr49f_eta,cr49f_cy_cut,crcf9_bl_etd,crcf9_bl_eta,_cr49f_region_japan_id_value,_cr49f_carrier_id_value,_cr49f_region_id_value,_cr49f_sale_contract_id_value&$orderby=cr49f_etd asc&$top=500`);
     const bookings=res.value||[];
     const oneMonthAgo=localDateStr(-30);
     const targetBookings=bookings.filter(b=>{
@@ -919,13 +939,22 @@ async function loadShipping(){
     const ctCountMap={};
     const chunks=[];
     for(let i=0;i<bkgGuids.length;i+=20)chunks.push(bkgGuids.slice(i,i+20));
-    await Promise.all(chunks.map(async chunk=>{
-      const f=chunk.map(g=>`_crcf9_booking_id_value eq ${g}`).join(' or ');
-      try{
-        const r=await dvGet(`${DV_API}/crcf9_container_informations?$filter=${encodeURIComponent(f)}&$select=_crcf9_booking_id_value&$top=500`);
-        (r.value||[]).forEach(ct=>{const bg=ct['_crcf9_booking_id_value'];if(bg)ctCountMap[bg]=(ctCountMap[bg]||0)+1;});
-      }catch(e){}
-    }));
+    // pay_cls (TT/LC) 取得
+    const scGuids=[...new Set(targetBookings.map(b=>b['_cr49f_sale_contract_id_value']).filter(Boolean))];
+    const scPayMap={};
+    await Promise.all([
+      ...chunks.map(async chunk=>{
+        const f=chunk.map(g=>`_crcf9_booking_id_value eq ${g}`).join(' or ');
+        try{
+          const r=await dvGet(`${DV_API}/crcf9_container_informations?$filter=${encodeURIComponent(f)}&$select=_crcf9_booking_id_value&$top=500`);
+          (r.value||[]).forEach(ct=>{const bg=ct['_crcf9_booking_id_value'];if(bg)ctCountMap[bg]=(ctCountMap[bg]||0)+1;});
+        }catch(e){}
+      }),
+      ...scGuids.map(async g=>{
+        try{const d=await dvGet(`${DV_API}/cr49f_sale_contracts(${g})?$select=cr49f_pay_cls`);
+          scPayMap[g]=d.cr49f_pay_cls||'その他';}catch(e){}
+      })
+    ]);
     allShipping=targetBookings.map(b=>{
       const etdRaw=(b.crcf9_bl_etd||b.cr49f_etd||'').slice(0,10);
       const pol=(polMap[b['_cr49f_region_japan_id_value']]||'—').replace(', JAPAN','').trim();
@@ -939,6 +968,7 @@ async function loadShipping(){
         pol,cntr,ship:carrierMap[b['_cr49f_carrier_id_value']]||'—',
         ct_count:ctCountMap[b.cr49f_bookingid]||'—',
         importer:sp.name,staff:sp.staff,
+        pay_cls:scPayMap[b['_cr49f_sale_contract_id_value']]||'その他',
         is_vietnam:cntr.toUpperCase().includes('VIETNAM')};
     });
   }catch(e){
@@ -1493,6 +1523,75 @@ function renderSale(){
       <td class="cn">${r.si?'<span class="si-done">入力済</span>':'<span class="si-no">未</span>'}</td>
       <td class="cn">${mkChip(r.staff)}</td>
     </tr>`;}).join(''):'<tr class="msg-row"><td colspan="11">該当データなし</td></tr>';
+}
+
+// ── 統計パネル ──
+function toggleStats(){
+  const content=document.getElementById('statsContent');
+  const btn=document.getElementById('statsPanelBtn');
+  const isOpen=content.style.display!=='none';
+  content.style.display=isOpen?'none':'';
+  btn.textContent=isOpen?'📊 担당者別 統計を表示':'📊 担당者別 統計を非表示';
+  if(!isOpen)renderStats();
+}
+
+function renderStats(){
+  if(!allShipping.length)return;
+  const months=[...new Set(allShipping.map(r=>r.etd_raw?r.etd_raw.slice(0,7):'').filter(Boolean))].sort();
+  const staffs=[...new Set(allShipping.map(r=>r.staff||'—'))].sort();
+  const stats={};
+  allShipping.forEach(r=>{
+    const month=r.etd_raw?r.etd_raw.slice(0,7):'';
+    if(!month)return;
+    const staff=r.staff||'—';
+    const pay=r.pay_cls==='TT'?'TT':r.pay_cls==='LC'?'LC':'他';
+    if(!stats[staff])stats[staff]={};
+    if(!stats[staff][month])stats[staff][month]={TT:0,LC:0,他:0};
+    stats[staff][month][pay]++;
+  });
+  if(months.length){
+    document.getElementById('statsRangeLabel').textContent=
+      `${months[0].replace('-','/')} 〜 ${months[months.length-1].replace('-','/')}`;
+  }
+  const th=(t,bg='#2D4878')=>`<th style="background:${bg};color:rgba(255,255,255,.9);padding:5px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.1);font-size:10px;">${t}</th>`;
+  const td=(t,bold=false,color='')=>`<td style="padding:4px 8px;text-align:center;border-bottom:.5px solid var(--border);border-right:.5px solid var(--border);${bold?'font-weight:600;':''}${color?'color:'+color+';':''}">${t}</td>`;
+  let html=`<thead><tr>${th('担당者')}`;
+  months.forEach(m=>{
+    html+=`<th colspan="4" style="background:#1A3C78;color:rgba(255,255,255,.9);padding:5px 8px;text-align:center;border-right:1px solid rgba(255,255,255,.2);font-size:10px;">${m.replace(/(\d{4})-(\d{2})/,'$1/$2')}</th>`;
+  });
+  html+=`${th('合計','#0F2A5A')}</tr><tr><th style="background:#2D4878;"></th>`;
+  months.forEach(()=>['TT','LC','他','計'].forEach(t=>html+=`<th style="background:#1A4D8F;color:rgba(255,255,255,.7);padding:3px 6px;text-align:center;font-size:10px;border-right:.5px solid rgba(255,255,255,.1);">${t}</th>`));
+  html+=`<th style="background:#0F2A5A;color:rgba(255,255,255,.7);padding:3px 8px;font-size:10px;">件</th></tr></thead><tbody>`;
+  let grandTotal=0;
+  const monthTotals={};
+  staffs.forEach(staff=>{
+    let rowTotal=0;
+    html+=`<tr><td style="padding:4px 10px;border-bottom:.5px solid var(--border);font-weight:500;">${staff}</td>`;
+    months.forEach(m=>{
+      const d=stats[staff]?.[m]||{TT:0,LC:0,他:0};
+      const sub=d.TT+d.LC+d.他;rowTotal+=sub;
+      if(!monthTotals[m])monthTotals[m]={TT:0,LC:0,他:0};
+      monthTotals[m].TT+=d.TT;monthTotals[m].LC+=d.LC;monthTotals[m].他+=d.他;
+      html+=td(d.TT||'—','',d.TT?'#4f8ef7':'');
+      html+=td(d.LC||'—','',d.LC?'#f59e0b':'');
+      html+=td(d.他||'—');
+      html+=td(sub>0?sub:'—',sub>0);
+    });
+    grandTotal+=rowTotal;
+    html+=td(rowTotal>0?rowTotal:'—',true)+'</tr>';
+  });
+  html+=`<tr style="background:var(--surface3);"><td style="padding:4px 10px;font-weight:700;">合計</td>`;
+  let chk=0;
+  months.forEach(m=>{
+    const t=monthTotals[m]||{TT:0,LC:0,他:0};
+    const sub=t.TT+t.LC+t.他;chk+=sub;
+    html+=td(t.TT||'—',true,'#4f8ef7');
+    html+=td(t.LC||'—',true,'#f59e0b');
+    html+=td(t.他||'—');
+    html+=td(sub>0?sub:'—',true);
+  });
+  html+=td(grandTotal,true)+'</tr></tbody>';
+  document.getElementById('statsTable').innerHTML=html;
 }
 
 async function onScPeriodChange(){allSale=[];await loadSale();}
