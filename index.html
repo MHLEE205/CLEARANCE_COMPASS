@@ -2,9 +2,11 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.22</title>
+<title>LEENAI 今日の作業 v3.23</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
-:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--radius:10px;}
+:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--info:#38bdf8;--radius:10px;}
 [data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
 [data-theme="leenai"]{--bg:#FAFDF7;--surface:#ffffff;--surface2:#F2F9EE;--surface3:#E8F5E0;--border:#D0E8C0;--border2:#B8DFB0;--text:#1A3A0E;--text2:#4A6A3A;--text3:#8AAA80;--accent:#2D5A1E;--accent2:#2E72C8;}
 *{box-sizing:border-box;margin:0;padding:0;}
@@ -148,6 +150,91 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 .spinner-lg{width:28px;height:28px;border-width:3px;}
 @keyframes spin{to{transform:rotate(360deg)}}
 .powered{text-align:center;font-size:11px;color:var(--text3);padding:12px;border-top:1px solid var(--border);}
+/* ── Allocation Tab: テーマ追加 ── */
+[data-theme="focus"]{--bg:#D8DDE8;--surface:#EDF0F5;--surface2:#CDD4E0;--surface3:#BEC8D6;--border:#9DAABE;--text:#202733;--text2:#2E3A4A;--text3:#4E5D6E;--accent:#315F9E;--accent2:#2F7D6A;--ok:#16a34a;--warn:#d97706;--danger:#dc2626;--info:#0284c7;}
+/* ── Allocation Tab: CSS ── */
+#content-alloc .main{max-width:1700px;margin:0 auto;padding:14px 16px;}
+.flt-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
+.flt-label{font-size:10px;font-weight:700;color:var(--text3);min-width:28px;}
+.fchip{padding:3px 9px;border-radius:5px;font-size:10px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);transition:all .12s;}
+.fchip:hover{border-color:var(--accent);color:var(--text);}
+.fchip.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+.fchip.all-chip{border-color:var(--text3);color:var(--text3);}
+.fchip.all-chip.on{background:var(--surface3);color:var(--text);border-color:var(--text2);}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
+#log{font-size:11px;color:var(--text2);max-height:150px;overflow-y:auto;padding:8px;background:var(--surface2);border-radius:6px;margin-top:8px;display:none;}
+.log-ok{color:var(--ok);}.log-err{color:var(--danger);}.log-info{color:var(--accent);}
+.sum-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
+.sc{background:var(--surface2);border-radius:8px;padding:8px 12px;min-width:90px;text-align:center;}
+.sc .lb{font-size:10px;color:var(--text2);}.sc .vl{font-size:18px;font-weight:700;}
+.sc .vl.plus{color:var(--ok);}.sc .vl.minus{color:var(--danger);}
+.itabs{display:flex;gap:3px;flex-wrap:wrap;margin-bottom:10px;}
+.itab{padding:4px 10px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;border:1px solid var(--border);background:transparent;color:var(--text2);}
+.itab:hover{border-color:var(--accent);color:var(--text);}.itab.on{background:var(--accent);color:#fff;border-color:var(--accent);}
+table.dt{width:100%;border-collapse:collapse;font-size:11px;}
+table.dt th{background:var(--surface2);color:var(--text2);font-weight:600;font-size:10px;padding:4px 6px;text-align:left;border-bottom:1px solid var(--border);}
+table.dt td{padding:3px 6px;border-bottom:1px solid var(--border);}
+table.dt tr:hover{background:var(--surface2);}
+.r{text-align:right;}
+.gh{background:var(--surface3);font-weight:700;color:var(--accent);}
+.gh2{background:rgba(79,142,247,.08);font-weight:600;color:var(--text);font-size:11px;}
+.pol-row{background:linear-gradient(90deg,var(--accent) 3px,var(--surface3) 3px);font-weight:700;font-size:12px;}
+.pol-row td{padding:6px 8px!important;color:var(--text);}
+.pol-row .pol-name{color:var(--accent);font-size:13px;}
+.pol-row .pol-num{font-size:13px;}
+.neg{color:var(--danger);}.pos{color:var(--ok);}
+.sp{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+@media(max-width:900px){.sp{grid-template-columns:1fr;}}
+.al{padding:8px 12px;border-radius:6px;font-size:12px;margin-bottom:8px;background:rgba(79,142,247,.1);color:var(--accent);border:1px solid rgba(79,142,247,.3);}
+.hid{display:none!important;}
+@keyframes spn{to{transform:rotate(360deg)}}
+.ld::after{content:'';display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spn .6s linear infinite;margin-left:6px;}
+.ct{font-size:12px;font-weight:700;color:var(--text2);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.btn-ref{background:var(--surface2);color:var(--accent);border:1px solid var(--accent);padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
+.btn-ref:hover{background:var(--accent);color:#fff;}
+.btn-ref:disabled{opacity:.4;cursor:not-allowed;}
+.ts{font-size:10px;color:var(--text3);margin-left:6px;}
+.toolbar{display:flex;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.btn-file{background:var(--surface2);color:var(--warn);border:1px solid var(--warn);padding:4px 12px;border-radius:6px;font-size:11px;font-weight:600;cursor:pointer;transition:all .15s;}
+.btn-file:hover{background:var(--warn);color:#000;}
+.freight-badge{font-size:10px;background:rgba(79,142,247,.15);color:var(--accent);padding:2px 8px;border-radius:10px;}
+.freight-err-badge{font-size:10px;background:rgba(239,68,68,.12);color:var(--danger);padding:2px 8px;border-radius:10px;}
+.freight-ok-badge{font-size:10px;background:rgba(34,197,94,.12);color:var(--ok);padding:2px 8px;border-radius:10px;}
+table.mx{width:100%;border-collapse:collapse;font-size:10px;table-layout:auto;}
+table.mx th{background:var(--surface2);color:var(--text2);font-size:9px;font-weight:600;padding:3px 4px;border:1px solid var(--border);text-align:center;white-space:nowrap;}
+table.mx td{padding:2px 3px;border:1px solid var(--border);text-align:center;vertical-align:top;min-width:48px;}
+table.mx th.pol-hd{text-align:left;min-width:70px;position:sticky;left:0;z-index:5;background:var(--surface2);}
+table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:sticky;left:0;z-index:4;background:var(--surface);}
+.mx-plus{background:rgba(34,197,94,.15);color:var(--ok);}
+.mx-mid{background:rgba(245,158,11,.12);color:var(--warn);}
+.mx-neg{background:rgba(239,68,68,.12);color:var(--danger);}
+.mx-na{color:var(--text3);font-size:9px;}
+.mx-carrier{font-size:8px;color:var(--text2);}
+.mx-bkg{font-size:8px;color:var(--info);font-weight:600;}
+.mx-rank{font-size:9px;line-height:1.4;white-space:nowrap;}
+.mx-rank .rk1{color:var(--ok);font-weight:700;}
+.mx-rank .rk2{color:var(--text2);}
+.mx-rank .rk3{color:var(--text3);}
+.ai-panel{background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:12px 14px;margin-bottom:10px;}
+.ai-title{font-size:12px;font-weight:700;color:var(--accent);margin-bottom:8px;display:flex;align-items:center;gap:6px;}
+.ai-row{display:flex;justify-content:space-between;padding:3px 0;border-bottom:1px solid var(--border);font-size:11px;}
+.ai-row:last-child{border-bottom:none;}
+.ai-route{color:var(--text);}
+.ai-route span{color:var(--accent);}
+.ai-margin{font-weight:600;}
+.ai-margin.p{color:var(--ok);}.ai-margin.n{color:var(--danger);}
+.ai-total{display:flex;justify-content:space-between;margin-top:6px;padding-top:6px;border-top:1px solid var(--accent);font-size:12px;font-weight:700;}
+.ai-note{font-size:10px;color:var(--text2);margin-top:6px;line-height:1.5;}
+.mx-wrap{overflow-x:auto;max-width:100%;}
+.mx-cell{border-radius:3px;padding:2px 3px;font-size:10px;cursor:pointer;}
+.modal-bg{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.5);z-index:500;display:flex;align-items:center;justify-content:center;}
+.modal{background:var(--surface);border:1px solid var(--accent);border-radius:var(--radius);padding:16px 20px;max-width:520px;width:90%;max-height:80vh;overflow-y:auto;}
+.modal-title{font-size:14px;font-weight:700;color:var(--accent);margin-bottom:10px;display:flex;justify-content:space-between;align-items:center;}
+.modal-close{cursor:pointer;font-size:18px;color:var(--text2);background:none;border:none;}
+.modal table{width:100%;border-collapse:collapse;font-size:11px;margin-top:6px;}
+.modal th{background:var(--surface2);color:var(--text2);padding:3px 6px;text-align:left;font-size:10px;}
+.modal td{padding:3px 6px;border-bottom:1px solid var(--border);}
+.footer{text-align:center;padding:20px 0;font-size:13px;color:var(--accent);border-top:1px solid var(--border);margin-top:16px;font-weight:600;letter-spacing:1px;}
 </style>
 </head>
 <body>
@@ -164,7 +251,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.22</div>
+  <div class="splash-ver">v3.23</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -180,7 +267,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
       <div class="logo">LN</div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.22 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.23 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -194,11 +281,65 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 
   <!-- タブバー -->
   <div class="tab-bar">
+    <div class="tab-btn" id="tab-alloc" onclick="switchTab('alloc')">割り当て</div>
     <div class="tab-btn on" id="tab-today" onclick="switchTab('today')">🛃 通関</div>
     <div class="tab-btn" id="tab-shipping" onclick="switchTab('shipping')">📄 船積書類</div>
     <div class="tab-btn" id="tab-purchase" onclick="switchTab('purchase')">📋 購買契約</div>
     <div class="tab-btn" id="tab-sale" onclick="switchTab('sale')">📊 販売契約</div>
     <div class="tab-btn" id="tab-master" onclick="switchTab('master')">⚙ マスター</div>
+  </div>
+
+  <!-- 割り当てタブ -->
+  <div class="tab-content" id="content-alloc">
+    <div style="display:flex;align-items:center;gap:8px;padding:8px 20px;background:var(--surface);border-bottom:1px solid var(--border);flex-wrap:wrap;">
+      <button class="btn-ref hid" id="refBtn" onclick="doRefresh()">Refresh</button>
+      <span class="ts hid" id="tsSpan"></span>
+    </div>
+    <div class="main">
+      <div id="aA"></div>
+      <div class="toolbar">
+        <button class="btn-file hid" id="freightFallbackBtn" onclick="loadFreightManual()">📂 運賃ファイルを手動選択</button>
+        <span id="frLabel" style="font-size:11px;color:var(--text2)">運賃: SharePointから読込中...</span>
+      </div>
+      <div class="sum-row" id="sR"></div>
+      <div class="itabs" id="iT"></div>
+      <div class="flt-row" id="fPOL"></div>
+      <div class="flt-row" id="fPOD"></div>
+      <div class="sp">
+        <div>
+          <div class="card">
+            <div class="ct">Sales (Sell Balance)</div>
+            <div id="sT"></div>
+          </div>
+          <div class="card" style="margin-top:10px" id="mxCard">
+            <div class="ct">Margin Matrix (POL × POD) <span id="mxStatus" style="font-size:10px;color:var(--text3);font-weight:400"></span></div>
+            <div class="mx-wrap" id="mxArea"></div>
+          </div>
+          <div class="ai-panel" id="aiPanel" style="display:none;margin-top:10px">
+            <div class="ai-title">LEENAI 推奨配分</div>
+            <div id="aiContent"></div>
+          </div>
+        </div>
+        <div>
+          <div class="card">
+            <div class="ct">Buy (Purchase Balance)</div>
+            <div id="bT"></div>
+          </div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <div class="ct">Data Check</div>
+        <div id="dB" style="font-size:11px;color:var(--text2);max-height:200px;overflow:auto"></div>
+      </div>
+      <div class="footer">✦ Powered by LEENAI Automation System</div>
+    </div>
+  </div>
+  <!-- 셀 상세 모달 -->
+  <div id="cellModal" class="modal-bg" style="display:none" onclick="if(event.target===this)this.style.display='none'">
+    <div class="modal">
+      <div class="modal-title"><span id="modalTitle"></span><button class="modal-close" onclick="document.getElementById('cellModal').style.display='none'">✕</button></div>
+      <div id="modalBody"></div>
+    </div>
   </div>
 
   <!-- 通関タブ -->
@@ -900,10 +1041,11 @@ async function saveSpStatus(){
 }
 
 function switchTab(name){
-  ['today','shipping','purchase','sale','master'].forEach(t=>{
+  ['alloc','today','shipping','purchase','sale','master'].forEach(t=>{
     document.getElementById(`tab-${t}`).classList.toggle('on',t===name);
     document.getElementById(`content-${t}`).classList.toggle('on',t===name);
   });
+  if(name==='alloc'&&!window._allocLoaded&&dvToken){window._allocLoaded=true;AL_loadAll();}
   if(name==='shipping'&&allShipping.length===0&&dvToken)loadShipping();
   if(name==='purchase'&&allPurchase.length===0&&dvToken)loadPurchase();
   if(name==='sale'&&allSale.length===0&&dvToken)loadSale();
@@ -1756,12 +1898,12 @@ function showMain(){
 // ── テーマ ──
 function toggleTheme(){
   const h=document.documentElement,cur=h.getAttribute('data-theme')||'dark';
-  const order=['dark','light','leenai'],next=order[(order.indexOf(cur)+1)%order.length];
+  const order=['dark','light','leenai','focus'],next=order[(order.indexOf(cur)+1)%order.length];
   h.setAttribute('data-theme',next);localStorage.setItem('leenai_theme',next);updateThemeBtn(next);
 }
 function updateThemeBtn(t){
   const b=document.getElementById('themeToggleBtn');if(!b)return;
-  b.textContent={dark:'🌙 ダーク',light:'☀️ ライト',leenai:'🌿 LEENAI'}[t]||'🌙 ダーク';
+  b.textContent={dark:'🌙 ダーク',light:'☀️ ライト',leenai:'🌿 LEENAI',focus:'🎯 FOCUS'}[t]||'🌙 ダーク';
 }
 (function(){const s=localStorage.getItem('leenai_theme')||'dark';document.documentElement.setAttribute('data-theme',s);document.addEventListener('DOMContentLoaded',()=>updateThemeBtn(s));})();
 
@@ -1793,6 +1935,429 @@ window.onload=async()=>{
     setTimeout(()=>startGraphLogin(),500);
   }
 };
+
+
+/* ═══════════════════════════════════════════
+   Allocation Tab (B-01) — 統合 JS
+   認証・DV接続は Compass のものを共有
+═══════════════════════════════════════════ */
+function $(id){return document.getElementById(id);}
+
+const FREIGHT_SP_PATH='古紙/-. AI 活用/海上運賃.xlsx';
+let IT={},BD=[],SD=[],BK=[],PM={},SM={},PK={},BY={},PD={},DRAY_AVG={},BKG_RAW=[],CARRIERS={};
+let FREIGHT={};
+let SI='ALL';
+let SF_POL=new Set();
+let SF_POD=new Set();
+
+// Compass の dvGet を使った Alloc 用 API ラッパー
+async function dg(p){return dvGet(DV_API+'/'+p);}
+async function dgA(p){let a=[],u=p;while(u){const d=await dg(u);a=a.concat(d.value||[]);u=d['@odata.nextLink']?d['@odata.nextLink'].replace(DV_API+'/',''):null;}return a;}
+
+async function loadFreightFromSP(){
+  if(!grToken){setFreightLabel('err','SharePoint未接続');showFreightFallback();return;}
+  setFreightLabel('info','SharePointから読込中...');
+  try{
+    const encodedPath=FREIGHT_SP_PATH.split('/').map(encodeURIComponent).join('/');
+    const url=`${GR_API}/drives/${DRIVE_ID}/root:/${encodedPath}:/content`;
+    const r=await fetch(url,{headers:{Authorization:`Bearer ${grToken}`}});
+    if(!r.ok)throw new Error(`SP ${r.status}`);
+    const buf=await r.arrayBuffer();
+    await parseFreightBuffer(buf,'SharePoint');
+    $('freightFallbackBtn').classList.add('hid');
+  }catch(e){
+    lg('SP運賃読込失敗: '+e.message,'err');
+    setFreightLabel('err','SP読込失敗 — 手動選択で運賃ファイルを指定してください');
+    showFreightFallback();
+  }
+}
+function showFreightFallback(){$('freightFallbackBtn').classList.remove('hid');}
+function setFreightLabel(type,text){
+  const el=$('frLabel');el.className='';
+  if(type==='ok'){el.innerHTML=`<span class="freight-ok-badge">✓ ${text}</span>`;}
+  else if(type==='err'){el.innerHTML=`<span class="freight-err-badge">⚠ ${text}</span>`;}
+  else{el.textContent=text;el.style.color='var(--text2)';}
+}
+async function loadFreightManual(){
+  try{
+    const [fh]=await window.showOpenFilePicker({types:[{description:'Excel',accept:{'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet':['.xlsx','.xlsm']}}]});
+    const file=await fh.getFile();
+    const buf=await file.arrayBuffer();
+    await parseFreightBuffer(buf,'手動');
+  }catch(e){
+    if(e.name==='AbortError')return;
+    setFreightLabel('err','ファイル読込エラー: '+e.message);
+  }
+}
+async function parseFreightBuffer(buf,source){
+  const zip=await JSZip.loadAsync(buf);
+  const stylesXml=await zip.file('xl/styles.xml').async('string');
+  const sDom=new DOMParser().parseFromString(stylesXml,'text/xml');
+  const redFontIds=new Set();
+  sDom.querySelectorAll('fonts>font').forEach((f,idx)=>{
+    const color=f.querySelector('color');if(!color)return;
+    const rgb=color.getAttribute('rgb');
+    if(rgb){const r2=parseInt(rgb.substring(2,4),16),g2=parseInt(rgb.substring(4,6),16),b2=parseInt(rgb.substring(6,8),16);if(r2>180&&g2<80&&b2<80)redFontIds.add(idx);}
+  });
+  const redXfIds=new Set();
+  sDom.querySelectorAll('cellXfs>xf').forEach((xf,idx)=>{const fontId=parseInt(xf.getAttribute('fontId')||'0');if(redFontIds.has(fontId))redXfIds.add(idx);});
+  const wbXml=await zip.file('xl/workbook.xml').async('string');
+  const wbDom=new DOMParser().parseFromString(wbXml,'text/xml');
+  const relsXml=await zip.file('xl/_rels/workbook.xml.rels').async('string');
+  const relsDom=new DOMParser().parseFromString(relsXml,'text/xml');
+  const wb=XLSX.read(buf,{type:'array'});
+  const now=new Date();
+  const targetMonth=now.getDate()>=20?now.getMonth()+2:now.getMonth()+1;
+  const monthNames=['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'];
+  const mKey=monthNames[(targetMonth-1)%12];
+  let targetSheet=null;
+  for(const sn of wb.SheetNames){if(sn.includes(mKey+'レート')||sn.includes(mKey))targetSheet=sn;}
+  if(!targetSheet){const prevKey=monthNames[(targetMonth-2+12)%12];for(const sn of wb.SheetNames){if(sn.includes(prevKey+'レート')||sn.includes(prevKey))targetSheet=sn;}}
+  if(!targetSheet){const kuke=wb.SheetNames.filter(s=>s.includes('向け'));if(kuke.length)targetSheet=kuke[kuke.length-1];}
+  if(!targetSheet)targetSheet=wb.SheetNames[wb.SheetNames.length-2]||wb.SheetNames[0];
+  lg(`[${source}] Sheet: target=${mKey} → "${targetSheet}"`,'info');
+  const redCells=new Set();
+  let sheetRId=null;
+  wbDom.querySelectorAll('sheet').forEach(s=>{if(s.getAttribute('name')===targetSheet){sheetRId=s.getAttributeNS('http://schemas.openxmlformats.org/officeDocument/2006/relationships','id')||s.getAttribute('r:id');}});
+  if(sheetRId){
+    let sheetTarget=null;
+    relsDom.querySelectorAll('Relationship').forEach(r2=>{if(r2.getAttribute('Id')===sheetRId)sheetTarget=r2.getAttribute('Target');});
+    if(sheetTarget){
+      const sheetPath='xl/'+sheetTarget.replace(/^\//,'');
+      const sheetXml=await zip.file(sheetPath).async('string');
+      const shDom=new DOMParser().parseFromString(sheetXml,'text/xml');
+      shDom.querySelectorAll('row>c').forEach(c=>{const s=parseInt(c.getAttribute('s')||'0');if(redXfIds.has(s))redCells.add(c.getAttribute('r'));});
+    }
+  }
+  const ws=wb.Sheets[targetSheet];
+  function getCell(r,c){return ws[XLSX.utils.encode_cell({r,c})]||null;}
+  FREIGHT={};let skippedRed=0,activeCount=0;
+  const maxRow=(ws['!ref']?XLSX.utils.decode_range(ws['!ref']).e.r:200);
+  for(let i=4;i<=maxRow;i++){
+    const polCell=getCell(i,0),carrierCell=getCell(i,1);
+    if(!polCell||!polCell.v)continue;
+    const polJp=String(polCell.v).trim();
+    const carrier=String((carrierCell&&carrierCell.v)||'').trim();
+    if(!polJp||!carrier)continue;
+    const pol=POL_JP2EN[polJp]||polJp;
+    if(!FREIGHT[pol])FREIGHT[pol]={};
+    if(!FREIGHT[pol][carrier])FREIGHT[pol][carrier]={};
+    for(let c=2;c-2<POD_COLS.length;c++){
+      const pod=POD_COLS[c-2];
+      const cell=getCell(i,c);
+      if(!cell||cell.v===null||cell.v===undefined||cell.v==='')continue;
+      const addr=XLSX.utils.encode_cell({r:i,c});
+      if(redCells.has(addr)){skippedRed++;continue;}
+      const val=cell.v;const sv=String(val).trim();
+      if(sv==='No offer'||sv==='TBA'||sv==='休'||sv==='不可'||sv.includes('サービス不可')||sv.includes('見積不可')){
+        FREIGHT[pol][carrier][pod]={rate:null,note:sv};
+      }else{
+        const numMatch=String(val).replace(/[＄$]/g,'').match(/^[\d,.]+/);
+        if(numMatch){const rate=parseFloat(numMatch[0].replace(/,/g,''));const note=sv.includes('(')?(sv.match(/\(.+\)/)||[''])[0]:'';FREIGHT[pol][carrier][pod]={rate:isNaN(rate)?null:rate,note};if(!isNaN(rate))activeCount++;}
+        else{FREIGHT[pol][carrier][pod]={rate:null,note:sv};}
+      }
+    }
+  }
+  const polCount=Object.keys(FREIGHT).length;
+  setFreightLabel('ok',`[${source}] ${targetSheet} — ${polCount} POL, ${activeCount} routes (${skippedRed} old skipped)`);
+  render();
+}
+
+async function AL_loadAll(){
+  sa('Data loading...',true);
+  try{
+    lg('Items...','info');
+    (await dgA("cr49f_items?$select=cr49f_itemid,cr49f_item")).forEach(i=>IT[i.cr49f_itemid]=i.cr49f_item);
+    lg('Items: '+Object.keys(IT).length,'ok');
+    lg('Purchase details...','info');
+    BD=await dgA("cr49f_purchase_details?$filter=cr49f_closing eq false&$select=cr49f_purchase_detailid,cr49f_quantity,cr49f_price,cr49f_loading_port,cr49f_incoterms,cr49f_count,_cr49f_item_id_value,_cr49f_purchase_contract_id_value");
+    lg('Purchase: '+BD.length,'ok');
+    lg('Sales details...','info');
+    SD=await dgA("cr49f_sale_details?$filter=cr49f_closing eq false&$select=cr49f_sale_detailid,cr49f_quantity,cr49f_price,cr49f_price_yen,cr49f_remark,_cr49f_item_id_value,_cr49f_sale_contract_id_value");
+    lg('Sales: '+SD.length,'ok');
+    lg('Booking details...','info');
+    BK=await dgA("cr49f_booking_details?$select=cr49f_net,cr49f_count,_cr49f_booking_id_value,_cr49f_purchase_contract_detail_id_value,_cr49f_sale_contract_detail_id_value,_cr49f_item_id_value");
+    lg('BKG detail: '+BK.length,'ok');
+    lg('Active bookings...','info');
+    const bkgFrom=new Date();bkgFrom.setMonth(bkgFrom.getMonth()-2);
+    const bkgTo=new Date();bkgTo.setMonth(bkgTo.getMonth()+3);
+    const bkgData=await dgA(
+      "cr49f_bookings?$filter=cr49f_etd ge "+bkgFrom.toISOString().split('T')[0]+"T00:00:00Z"+
+      " and cr49f_etd le "+bkgTo.toISOString().split('T')[0]+"T23:59:59Z"+
+      "&$select=cr49f_bookingid,cr49f_booking_no,_cr49f_carrier_id_value,_cr49f_region_japan_id_value,_cr49f_region_id_value"
+    );
+    lg('Active BKG: '+bkgData.length,'ok');
+    const crGuids=[...new Set(bkgData.map(b=>b._cr49f_carrier_id_value).filter(Boolean))];
+    (await Promise.all(crGuids.map(g=>dg(`crcf9_carriers(${g})?$select=crcf9_carrier`).catch(()=>null)))).forEach((r,i)=>{if(r)CARRIERS[crGuids[i]]=r.crcf9_carrier;});
+    const bkgPolGuids=[...new Set(bkgData.map(b=>b._cr49f_region_japan_id_value).filter(Boolean))];
+    const POL_NAMES={};
+    (await Promise.all(bkgPolGuids.map(g=>dg(`crcf9_region_japans(${g})?$select=crcf9_pol`).catch(()=>null)))).forEach((r,i)=>{if(r)POL_NAMES[bkgPolGuids[i]]=r.crcf9_pol;});
+    const bkgPodGuids=[...new Set(bkgData.map(b=>b._cr49f_region_id_value).filter(Boolean))];
+    const newPodGuids=bkgPodGuids.filter(g=>!PD[g]);
+    (await Promise.all(newPodGuids.map(g=>dg(`cr49f_regions(${g})?$select=cr49f_pod,cr49f_region`).catch(()=>null)))).forEach((r,i)=>{if(r)PD[newPodGuids[i]]={p:r.cr49f_pod,r:r.cr49f_region};});
+    const bkgMap={};
+    bkgData.forEach(b=>{
+      const polJp=POL_NAMES[b._cr49f_region_japan_id_value]||'?';
+      bkgMap[b.cr49f_bookingid]={pol:POL_JP2EN[polJp]||polJp,pod:(PD[b._cr49f_region_id_value]||{}).p||'?',carrier:CARRIERS[b._cr49f_carrier_id_value]||'?'};
+    });
+    BKG_RAW=[];let bkgMatchCount=0,bkgNoId=0,bkgNoMap=0;
+    BK.forEach(bd=>{
+      const bkgId=bd._cr49f_booking_id_value;
+      if(!bkgId){bkgNoId++;return;}
+      const info=bkgMap[bkgId];
+      if(!info){bkgNoMap++;return;}
+      bkgMatchCount++;
+      const itemName=IT[bd._cr49f_item_id_value]||'?';
+      BKG_RAW.push({pol:info.pol,pod:info.pod,carrier:info.carrier,item:itemName,mt:bd.cr49f_net||0});
+    });
+    lg(`BKG join: match=${bkgMatchCount}, no_id=${bkgNoId}, no_map=${bkgNoMap}`,bkgNoId>BK.length/2?'err':'ok');
+    lg('Packer...','info');
+    const pcG=[...new Set(BD.map(b=>b._cr49f_purchase_contract_id_value).filter(Boolean))];
+    (await Promise.all(pcG.map(g=>dg(`cr49f_purchase_contracts(${g})?$select=_cr49f_packer_id_value,cr49f_exchange_rate,cr49f_purchase_contract_no`).catch(()=>null)))).forEach((r,i)=>{if(r)PM[pcG[i]]={pk:r._cr49f_packer_id_value,rt:r.cr49f_exchange_rate,no:r.cr49f_purchase_contract_no};});
+    const pkG=[...new Set(Object.values(PM).map(p=>p.pk).filter(Boolean))];
+    (await Promise.all(pkG.map(g=>dg(`cr49f_packers(${g})?$select=cr49f_packer`).catch(()=>null)))).forEach((r,i)=>{if(r)PK[pkG[i]]=r.cr49f_packer;});
+    lg('Packer: '+Object.keys(PK).length,'ok');
+    lg('Buyer/POD...','info');
+    const scG=[...new Set(SD.map(s=>s._cr49f_sale_contract_id_value).filter(Boolean))];
+    (await Promise.all(scG.map(g=>dg(`cr49f_sale_contracts(${g})?$select=cr49f_sale_contract_no,cr49f_latest_shipment,cr49f_tolerance,_cr49f_buyer_id_value,_cr49f_pod1_value`).catch(()=>null)))).forEach((r,i)=>{if(r)SM[scG[i]]={by:r._cr49f_buyer_id_value,pod:r._cr49f_pod1_value,ls:r.cr49f_latest_shipment,no:r.cr49f_sale_contract_no,tol:r.cr49f_tolerance||''};});
+    const byG=[...new Set(Object.values(SM).map(s=>s.by).filter(Boolean))];
+    (await Promise.all(byG.map(g=>dg(`cr49f_buyers(${g})?$select=cr49f_buyer,crcf9_country`).catch(()=>null)))).forEach((r,i)=>{if(r)BY[byG[i]]={n:r.cr49f_buyer,c:r.crcf9_country};});
+    const pdG=[...new Set(Object.values(SM).map(s=>s.pod).filter(Boolean))];
+    (await Promise.all(pdG.map(g=>dg(`cr49f_regions(${g})?$select=cr49f_pod,cr49f_region`).catch(()=>null)))).forEach((r,i)=>{if(r)PD[pdG[i]]={p:r.cr49f_pod,r:r.cr49f_region};});
+    lg('Buyer: '+Object.keys(BY).length+', POD: '+Object.keys(PD).length,'ok');
+    lg('Dray cost...','info');
+    const twoMonthsAgo=new Date();twoMonthsAgo.setMonth(twoMonthsAgo.getMonth()-2);
+    const dtStr=twoMonthsAgo.toISOString().split('T')[0]+'T00:00:00Z';
+    const drayData=await dgA("crcf9_container_informations?$filter=crcf9_work_date ge "+dtStr+" and crcf9_dray_cost gt 0&$select=crcf9_dray_cost,crcf9_incoterms,_crcf9_parker_plant_id_value");
+    const draySum={};
+    drayData.forEach(d=>{
+      if(d.crcf9_incoterms!=='店頭')return;
+      const pl=d._crcf9_parker_plant_id_value;if(!pl)return;
+      if(!draySum[pl])draySum[pl]={total:0,cnt:0};
+      draySum[pl].total+=d.crcf9_dray_cost;draySum[pl].cnt++;
+    });
+    Object.entries(draySum).forEach(([k,v])=>{DRAY_AVG[k]=Math.round(v.total/v.cnt);});
+    lg('Dray: '+Object.keys(DRAY_AVG).length+' plants','ok');
+    const aP={},aS={};
+    BK.forEach(b=>{const p=b._cr49f_purchase_contract_detail_id_value,s=b._cr49f_sale_contract_detail_id_value,n=b.cr49f_net||0;if(p)aP[p]=(aP[p]||0)+n;if(s)aS[s]=(aS[s]||0)+n;});
+    BD.forEach(b=>{
+      b._it=IT[b._cr49f_item_id_value]||'?';
+      const pc=PM[b._cr49f_purchase_contract_id_value]||{};
+      b._pk=PK[pc.pk]||'?';b._rt=pc.rt||155;b._co=pc.no||'';
+      b._al=aP[b.cr49f_purchase_detailid]||0;
+      b._rm=Math.round(((b.cr49f_quantity||0)-b._al)*100)/100;
+      b._pol=b.cr49f_loading_port||'-';
+    });
+    SD.forEach(s=>{
+      s._it=IT[s._cr49f_item_id_value]||'?';
+      const sc=SM[s._cr49f_sale_contract_id_value]||{};
+      const by=BY[sc.by]||{},pd=PD[sc.pod]||{};
+      s._by=by.n||'?';s._ct=by.c||'?';s._pd=pd.p||'?';s._rg=pd.r||'?';
+      s._ls=sc.ls;s._co=sc.no||'';s._tol=sc.tol||'';s._rmk=s.cr49f_remark||'';
+      s._al=aS[s.cr49f_sale_detailid]||0;
+      s._rm=Math.round(((s.cr49f_quantity||0)-s._al)*100)/100;
+    });
+    sa('',false);lg('All data loaded','ok');render();updateTs();
+    await loadFreightFromSP();
+  }catch(e){sa('Error: '+e.message,false);lg('ERROR: '+e.message,'err');}
+}
+
+function render(){
+  const is=new Set();BD.forEach(b=>is.add(b._it));SD.forEach(s=>is.add(s._it));
+  const ai=[...is].sort(),sm={};ai.forEach(i=>sm[i]={s:0,b:0});
+  BD.forEach(b=>{if(sm[b._it])sm[b._it].b+=b._rm;});
+  SD.forEach(s=>{if(sm[s._it])sm[s._it].s+=s._rm;});
+  const tS=Object.values(sm).reduce((a,x)=>a+x.s,0),tB=Object.values(sm).reduce((a,x)=>a+x.b,0),df=tB-tS;
+  $('sR').innerHTML=`<div class="sc"><div class="lb">Sales Balance(MT)</div><div class="vl">${Math.round(tS).toLocaleString()}</div></div><div class="sc"><div class="lb">Purchase Balance(MT)</div><div class="vl">${Math.round(tB).toLocaleString()}</div></div><div class="sc"><div class="lb">Diff</div><div class="vl ${df>=0?'plus':'minus'}">${df>=0?'+':''}${Math.round(df).toLocaleString()}</div></div><div class="sc"><div class="lb">Dray Plants</div><div class="vl">${Object.keys(DRAY_AVG).length}</div></div>`;
+  let th=`<div class="itab ${SI==='ALL'?'on':''}" onclick="sel('ALL')">ALL</div>`;
+  ai.sort((a,b)=>(sm[b].s+sm[b].b)-(sm[a].s+sm[a].b)).forEach(i=>{
+    const d=Math.round(sm[i].b-sm[i].s);
+    th+=`<div class="itab ${SI===i?'on':''}" onclick="sel('${i}')">${i}<span style="color:${d>=0?'var(--ok)':'var(--danger)'};font-size:9px;margin-left:2px">${d>=0?'+':''}${d}</span></div>`;
+  });
+  $('iT').innerHTML=th;buildFilterChips();rT();renderMatrix();
+}
+function buildFilterChips(){
+  const bf=SI==='ALL'?BD:BD.filter(b=>b._it===SI);
+  const sf=SI==='ALL'?SD:SD.filter(s=>s._it===SI);
+  const pols=[...new Set(bf.map(b=>b._pol).filter(p=>p&&p!=='-'))].sort();
+  const pods=[...new Set(sf.map(s=>s._pd).filter(p=>p&&p!=='?'&&p!=='国内転売'&&p!=='国内'))].sort();
+  SF_POL=new Set([...SF_POL].filter(v=>pols.includes(v)));
+  SF_POD=new Set([...SF_POD].filter(v=>pods.includes(v)));
+  let ph=`<span class="flt-label">POL</span><div class="fchip all-chip ${SF_POL.size===0?'on':''}" onclick="selPOL('ALL')">全</div>`;
+  pols.forEach(p=>{ph+=`<div class="fchip ${SF_POL.has(p)?'on':''}" onclick="selPOL('${p}')">${p}</div>`;});
+  $('fPOL').innerHTML=ph;
+  let dh=`<span class="flt-label">POD</span><div class="fchip all-chip ${SF_POD.size===0?'on':''}" onclick="selPOD('ALL')">全</div>`;
+  pods.forEach(p=>{dh+=`<div class="fchip ${SF_POD.has(p)?'on':''}" onclick="selPOD('${encodeURI(p)}')" title="${p}">${p}</div>`;});
+  $('fPOD').innerHTML=dh;
+}
+function selPOL(v){if(v==='ALL'){SF_POL.clear();}else{SF_POL.has(v)?SF_POL.delete(v):SF_POL.add(v);}buildFilterChips();rT();renderMatrix();}
+function selPOD(v){const dv=decodeURI(v);if(dv==='ALL'){SF_POD.clear();}else{SF_POD.has(dv)?SF_POD.delete(dv):SF_POD.add(dv);}buildFilterChips();rT();renderMatrix();}
+function sel(i){SI=i;SF_POL.clear();SF_POD.clear();render();}
+function rT(){
+  let bf=SI==='ALL'?BD:BD.filter(b=>b._it===SI);
+  let sf=SI==='ALL'?SD:SD.filter(s=>s._it===SI);
+  if(SF_POL.size>0)bf=bf.filter(b=>SF_POL.has(b._pol));
+  if(SF_POD.size>0)sf=sf.filter(s=>SF_POD.has(s._pd));
+  let sh='<table class="dt"><thead><tr><th>POD</th><th>Buyer</th><th>Item</th><th>CO.</th><th>Country</th><th class="r">$/MT</th><th class="r">Contract</th><th class="r">Alloc</th><th class="r">Balance</th><th style="min-width:52px">Tol.</th><th style="min-width:80px">Remark</th><th>L.Ship</th></tr></thead><tbody>';
+  const byPod={};
+  sf.forEach(s=>{const k=s._pd||'?';(byPod[k]=byPod[k]||[]).push(s);});
+  Object.keys(byPod).sort((a,b)=>{const ra=byPod[a].reduce((x,r)=>x+r._rm,0);const rb=byPod[b].reduce((x,r)=>x+r._rm,0);return rb-ra;}).forEach(pod=>{
+    const pRows=byPod[pod];
+    const pq=pRows.reduce((a,r)=>a+(r.cr49f_quantity||0),0);
+    const pa=pRows.reduce((a,r)=>a+r._al,0);
+    const pr=pRows.reduce((a,r)=>a+r._rm,0);
+    const country=pRows[0]?._rg||'';
+    sh+=`<tr class="pol-row"><td class="pol-name">${pod}</td><td></td><td></td><td></td><td style="font-size:10px">${country}</td><td></td><td class="r pol-num">${Math.round(pq)}</td><td class="r pol-num">${Math.round(pa)}</td><td class="r pol-num ${pr<0?'neg':'pos'}">${Math.round(pr)}</td><td></td><td></td><td></td></tr>`;
+    pRows.sort((a,b)=>{const la=a._ls?new Date(a._ls):new Date('2099-01-01');const lb=b._ls?new Date(b._ls):new Date('2099-01-01');return la-lb;}).forEach(r=>{
+      const done=Math.abs(r._rm)<0.5;const dim=done?'opacity:.45;':'';
+      const ls=r._ls?new Date(r._ls):null;const ug=!done&&ls&&(ls-new Date()<14*86400000);
+      const tolHtml=r._tol?`<span style="font-size:10px;color:var(--text2)">${r._tol}</span>`:'<span style="color:var(--text3)">-</span>';
+      const rmkHtml=r._rmk?`<span style="font-size:10px;color:var(--text2)">${r._rmk}</span>`:'';
+      sh+=`<tr style="${dim}"><td></td><td><b>${r._by}</b></td><td style="font-size:10px;color:var(--text2)">${r._it}</td><td style="font-size:10px;color:var(--text2)">${r._co}</td><td style="font-size:10px">${r._rg}</td><td class="r">${r.cr49f_price||r.cr49f_price_yen||'-'}</td><td class="r">${Math.round(r.cr49f_quantity||0)}</td><td class="r" style="color:var(--text2)">${Math.round(r._al)}</td><td class="r ${r._rm<0?'neg':r._rm>0?'pos':''}">${done?'<span style="color:var(--text3)">0</span>':'<b>'+Math.round(r._rm)+'</b>'}</td><td>${tolHtml}</td><td>${rmkHtml}</td><td style="font-size:10px;${ug?'color:var(--danger);font-weight:700':''};">${ls?(ls.getMonth()+1)+'/'+ls.getDate():'-'}</td></tr>`;
+    });
+  });
+  sh+='</tbody></table>';$('sT').innerHTML=sh;
+  let bh='<table class="dt"><thead><tr><th>POL</th><th>Packer</th><th>Item</th><th>CO.</th><th>Inco</th><th class="r">¥/kg</th><th class="r">Contract</th><th class="r">Alloc</th><th class="r">Balance</th></tr></thead><tbody>';
+  const byPol={};
+  bf.forEach(b=>{const k=b._pol;(byPol[k]=byPol[k]||[]).push(b);});
+  Object.keys(byPol).sort((a,b)=>{const ra=byPol[a].reduce((x,r)=>x+r._rm,0);const rb=byPol[b].reduce((x,r)=>x+r._rm,0);return rb-ra;}).forEach(pol=>{
+    const pRows=byPol[pol];
+    const pq=pRows.reduce((a,r)=>a+(r.cr49f_quantity||0),0);
+    const pa=pRows.reduce((a,r)=>a+r._al,0);
+    const pr=pRows.reduce((a,r)=>a+r._rm,0);
+    bh+=`<tr class="pol-row"><td class="pol-name">${pol}</td><td></td><td></td><td></td><td></td><td></td><td class="r pol-num">${Math.round(pq)}</td><td class="r pol-num">${Math.round(pa)}</td><td class="r pol-num ${pr<0?'neg':'pos'}">${Math.round(pr)}</td></tr>`;
+    pRows.sort((a,b)=>b._rm-a._rm).forEach(r=>{
+      const done=Math.abs(r._rm)<0.5;const dim=done?'opacity:.45;':'';
+      bh+=`<tr style="${dim}"><td></td><td><b>${r._pk}</b></td><td style="font-size:10px;color:var(--text2)">${r._it}</td><td style="font-size:10px;color:var(--text2)">${r._co}</td><td style="font-size:10px">${r.cr49f_incoterms||'-'}</td><td class="r">${r.cr49f_price||'-'}</td><td class="r">${Math.round(r.cr49f_quantity||0)}</td><td class="r" style="color:var(--text2)">${Math.round(r._al)}</td><td class="r ${r._rm<0?'neg':r._rm>0?'pos':''}">${done?'<span style="color:var(--text3)">0</span>':'<b>'+Math.round(r._rm)+'</b>'}</td></tr>`;
+    });
+  });
+  bh+='</tbody></table>';$('bT').innerHTML=bh;
+  if(BD.length){
+    const bkgFiltered2=SI==='ALL'?BKG_RAW:BKG_RAW.filter(b=>b.item===SI);
+    const bkgMtSum=bkgFiltered2.reduce((a,b)=>a+b.mt,0);
+    const bkgRouteTemp={};bkgFiltered2.forEach(b=>{const k=b.pol+'→'+b.pod;bkgRouteTemp[k]=(bkgRouteTemp[k]||0)+b.mt;});
+    const routeKeys=Object.entries(bkgRouteTemp).sort((a,b)=>b[1]-a[1]).slice(0,8).map(([k,v])=>`${k}=${Math.round(v)}MT`).join(', ');
+    $('dB').innerHTML=`<b>BKG:</b> ${BKG_RAW.length}件 (${SI}: ${bkgFiltered2.length}件, ${Math.round(bkgMtSum)}MT)<br><b>BKG routes:</b> ${routeKeys||'none'}<br><b>Freight POL:</b> ${Object.keys(FREIGHT).length>0?Object.keys(FREIGHT).join(', '):'Not loaded'}`;
+  }
+}
+const POL_JP2EN={'東京':'TOKYO','横浜':'YOKOHAMA','大阪':'OSAKA','神戸':'KOBE','那覇':'NAHA','名古屋':'NAGOYA','博多':'HAKATA','仙台':'SENDAI','新潟':'NIIGATA','金沢':'KANAZAWA','石狩':'ISHIKARI'};
+const POD_ABBR={JAKARTA:'JKT',SURABAYA:'SBY',LAEMCHABANG:'LCB','LAT KRABANG':'LKB',BANGKOK:'BKK',KWANGYANG:'KWA',PUSAN:'PUS',INCHEON:'ICN',HOCHIMINH:'SGN',HAIPHONG:'HPH','CAI MEP':'CMT','BINH DUONG':'BDG',DANANG:'DNG','LEE & MAN':'L&M',TAIPEI:'TPE',TAICHUNG:'TXG',KAOHSIUNG:'KHH',TAOYUAN:'TYN',KEELUNG:'KEL',PENANG:'PEN','(古着)PORT KLANG':'PKL',CHITTAGONG:'CTG','NHAVA SHEVA':'NHV'};
+const POD_COUNTRY={JKT:'ID',SBY:'ID',LCB:'TH',LKB:'TH',BKK:'TH',KWA:'KR',PUS:'KR',ICN:'KR',SGN:'VN',HPH:'VN',CMT:'VN',BDG:'VN',DNG:'VN','L&M':'VN',TPE:'TW',TXG:'TW',KHH:'TW',TYN:'TW',KEL:'TW',PEN:'MY',PKL:'MY',CTG:'BD',NHV:'IN'};
+const CARRIER_SHORT={'ONE(DRY)':'ONE','ONE(RAD)':'ONE-R','ONE':'ONE','OOCL(紙運輸)':'OOCL','EVER(紙運輸)':'EVER','INTERASIA':'IA','NAMSUNG':'NAM','DONGYOUNG':'DYL','WAN HAI':'WH','YANGMING':'YM','PAN OCEAN':'PAN','MAERSK':'MSK','JINJIANG':'JJ','SINOKOR':'SKR','HEUNG-A':'HA','DONGJIN':'DJ','TS LINE':'TSL','TS LINES':'TSL','CNC':'CNC','KMTC':'KMTC','ASL':'ASL','ZIM':'ZIM','HMM':'HMM','COSCO':'COSCO','HAPAG':'HPG','SKR/HAL':'SKR',' KMTC':'KMTC','EHIME':'EHM','SITC':'SITC','OOCL':'OOCL'};
+function cShort(c){return CARRIER_SHORT[c]||CARRIER_SHORT[c.trim()]||c.substring(0,4);}
+const POD_ALIAS={'CAT LAI':'HOCHIMINH','SP-ITC':'HOCHIMINH'};
+const POD_COLS=['JAKARTA','SURABAYA','LAEMCHABANG','LAT KRABANG','BANGKOK','KWANGYANG','PUSAN','INCHEON','HOCHIMINH','HAIPHONG','CAI MEP','BINH DUONG','DANANG','LEE & MAN','TAIPEI','TAICHUNG','KAOHSIUNG','TAOYUAN','KEELUNG','PENANG','(古着)PORT KLANG','CHITTAGONG','NHAVA SHEVA'];
+function calcAvgDray(){const vals=Object.values(DRAY_AVG);if(!vals.length)return 50000;return Math.round(vals.reduce((a,v)=>a+v,0)/vals.length);}
+function buildMarginData(){
+  if(!Object.keys(FREIGHT).length)return null;
+  const bf=SI==='ALL'?BD:BD.filter(b=>b._it===SI);
+  const sf=SI==='ALL'?SD:SD.filter(s=>s._it===SI);
+  if(!bf.length||!sf.length)return null;
+  const avgDray=calcAvgDray();
+  const polAgg={};
+  bf.forEach(b=>{
+    const pol=POL_JP2EN[b._pol]||b._pol;
+    if(!polAgg[pol])polAgg[pol]={totalCost:0,totalQty:0,tentoCount:0,totalCount:0,rates:[],remain:0};
+    const q=Math.max(b._rm,0);
+    polAgg[pol].totalCost+=(b.cr49f_price||0)*q;polAgg[pol].totalQty+=q;polAgg[pol].remain+=b._rm;
+    if(b.cr49f_incoterms==='店頭')polAgg[pol].tentoCount++;polAgg[pol].totalCount++;polAgg[pol].rates.push(b._rt);
+  });
+  Object.values(polAgg).forEach(p=>{p.avgPrice=p.totalQty>0?p.totalCost/p.totalQty:0;p.avgRate=p.rates.length?p.rates.reduce((a,v)=>a+v,0)/p.rates.length:155;p.tentoRatio=p.totalCount>0?p.tentoCount/p.totalCount:0;});
+  const podAgg={};
+  sf.forEach(s=>{const pod=s._pd;if(!pod||pod==='?')return;if(!podAgg[pod])podAgg[pod]={totalRev:0,totalQty:0,remain:0};const q=Math.max(s._rm,0);podAgg[pod].totalRev+=(s.cr49f_price||0)*q;podAgg[pod].totalQty+=q;podAgg[pod].remain+=s._rm;});
+  Object.values(podAgg).forEach(p=>{p.avgPrice=p.totalQty>0?p.totalRev/p.totalQty:0;});
+  const activePods=Object.keys(podAgg).filter(p=>podAgg[p].remain>0&&p!=='国内転売'&&p!=='国内'&&(SF_POD.size===0||SF_POD.has(p))).sort((a,b)=>podAgg[b].remain-podAgg[a].remain);
+  const activePols=Object.keys(polAgg).filter(p=>polAgg[p].remain>0&&(SF_POL.size===0||SF_POL.has(p))).sort((a,b)=>polAgg[b].remain-polAgg[a].remain);
+  const matrix={};
+  activePols.forEach(pol=>{
+    matrix[pol]={};const pa=polAgg[pol];const dray=pa.tentoRatio>0?(avgDray*pa.tentoRatio)/pa.avgRate:0;
+    activePods.forEach(pod=>{
+      const sa2=podAgg[pod];const freightPod=POD_ALIAS[pod]||pod;const carriers=FREIGHT[pol]||{};
+      let bestRate=null,bestCarrier='';
+      Object.entries(carriers).forEach(([carrier,pods])=>{const fr=pods[freightPod];if(fr&&fr.rate!==null&&fr.rate>0){if(bestRate===null||fr.rate<bestRate){bestRate=fr.rate;bestCarrier=carrier;}}});
+      if(bestRate===null){matrix[pol][pod]={margin:null,carrier:'',freight:null,note:'N/A'};}
+      else{const sellPerMT=sa2.avgPrice;const buyPerMT=pa.avgPrice*1000/pa.avgRate;const drayPerMT=dray/23;const freightPerMT=bestRate/23;const margin=sellPerMT-buyPerMT-drayPerMT-freightPerMT;matrix[pol][pod]={margin:Math.round(margin*10)/10,carrier:bestCarrier,freight:bestRate,sellPrice:sa2.avgPrice,buyPrice:pa.avgPrice,dray:Math.round(dray*pa.avgRate)};}
+    });
+  });
+  return {matrix,activePols,activePods,polAgg,podAgg,avgDray};
+}
+function renderMatrix(){
+  const mxArea=$('mxArea'),mxStatus=$('mxStatus');
+  if(!Object.keys(FREIGHT).length){mxArea.innerHTML='<div style="color:var(--text3);font-size:11px;padding:8px">海上運賃を読み込むとマージンマトリクスが表示されます</div>';mxStatus.textContent='';$('aiPanel').style.display='none';return;}
+  const md=buildMarginData();
+  if(!md){mxArea.innerHTML='<div style="color:var(--text3);font-size:11px;padding:8px">選択Itemのデータがありません</div>';$('aiPanel').style.display='none';return;}
+  const {matrix,activePols,activePods,polAgg,podAgg,avgDray}=md;
+  mxStatus.textContent=`($/MT, dray avg ¥${avgDray.toLocaleString()}/本)`;
+  const BKG_ROUTE={};
+  const bkgFiltered=SI==='ALL'?BKG_RAW:BKG_RAW.filter(b=>b.item===SI);
+  bkgFiltered.forEach(b=>{const key=b.pol+'→'+b.pod;if(!BKG_ROUTE[key])BKG_ROUTE[key]={mt:0,carriers:{}};BKG_ROUTE[key].mt+=b.mt;BKG_ROUTE[key].carriers[b.carrier]=(BKG_ROUTE[key].carriers[b.carrier]||0)+b.mt;});
+  let h='<table class="mx"><thead><tr><th class="pol-hd">POL \\ POD<div style="font-size:8px;font-weight:400;color:var(--text3)">$/MT</div></th>';
+  activePods.forEach(pod=>{const abbr=POD_ABBR[pod]||pod.substring(0,3);const ctry=POD_COUNTRY[abbr]||'';const rem=Math.round(podAgg[pod].remain);h+=`<th><div>${abbr}</div><div style="font-size:8px;color:var(--text3)">${ctry}</div><div style="color:var(--danger);font-size:9px">${rem}</div></th>`;});
+  h+=`<th style="min-width:80px;text-align:left">TOP3</th></tr></thead><tbody>`;
+  activePols.forEach(pol=>{
+    const pa=polAgg[pol];const rem=Math.round(pa.remain);
+    h+=`<tr><td class="pol-td"><div>${pol}</div><div style="font-size:9px;color:var(--accent)">${rem}MT</div><div style="font-size:8px;color:var(--text3)">¥${pa.avgPrice.toFixed(1)}/kg</div></td>`;
+    const podMargins=[];
+    activePods.forEach(pod=>{
+      const cell=matrix[pol][pod];const bkgKey=pol+'→'+pod;const bkg=BKG_ROUTE[bkgKey];
+      if(!cell||cell.margin===null){let bkgHtml='';if(bkg&&bkg.mt>0)bkgHtml=`<div class="mx-bkg">${Math.round(bkg.mt)}MT</div>`;h+=`<td><div class="mx-na">-</div>${bkgHtml}</td>`;}
+      else{const m=cell.margin;podMargins.push({pod,m,carrier:cell.carrier,freight:cell.freight,hasBkg:!!(bkg&&bkg.mt>0)});const cls=m>5?'mx-plus':m>-5?'mx-mid':'mx-neg';let bkgHtml='';if(bkg&&bkg.mt>0)bkgHtml=`<div class="mx-bkg">${Math.round(bkg.mt)}MT</div>`;h+=`<td onclick="showCellDetail('${pol}','${pod}')"><div class="mx-cell ${cls}"><div style="font-weight:700">${m>=0?'+':''}${m.toFixed(1)}</div><div class="mx-carrier">${cShort(cell.carrier)} $${cell.freight}</div>${bkgHtml}</div></td>`;}
+    });
+    const top3=podMargins.sort((a,b)=>{if(a.hasBkg&&!b.hasBkg)return -1;if(!a.hasBkg&&b.hasBkg)return 1;return b.m-a.m;}).slice(0,3);
+    h+=`<td class="mx-rank">`;top3.forEach((t,i)=>{const abbr=POD_ABBR[t.pod]||t.pod.substring(0,3);const cls=i===0?'rk1':i===1?'rk2':'rk3';h+=`<div class="${cls}">${i+1}. ${abbr} ${t.m>=0?'+':''}${t.m.toFixed(1)}${t.hasBkg?' ●':''}</div>`;});h+=`</td></tr>`;
+  });
+  h+='</tbody></table>';mxArea.innerHTML=h;renderAiPanel(md,BKG_ROUTE);
+}
+function renderAiPanel(md,BKG_ROUTE){
+  const {matrix,activePols,activePods,polAgg,podAgg}=md;
+  const panel=$('aiPanel'),content=$('aiContent');
+  const combos=[];
+  activePols.forEach(pol=>{activePods.forEach(pod=>{const cell=matrix[pol][pod];if(!cell||cell.margin===null)return;const bkgKey=pol+'→'+pod;const hasBkg=BKG_ROUTE[bkgKey]&&BKG_ROUTE[bkgKey].mt>0;combos.push({pol,pod,margin:cell.margin,carrier:cell.carrier,freight:cell.freight,hasBkg});});});
+  combos.sort((a,b)=>{if(a.hasBkg&&!b.hasBkg)return -1;if(!a.hasBkg&&b.hasBkg)return 1;return b.margin-a.margin;});
+  const remPol={};activePols.forEach(p=>{const r=Math.max(polAgg[p].remain,0);if(r>20)remPol[p]=r;});
+  const remPod={};activePods.forEach(p=>{const r=Math.max(podAgg[p].remain,0);if(r>20)remPod[p]=r;});
+  const assignments=[];let totalMargin=0,totalMT=0;
+  combos.forEach(c=>{if(!(remPol[c.pol]>0)||!(remPod[c.pod]>0))return;const qty=Math.min(remPol[c.pol],remPod[c.pod]);assignments.push({...c,qty:Math.round(qty)});remPol[c.pol]-=qty;remPod[c.pod]-=qty;totalMargin+=c.margin*qty;totalMT+=qty;});
+  if(!assignments.length){panel.style.display='none';return;}
+  panel.style.display='block';
+  let html='';
+  assignments.slice(0,8).forEach(a=>{const podAbbr=POD_ABBR[a.pod]||a.pod.substring(0,3);const mCls=a.margin>=0?'p':'n';html+=`<div class="ai-row"><div class="ai-route"><span>${a.pol}</span> → ${podAbbr} (${cShort(a.carrier)})</div><div>${a.qty}MT</div><div class="ai-margin ${mCls}">${a.margin>=0?'+':''}${a.margin.toFixed(1)}</div></div>`;});
+  if(assignments.length>8)html+=`<div style="font-size:10px;color:var(--text3);padding:3px 0">他 ${assignments.length-8}ルート...</div>`;
+  html+=`<div class="ai-total"><div>推定合計</div><div>${Math.round(totalMT).toLocaleString()}MT</div><div class="${totalMargin>=0?'pos':'neg'}">$${Math.round(totalMargin).toLocaleString()}/MT計</div></div>`;
+  const bkgRoutes=assignments.filter(a=>a.hasBkg);let notes='';
+  if(bkgRoutes.length)notes+=`<div>● 既存BKGルート優先 (${bkgRoutes.length}件、混載可能)</div>`;
+  notes+='<div>● マージン最大化で全国配分を最適化</div>';
+  const negRoutes=assignments.filter(a=>a.margin<0);
+  if(negRoutes.length)notes+=`<div style="color:var(--warn)">⚠ マイナスマージン ${negRoutes.length}ルート含む</div>`;
+  html+=`<div class="ai-note">${notes}</div>`;
+  content.innerHTML=html;
+}
+function showCellDetail(pol,pod){
+  if(!Object.keys(FREIGHT).length)return;
+  const freightPod=POD_ALIAS[pod]||pod;const carriers=FREIGHT[pol]||{};const allRates=[];
+  Object.entries(carriers).forEach(([carrier,pods])=>{const fr=pods[freightPod];if(fr&&fr.rate!==null&&fr.rate>0)allRates.push({carrier,rate:fr.rate,note:fr.note||''});});
+  allRates.sort((a,b)=>a.rate-b.rate);
+  const bf=SI==='ALL'?BD:BD.filter(b=>b._it===SI);
+  const polBuy=bf.filter(b=>(POL_JP2EN[b._pol]||b._pol)===pol&&b._rm>0.5);
+  const sf2=SI==='ALL'?SD:SD.filter(s=>s._it===SI);
+  const podSell=sf2.filter(s=>s._pd===pod&&s._rm>0.5);
+  const bkgF=SI==='ALL'?BKG_RAW:BKG_RAW.filter(b=>b.item===SI);
+  const bkgRoute=bkgF.filter(b=>b.pol===pol&&b.pod===pod);
+  const bkgTotal=bkgRoute.reduce((a,b)=>a+b.mt,0);
+  $('modalTitle').textContent=`${pol} → ${pod} 詳細`;
+  let h='';
+  h+=`<div style="font-weight:600;font-size:11px;color:var(--accent);margin-top:4px">運賃一覧 (${allRates.length}社)</div>`;
+  if(allRates.length){h+='<table><thead><tr><th>船社</th><th class="r">運賃($/本)</th><th class="r">$/MT</th><th>備考</th></tr></thead><tbody>';allRates.forEach((r,i)=>{const best=i===0?'style="color:var(--ok);font-weight:700"':'';h+=`<tr ${best}><td>${cShort(r.carrier)}</td><td class="r">$${r.rate.toLocaleString()}</td><td class="r">$${(r.rate/23).toFixed(1)}</td><td style="font-size:10px">${r.note}</td></tr>`;});h+='</tbody></table>';}
+  else h+='<div style="color:var(--text3);font-size:11px">運賃データなし</div>';
+  if(polBuy.length){h+=`<div style="font-weight:600;font-size:11px;color:var(--ok);margin-top:10px">購買残 (${pol})</div>`;h+='<table><thead><tr><th>Packer</th><th>渡し</th><th class="r">¥/kg</th><th class="r">残(MT)</th></tr></thead><tbody>';polBuy.forEach(b=>h+=`<tr><td>${b._pk}</td><td>${b.cr49f_incoterms||'-'}</td><td class="r">${b.cr49f_price||'-'}</td><td class="r">${Math.round(b._rm)}</td></tr>`);h+='</tbody></table>';}
+  if(podSell.length){h+=`<div style="font-weight:600;font-size:11px;color:var(--danger);margin-top:10px">販売残 (${pod})</div>`;h+='<table><thead><tr><th>Buyer</th><th class="r">$/MT</th><th class="r">残(MT)</th><th>L.Ship</th></tr></thead><tbody>';podSell.forEach(s=>{const ls=s._ls?new Date(s._ls):null;h+=`<tr><td>${s._by}</td><td class="r">${s.cr49f_price||'-'}</td><td class="r">${Math.round(s._rm)}</td><td>${ls?(ls.getMonth()+1)+'/'+ls.getDate():'-'}</td></tr>`;});h+='</tbody></table>';}
+  if(bkgTotal>0)h+=`<div style="font-weight:600;font-size:11px;color:var(--info);margin-top:10px">BKG実績: ${Math.round(bkgTotal)}MT</div>`;
+  $('modalBody').innerHTML=h;$('cellModal').style.display='flex';
+}
+function lg(m,t){const e=$('log');if(!e)return;e.style.display='block';e.innerHTML+=`<div class="log-${t||'info'}">${m}</div>`;e.scrollTop=e.scrollHeight;}
+function sa(m,ld){const e=$('aA');if(!e)return;if(!m){e.innerHTML='';return;}e.innerHTML=`<div class="al">${ld?'<span class="ld">'+m+'</span>':m}</div>`;}
+function updateTs(){const el=$('tsSpan');if(!el)return;const now=new Date();const ts=now.getHours()+':'+String(now.getMinutes()).padStart(2,'0')+':'+String(now.getSeconds()).padStart(2,'0');el.textContent='Updated '+ts;el.classList.remove('hid');}
+async function doRefresh(){const btn=$('refBtn');if(!btn)return;btn.disabled=true;btn.textContent='Loading...';try{IT={};BD=[];SD=[];BK=[];PM={};SM={};PK={};BY={};PD={};DRAY_AVG={};BKG_RAW=[];CARRIERS={};FREIGHT={};await AL_loadAll();}catch(e){sa('Refresh error: '+e.message,false);}btn.disabled=false;btn.textContent='Refresh';}
 </script>
 </body>
 </html>
