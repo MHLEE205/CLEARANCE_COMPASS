@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.24</title>
+<title>LEENAI 今日の作業 v3.25</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
@@ -252,7 +252,7 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.24</div>
+  <div class="splash-ver">v3.25</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -268,7 +268,7 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
       <div class="logo">LEEN<span>AI</span></div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.24 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.25 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -968,8 +968,12 @@ function getBuyerStaff(buyerName){if(!buyerName||buyerName==='—')return'—';r
 function getShipStaff(ivNo){
   if(!ivNo||ivNo==='—')return{name:'—',staff:'—'};
   const body=ivNo.replace(/^N/,'');
-  for(const k of IV_CODE_KEYS){
-    if(body.startsWith(k)&&/\d/.test(body[k.length]||''))return IV_IMPORTER_MAP[k];
+  // マスターJSONのshippingStaffDataを使用 (長コード優先)
+  const sorted=[...shippingStaffData].sort((a,b)=>(b.code||'').length-(a.code||'').length);
+  for(const r of sorted){
+    const k=r.code||'';
+    if(k&&body.startsWith(k)&&/\d/.test(body[k.length]||''))
+      return{name:r.importer||'—',staff:r.staff||'—'};
   }
   return{name:'—',staff:'—'};
 }
