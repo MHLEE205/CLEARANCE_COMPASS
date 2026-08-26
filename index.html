@@ -2,7 +2,7 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.23</title>
+<title>LEENAI 今日の作業 v3.24</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
@@ -252,7 +252,7 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
   <div class="splash-logo">LEEN<span>AI</span></div>
   <div class="splash-sys">今日の作業</div>
   <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.23</div>
+  <div class="splash-ver">v3.24</div>
   <div class="splash-div"></div>
   <div class="splash-desc">
     このツールを使用するには<br>
@@ -268,7 +268,7 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
       <div class="logo">LEEN<span>AI</span></div>
       <div>
         <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.23 | 通関・COTECNA・船積書類管理</div>
+        <div class="header-sub">v3.24 | 通関・COTECNA・船積書類管理</div>
       </div>
     </div>
     <div class="header-right">
@@ -1817,6 +1817,15 @@ async function saveMasterJson(){
     if(!r.ok)throw new Error(`${r.status}`);
     document.getElementById('masterSaveOk').style.display='';
     setTimeout(()=>document.getElementById('masterSaveOk').style.display='none',3000);
+    // マスター保存後 → 担当者変更を各タブに反映
+    showLoading('担当者情報を更新中...');
+    try{
+      allShipping=[];allShippingAll=[];
+      const rd=getRangeDays();
+      await Promise.all([loadTsukan(rd),loadCotecna(rd)]);
+      const activeTab=document.querySelector('.tab-btn.on')?.id?.replace('tab-','');
+      if(activeTab==='shipping')await loadShipping();
+    }finally{hideLoading();}
   }catch(e){alert('保存エラー: '+e.message);}
 }
 
@@ -1839,8 +1848,8 @@ function renderTsukanMaster(){
   const tb=document.getElementById('tsukanMasterBody');if(!tb)return;
   tb.innerHTML=polStaffData.map((r,i)=>`
     <tr>
-      <td><input class="master-edit-input" value="${r.pol||''}" onchange="polStaffData[${i}].pol=this.value" placeholder="POL名"></td>
-      <td><input class="master-edit-input" value="${r.staff||''}" onchange="polStaffData[${i}].staff=this.value" placeholder="担当者名"></td>
+      <td><input class="master-edit-input" value="${r.pol||''}" oninput="polStaffData[${i}].pol=this.value" placeholder="POL名"></td>
+      <td><input class="master-edit-input" value="${r.staff||''}" oninput="polStaffData[${i}].staff=this.value" placeholder="担当者名"></td>
       <td class="cn"><button class="master-del-btn" onclick="delTsukanRow(${i})">削除</button></td>
     </tr>`).join('');
 }
@@ -1859,9 +1868,9 @@ function renderShippingMaster(){
   const tb=document.getElementById('shippingMasterBody');if(!tb)return;
   tb.innerHTML=shippingStaffData.map((r,i)=>`
     <tr>
-      <td><input class="master-edit-input" value="${r.code||''}" onchange="shippingStaffData[${i}].code=this.value" placeholder="IVコード(例:MG)" style="width:70px;"></td>
-      <td><input class="master-edit-input" value="${r.importer||''}" onchange="shippingStaffData[${i}].importer=this.value" placeholder="Importer名"></td>
-      <td><input class="master-edit-input" value="${r.staff||''}" onchange="shippingStaffData[${i}].staff=this.value" placeholder="大場/パク/..."></td>
+      <td><input class="master-edit-input" value="${r.code||''}" oninput="shippingStaffData[${i}].code=this.value" placeholder="IVコード(例:MG)" style="width:70px;"></td>
+      <td><input class="master-edit-input" value="${r.importer||''}" oninput="shippingStaffData[${i}].importer=this.value" placeholder="Importer名"></td>
+      <td><input class="master-edit-input" value="${r.staff||''}" oninput="shippingStaffData[${i}].staff=this.value" placeholder="大場/パク/..."></td>
       <td class="cn"><button class="master-del-btn" onclick="delShippingRow(${i})">削除</button></td>
     </tr>`).join('');
 }
