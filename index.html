@@ -919,8 +919,10 @@ async function saveSpStatus(){
 
 function switchTab(name){
   ['alloc','today','shipping','purchase','sale','master'].forEach(t=>{
-    document.getElementById(`tab-${t}`).classList.toggle('on',t===name);
-    document.getElementById(`content-${t}`).classList.toggle('on',t===name);
+    document.getElementById('tab-'+t).classList.toggle('on',t===name);
+    var c=document.getElementById('content-'+t);
+    c.classList.toggle('on',t===name);
+    c.style.display=(t===name)?'block':'none';
   });
   if(name==='alloc'&&!window._allocLoaded){window._allocLoaded=true;AL_loadAll();}
   if(name==='shipping'&&allShipping.length===0)loadShipping();
