@@ -2,17 +2,19 @@
 <html lang="ja" data-theme="dark">
 <head>
 <meta charset="UTF-8">
-<title>LEENAI 今日の作業 v3.27</title>
+<link id="leenaiFavicon" rel="icon">
+<link rel="stylesheet" href="https://mhlee205.github.io/LEENAI_COMMON/v1/leenai-common.css">
+<script src="https://mhlee205.github.io/LEENAI_COMMON/v1/leenai-common.js"></script>
+<script>if(!window.LEENAI){document.addEventListener('DOMContentLoaded',function(){document.body.innerHTML='<div style="padding:40px;font-family:sans-serif">共通ファイルの読み込みに失敗しました。ページを再読み込みしてください。</div>';});}</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/3.10.1/jszip.min.js"></script>
 <style>
-:root{--bg:#0f1117;--surface:#1a1d27;--surface2:#22263a;--surface3:#2a2f46;--border:#2e3350;--border2:#3a4460;--text:#e2e8f0;--text2:#8892a4;--text3:#4a5568;--accent:#4f8ef7;--ok:#22c55e;--warn:#f59e0b;--danger:#ef4444;--info:#38bdf8;--radius:10px;}
-[data-theme="light"]{--bg:#f4f6fb;--surface:#ffffff;--surface2:#f0f4ff;--surface3:#e8edf7;--border:#d1d5db;--border2:#c4cad5;--text:#111827;--text2:#6b7280;--text3:#9ca3af;}
-[data-theme="leenai"]{--bg:#FAFDF7;--surface:#ffffff;--surface2:#F2F9EE;--surface3:#E8F5E0;--border:#D0E8C0;--border2:#B8DFB0;--text:#1A3A0E;--text2:#4A6A3A;--text3:#8AAA80;--accent:#2D5A1E;--accent2:#2E72C8;}
+:root{--border2:#3a4460;--radius:10px;}
 *{box-sizing:border-box;margin:0;padding:0;}
 body{font-family:'Helvetica Neue',Arial,sans-serif;font-size:13px;background:var(--bg);color:var(--text);min-height:100vh;}
 /* ── タブバー ── */
 .tab-bar{background:var(--surface);border-bottom:1px solid var(--border);display:flex;padding:0 20px;position:sticky;top:52px;z-index:99;}
+body{font-size:13px;min-height:100vh;}
 .tab-btn{padding:10px 20px;font-size:13px;color:var(--text2);cursor:pointer;border-bottom:2px solid transparent;white-space:nowrap;}
 .tab-btn.on{color:var(--accent);border-bottom:2px solid var(--accent);font-weight:500;}
 .tab-btn:hover:not(.on){color:var(--text);}
@@ -47,38 +49,8 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .fd-note{font-size:11px;padding:2px 5px;border:1px solid var(--border);border-radius:5px;background:var(--surface2);color:var(--text);width:106px;}
 .fd-note:focus{outline:none;border-color:var(--accent);}
 
-.loading-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:999;align-items:center;justify-content:center;}
-.loading-overlay.show{display:flex;}
-.loading-box{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:28px 36px;text-align:center;}
-.loading-msg{font-size:13px;color:var(--text2);margin-top:12px;}
-
-/* ── スプラッシュ ── */
-.splash{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;text-align:center;padding:20px;}
-.splash-logo{font-size:52px;font-weight:800;letter-spacing:-1px;margin-bottom:12px;}
-.splash-logo span{background:linear-gradient(135deg,#4f8ef7,#2D5A1E);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
-.splash-sys{font-size:11px;color:var(--text3);letter-spacing:.12em;margin-bottom:8px;}
-.splash-title{font-size:18px;font-weight:500;color:var(--text);margin-bottom:4px;}
-.splash-ver{font-size:12px;color:var(--text3);margin-bottom:20px;}
-.splash-div{width:40px;height:1px;background:var(--border);margin:0 auto 20px;}
-.splash-desc{font-size:12px;color:var(--text3);line-height:1.7;margin-bottom:24px;}
-.splash-btn{padding:11px 32px;border-radius:8px;border:none;background:var(--accent);color:#fff;font-size:14px;font-weight:600;cursor:pointer;}
-.splash-btn:hover{opacity:.85;}
-
-/* ── ヘッダー ── */
-.header{background:var(--surface);border-bottom:1px solid var(--border);padding:0 20px;height:52px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;}
-.header-left{display:flex;align-items:center;gap:12px;}
-.logo{font-size:17px;font-weight:800;letter-spacing:1px;}
-.logo span{color:var(--accent);}
-.header-title{font-size:15px;font-weight:500;color:var(--text);}
-.header-sub{font-size:11px;color:var(--text2);}
-.header-right{display:flex;align-items:center;gap:8px;}
-.chip-dv{font-size:11px;color:var(--ok);display:none;}
-.chip-sp{font-size:11px;color:#4f8ef7;display:none;}
-.theme-btn{padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--surface2);color:var(--text2);cursor:pointer;font-size:11px;}
 .btn{padding:6px 14px;border-radius:6px;border:1px solid var(--border);background:var(--surface2);color:var(--text);cursor:pointer;font-size:12px;}
-.btn-reload{background:var(--surface2);color:var(--text2);border-color:var(--border);}
-.btn-reload:hover{border-color:var(--accent);color:var(--accent);}
-.btn-primary{background:var(--accent);color:#fff;border-color:var(--accent);}
+.btn-primary{background:var(--accent-btn);color:#fff;border-color:var(--accent-btn);}
 
 /* ── メイン ── */
 .main{padding:16px 20px;max-width:1500px;margin:0 auto;}
@@ -102,7 +74,7 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .save-ok{font-size:12px;color:var(--ok);display:none;}
 
 /* ── セクション&テーブル ── */
-.section{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;}
+.section{background:var(--read);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;}
 .sec-hdr{padding:10px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px;}
 .sec-title{font-size:13px;font-weight:500;}
 .sec-date{font-size:11px;color:var(--text3);}
@@ -150,9 +122,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 .spinner{display:inline-block;width:14px;height:14px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
 .spinner-lg{width:28px;height:28px;border-width:3px;}
 @keyframes spin{to{transform:rotate(360deg)}}
-.powered{text-align:center;font-size:11px;color:var(--text3);padding:12px;border-top:1px solid var(--border);}
-/* ── Allocation Tab: テーマ追加 ── */
-[data-theme="focus"]{--bg:#D8DDE8;--surface:#EDF0F5;--surface2:#CDD4E0;--surface3:#BEC8D6;--border:#9DAABE;--text:#202733;--text2:#2E3A4A;--text3:#4E5D6E;--accent:#315F9E;--accent2:#2F7D6A;--ok:#16a34a;--warn:#d97706;--danger:#dc2626;--info:#0284c7;}
+/* ── Allocation Tab ── */
 /* ── Allocation Tab: CSS ── */
 #content-alloc .main{max-width:1700px;margin:0 auto;padding:14px 16px;}
 .flt-row{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-bottom:6px;}
@@ -162,7 +132,7 @@ tr.row-unsaved td{background:rgba(245,158,11,.07)!important;}
 .fchip.on{background:var(--accent);color:#fff;border-color:var(--accent);}
 .fchip.all-chip{border-color:var(--text3);color:var(--text3);}
 .fchip.all-chip.on{background:var(--surface3);color:var(--text);border-color:var(--text2);}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
+.card{background:var(--read);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px;margin-bottom:10px;}
 #log{font-size:11px;color:var(--text2);max-height:150px;overflow-y:auto;padding:8px;background:var(--surface2);border-radius:6px;margin-top:8px;display:none;}
 .log-ok{color:var(--ok);}.log-err{color:var(--danger);}.log-info{color:var(--accent);}
 .sum-row{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;}
@@ -240,45 +210,8 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
 </head>
 <body>
 
-<div class="loading-overlay" id="loadingOverlay">
-  <div class="loading-box">
-    <div class="spinner spinner-lg"></div>
-    <div class="loading-msg" id="loadingMsg">データ取得中...</div>
-  </div>
-</div>
-
-<!-- ログインスプラッシュ -->
-<div id="loginView" class="splash">
-  <div class="splash-logo">LEEN<span>AI</span></div>
-  <div class="splash-sys">今日の作業</div>
-  <div class="splash-title">通関・COTECNA 作業管理</div>
-  <div class="splash-ver">v3.27</div>
-  <div class="splash-div"></div>
-  <div class="splash-desc">
-    このツールを使用するには<br>
-    COMPASSアカウントでのログインが必要です
-  </div>
-  <button class="splash-btn" id="loginBtn" onclick="startDvLogin()">⚡ COMPASSでログイン</button>
-</div>
-
-<!-- メイン画面 -->
-<div id="mainView" style="display:none;">
-  <div class="header">
-    <div class="header-left">
-      <div class="logo">LEEN<span>AI</span></div>
-      <div>
-        <div class="header-title">LEENAI 今日の作業</div>
-        <div class="header-sub">v3.27 | 通関・COTECNA・船積書類管理</div>
-      </div>
-    </div>
-    <div class="header-right">
-      <span class="chip-dv" id="chipDv">● COMPASS</span>
-      <span class="chip-sp" id="chipSp">● SP</span>
-      <button class="theme-btn" id="themeToggleBtn" onclick="toggleTheme()">🌙 ダーク</button>
-      <button class="btn btn-reload" onclick="reloadData()">🔄 データ更新</button>
-      <button class="btn btn-primary" onclick="startDvLogin()">再ログイン</button>
-    </div>
-  </div>
+<div id="app" style="display:none">
+  <!-- ln-header は LEENAI が挿入 -->
 
   <!-- タブバー -->
   <div class="tab-bar">
@@ -332,7 +265,6 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
         <div class="ct">Data Check</div>
         <div id="dB" style="font-size:11px;color:var(--text2);max-height:200px;overflow:auto"></div>
       </div>
-      <div class="footer">✦ Powered by LEENAI Automation System</div>
     </div>
   </div>
   <!-- 셀 상세 모달 -->
@@ -444,7 +376,6 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
       </div>
     </div>
   </div>
-  <div class="powered">✦ Powered by LEENAI Automation System</div>
   </div><!-- /main -->
   </div><!-- /tab-content today -->
 
@@ -732,16 +663,11 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
 
 
 
-</div><!-- /mainView -->
+</div><!-- /app -->
 
 <script>
 // ── 定数 ──
-const CLIENT_ID = 'f071a165-5e9b-44bf-b6a1-baba654524db';
-const TENANT_ID = 'a56988ff-c2b8-4df8-9727-889ad4205198';
-const REDIRECT  = 'https://mhlee205.github.io/CLEARANCE_COMPASS/';
 const DV_API    = 'https://orgde512c6f.crm7.dynamics.com/api/data/v9.2';
-const DV_SCOPE  = 'https://orgde512c6f.crm7.dynamics.com/user_impersonation offline_access';
-const GR_SCOPE  = 'https://graph.microsoft.com/Files.ReadWrite offline_access';
 const DRIVE_ID  = 'b!ZK58_9YllU-vETQD3Xz0TbOInXbVCXJHnQ2280KJBArFLeM_18EgRbSeoO-TW__U';
 const JSON_PATH = '古紙/-. AI 活用/PORTAL/clearance_status.json';
 const GR_API    = 'https://graph.microsoft.com/v1.0';
@@ -758,84 +684,24 @@ const TS_OPTS  = ['未','ED未','ACL未'];
 const CT_OPTS  = ['未','提出'];
 
 // ── 状態変数 ──
-let dvToken = null, grToken = null;
+var currentUser='';
 let allTsukan = [], allCotecna = [];
 const _dvCache = { carriers: {}, regions: {} };
 let statusMap = {};   // { iv_no: {tsukan_irai, tsukan_status} }
 let cotecnaMap = {};  // { key: {report_status} }
 let savedMap = {}, savedCotecnaMap = {};
-let currentUser = '';
+// currentUser は上部で宣言済み
 
 // ── ローディング ──
-function showLoading(m='データ取得中...'){document.getElementById('loadingMsg').textContent=m;document.getElementById('loadingOverlay').classList.add('show');}
-function hideLoading(){document.getElementById('loadingOverlay').classList.remove('show');}
-
-// ── PKCE ──
-function rnd(n){const a=new Uint8Array(n);crypto.getRandomValues(a);return a;}
-function b64url(b){return btoa(String.fromCharCode(...new Uint8Array(b))).replace(/\+/g,'-').replace(/\//g,'_').replace(/=/g,'');}
-async function sha256(s){return crypto.subtle.digest('SHA-256',new TextEncoder().encode(s));}
-async function pkceParams(){const v=b64url(rnd(32));return{v,c:b64url(await sha256(v))};}
-
-// ── Dataverse ログイン ──
-async function startDvLogin(){
-  const {v,c}=await pkceParams();
-  sessionStorage.setItem('dv_pkce',JSON.stringify({v}));
-  const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT,
-    scope:DV_SCOPE,response_mode:'query',code_challenge:c,code_challenge_method:'S256',
-    state:'dv_1',prompt:'select_account'});
-  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?${p}`;
-}
-async function handleDvCallback(code){
-  const d=JSON.parse(sessionStorage.getItem('dv_pkce')||'{}');
-  if(!d.v)return;
-  sessionStorage.removeItem('dv_pkce');
-  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,{
-    method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
-    body:new URLSearchParams({grant_type:'authorization_code',client_id:CLIENT_ID,
-      code,redirect_uri:REDIRECT,code_verifier:d.v,scope:DV_SCOPE})
-  });
-  const data=await r.json();
-  if(data.error)throw new Error(data.error_description||data.error);
-  dvToken=data.access_token;
-  sessionStorage.setItem('dv_token',dvToken);
-  try{const pl=JSON.parse(atob(dvToken.split('.')[1].replace(/-/g,'+').replace(/_/g,'/')));
-    currentUser=pl.name||pl.preferred_username||'担当者';}catch(e){}
-  // DV完了 → 自動でGraphログイン
-  await startGraphLogin();
-}
-
-// ── Graph ログイン ──
-async function startGraphLogin(){
-  const {v,c}=await pkceParams();
-  sessionStorage.setItem('gr_pkce',JSON.stringify({v}));
-  const p=new URLSearchParams({client_id:CLIENT_ID,response_type:'code',redirect_uri:REDIRECT,
-    scope:GR_SCOPE,response_mode:'query',code_challenge:c,code_challenge_method:'S256',
-    state:'graph_1'});
-  location.href=`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/authorize?${p}`;
-}
-async function handleGraphCallback(code){
-  const d=JSON.parse(sessionStorage.getItem('gr_pkce')||'{}');
-  if(!d.v)return;
-  sessionStorage.removeItem('gr_pkce');
-  const r=await fetch(`https://login.microsoftonline.com/${TENANT_ID}/oauth2/v2.0/token`,{
-    method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},
-    body:new URLSearchParams({grant_type:'authorization_code',client_id:CLIENT_ID,
-      code,redirect_uri:REDIRECT,code_verifier:d.v,scope:GR_SCOPE})
-  });
-  const data=await r.json();
-  if(data.error)throw new Error(data.error_description||data.error);
-  grToken=data.access_token;
-  sessionStorage.setItem('gr_token',grToken);
-  await loadMasterJson();
-  showMain();
-  loadAll();
-}
+function showLoading(m){LEENAI.loading.show(m||'データ取得中...');}
+function hideLoading(){LEENAI.loading.hide();}
 
 // ── DV API ──
 async function dvGet(url){
-  const r=await fetch(url,{headers:{Authorization:`Bearer ${dvToken}`,
+  var tok=await LEENAI.auth.token('dataverse');
+  const r=await fetch(url,{headers:{Authorization:'Bearer '+tok,
     'OData-MaxVersion':'4.0','OData-Version':'4.0',Accept:'application/json;odata.metadata=minimal'}});
-  if(!r.ok){if(r.status===401){dvToken=null;sessionStorage.removeItem('dv_token');}throw new Error(`DV ${r.status}`);}
+  if(!r.ok) throw new Error('DV '+r.status);
   return r.json();
 }
 
@@ -843,8 +709,10 @@ async function dvGet(url){
 function filePath(){return JSON_PATH.split('/').map(encodeURIComponent).join('/');}
 async function loadStatusJson(){
   try{
-    const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${filePath()}:/content`,
-      {headers:{Authorization:`Bearer ${grToken}`}});
+    var gr=await LEENAI.auth.token('graph');
+    if(!gr){statusMap={};cotecnaMap={};shippingMap={};savedMap={};savedCotecnaMap={};savedShippingMap={};return;}
+    const r=await fetch(GR_API+'/drives/'+DRIVE_ID+'/root:/'+filePath()+':/content',
+      {headers:{Authorization:'Bearer '+gr}});
     if(!r.ok)throw new Error('not found');
     const d=await r.json();
     statusMap=d.records||{};
@@ -853,17 +721,18 @@ async function loadStatusJson(){
     savedMap=JSON.parse(JSON.stringify(statusMap));
     savedCotecnaMap=JSON.parse(JSON.stringify(cotecnaMap));
     savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
-    savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
   }catch(e){statusMap={};cotecnaMap={};shippingMap={};savedMap={};savedCotecnaMap={};savedShippingMap={};}
 }
 async function saveStatusJson(){
+  var gr=await LEENAI.auth.token('graph');
+  if(!gr)throw new Error('SharePoint未接続');
   const payload={last_updated:new Date().toISOString(),records:statusMap,cotecna:cotecnaMap,shipping:shippingMap};
-  const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${filePath()}:/content`,{
+  const r=await fetch(GR_API+'/drives/'+DRIVE_ID+'/root:/'+filePath()+':/content',{
     method:'PUT',
-    headers:{Authorization:`Bearer ${grToken}`,'Content-Type':'application/json'},
+    headers:{Authorization:'Bearer '+gr,'Content-Type':'application/json'},
     body:JSON.stringify(payload,null,2)
   });
-  if(!r.ok)throw new Error(`保存失敗 ${r.status}`);
+  if(!r.ok)throw new Error('保存失敗 '+r.status);
 }
 
 // ── 状態管理(通関) ──
@@ -1034,10 +903,10 @@ async function saveSpStatus(){
   try{
     const payload={last_updated:new Date().toISOString(),records:statusMap,cotecna:cotecnaMap,shipping:shippingMap};
     const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${filePath()}:/content`,{
-      method:'PUT',headers:{Authorization:`Bearer ${grToken}`,'Content-Type':'application/json'},
+      method:'PUT',headers:{Authorization:'Bearer '+(await LEENAI.auth.token('graph')),'Content-Type':'application/json'},
       body:JSON.stringify(payload,null,2)
     });
-    if(!r.ok)throw new Error(`保存失敗 ${r.status}`);
+    if(!r.ok)throw new Error('保存失敗 '+r.status);
     savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
     document.querySelectorAll('tr[data-sp-iv]').forEach(r=>r.classList.remove('row-unsaved'));
     document.getElementById('spSaveBar').classList.remove('show');
@@ -1053,10 +922,10 @@ function switchTab(name){
     document.getElementById(`tab-${t}`).classList.toggle('on',t===name);
     document.getElementById(`content-${t}`).classList.toggle('on',t===name);
   });
-  if(name==='alloc'&&!window._allocLoaded&&dvToken){window._allocLoaded=true;AL_loadAll();}
-  if(name==='shipping'&&allShipping.length===0&&dvToken)loadShipping();
-  if(name==='purchase'&&allPurchase.length===0&&dvToken)loadPurchase();
-  if(name==='sale'&&allSale.length===0&&dvToken)loadSale();
+  if(name==='alloc'&&!window._allocLoaded){window._allocLoaded=true;AL_loadAll();}
+  if(name==='shipping'&&allShipping.length===0)loadShipping();
+  if(name==='purchase'&&allPurchase.length===0)loadPurchase();
+  if(name==='sale'&&allSale.length===0)loadSale();
 }
 
 // ── 船積書類データロード ──
@@ -1138,7 +1007,7 @@ function renderShipping(){
   const fp=document.getElementById('spPolFilter').value.toUpperCase();
   const fs=document.getElementById('spStaffFilter').value;
   const fc=document.getElementById('spCntrFilter').value.toUpperCase();
-  const hasSp=!!grToken;
+  const hasSp=LEENAI.auth.status.graph==='ok';
   const rows=allShipping.filter(r=>
     (!fp||r.pol.toUpperCase().includes(fp))&&
     (!fs||r.staff===fs)&&
@@ -1267,7 +1136,7 @@ function renderTsukan(){
   const rows=allTsukan.filter(r=>(!f||r.staff===f)&&(!p||r.pol.toUpperCase().includes(p)));
   document.getElementById('tsukanCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('tsukanBody').innerHTML='<tr class="msg-row"><td colspan="8">該当データなし</td></tr>';return;}
-  const today=localDateStr(0),bizday=nextBizDay(),hasSp=!!grToken;
+  const today=localDateStr(0),bizday=nextBizDay(),hasSp=LEENAI.auth.status.graph==='ok';
   document.getElementById('tsukanBody').innerHTML=rows.map(r=>{
     const st=getTsStatus(r.iv_no),unsaved=isTsUnsaved(r.iv_no);
     const stCls=st.tsukan_status==='ED未'?'st-ed':st.tsukan_status==='ACL未'?'st-acl':'';
@@ -1352,7 +1221,7 @@ function renderCotecna(){
   const rows=allCotecna.filter(r=>(!f||r.staff===f)&&(!p||r.pol.toUpperCase().includes(p)));
   document.getElementById('cotecnaCnt').textContent=`${rows.length}件`;
   if(!rows.length){document.getElementById('cotecnaBody').innerHTML='<tr class="msg-row"><td colspan="9">該当データなし</td></tr>';return;}
-  const today=localDateStr(0),hasSp=!!grToken;
+  const today=localDateStr(0),hasSp=LEENAI.auth.status.graph==='ok';
   document.getElementById('cotecnaBody').innerHTML=rows.map(r=>{
     const key=ctKey(r),st=getCtStatus(key),unsaved=isCtUnsaved(key);
     const ctCls=st.report_status==='提出'?'st-ok':'st-no';
@@ -1382,7 +1251,7 @@ async function loadAll(){
   const rd=getRangeDays();updateRangeHint(rd);
   showLoading('COMPASSからデータ取得中...');
   try{
-    await Promise.all([loadStatusJson(), grToken?loadMasterJson():Promise.resolve()]);
+    await Promise.all([loadStatusJson(), LEENAI.auth.status.graph==='ok'?loadMasterJson():Promise.resolve()]);
     await Promise.all([loadTsukan(rd),loadCotecna(rd)]);
   }
   finally{hideLoading();}
@@ -1806,8 +1675,10 @@ const DEFAULT_SHIPPING=[
 
 async function loadMasterJson(){
   try{
-    const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${masterFilePath()}:/content`,
-      {headers:{Authorization:`Bearer ${grToken}`}});
+    var gr=await LEENAI.auth.token('graph');
+    if(!gr)return;
+    const r=await fetch(GR_API+'/drives/'+DRIVE_ID+'/root:/'+masterFilePath()+':/content',
+      {headers:{Authorization:'Bearer '+gr}});
     if(!r.ok)throw new Error('not found');
     const d=await r.json();
     polStaffData=d.tsukan_staff||DEFAULT_TSUKAN;
@@ -1828,10 +1699,10 @@ async function saveMasterJson(){
   try{
     const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${masterFilePath()}:/content`,{
       method:'PUT',
-      headers:{Authorization:`Bearer ${grToken}`,'Content-Type':'application/json'},
+      headers:{Authorization:'Bearer '+(await LEENAI.auth.token('graph')),'Content-Type':'application/json'},
       body:JSON.stringify(payload,null,2)
     });
-    if(!r.ok)throw new Error(`${r.status}`);
+    if(!r.ok)throw new Error(r.status+'');
     document.getElementById('masterSaveOk').style.display='';
     setTimeout(()=>document.getElementById('masterSaveOk').style.display='none',3000);
     // マスター保存後 → 担当者変更を各タブに反映
@@ -1915,54 +1786,24 @@ async function reloadData(){
   }finally{hideLoading();}
 }
 
-function showMain(){
-  document.getElementById('loginView').style.display='none';
-  document.getElementById('mainView').style.display='';
-  document.getElementById('chipDv').style.display='';
-  if(grToken)document.getElementById('chipSp').style.display='';
+// ── startTool (LEENAI onReady) ──
+function startTool(){
+  var u=LEENAI.user;
+  if(u) currentUser=u.name||'';
   document.getElementById('todayLabel').textContent=todayLbl();
+  LEENAI.addHeaderButton({label:'🔄 データ更新',onClick:reloadData});
+  loadAll();
 }
 
-// ── テーマ ──
-function toggleTheme(){
-  const h=document.documentElement,cur=h.getAttribute('data-theme')||'dark';
-  const order=['dark','light','leenai','focus'],next=order[(order.indexOf(cur)+1)%order.length];
-  h.setAttribute('data-theme',next);localStorage.setItem('leenai_theme',next);updateThemeBtn(next);
-}
-function updateThemeBtn(t){
-  const b=document.getElementById('themeToggleBtn');if(!b)return;
-  b.textContent={dark:'🌙 ダーク',light:'☀️ ライト',leenai:'🌿 LEENAI',focus:'🎯 FOCUS'}[t]||'🌙 ダーク';
-}
-(function(){const s=localStorage.getItem('leenai_theme')||'dark';document.documentElement.setAttribute('data-theme',s);document.addEventListener('DOMContentLoaded',()=>updateThemeBtn(s));})();
-
-// ── 初期化 ──
-window.onload=async()=>{
-  const sd=sessionStorage.getItem('dv_token'),sg=sessionStorage.getItem('gr_token');
-  if(sd)dvToken=sd;
-  if(sg)grToken=sg;
-
-  if(location.search.includes('code=')){
-    const p=new URLSearchParams(location.search);
-    const code=p.get('code'),state=p.get('state')||'';
-    history.replaceState({},'',location.pathname);
-    showLoading('認証中...');
-    try{
-      if(state.startsWith('graph_')){
-        await handleGraphCallback(code);
-      } else {
-        await handleDvCallback(code); // DV完了後 → 自動でGraphログイン
-      }
-    }catch(e){alert('認証エラー: '+e.message);hideLoading();}
-    return;
-  }
-
-  if(dvToken&&grToken){showMain();loadAll();return;}
-  if(dvToken){
-    // DVのみ → 直接Graphログイン
-    showLoading('SharePointへ接続中...');
-    setTimeout(()=>startGraphLogin(),500);
-  }
-};
+LEENAI.init({
+  sys:'PORTAL',
+  name:'今日の作業',
+  version:'4.0',
+  date:'2026-10-08',
+  desc:'通関・COTECNA・船積書類 作業管理',
+  onReady:startTool,
+  redirectUri:'https://mhlee205.github.io/CLEARANCE_COMPASS/',
+});
 
 
 /* ═══════════════════════════════════════════
@@ -1983,12 +1824,13 @@ async function dg(p){return dvGet(DV_API+'/'+p);}
 async function dgA(p){let a=[],u=p;while(u){const d=await dg(u);a=a.concat(d.value||[]);u=d['@odata.nextLink']?d['@odata.nextLink'].replace(DV_API+'/',''):null;}return a;}
 
 async function loadFreightFromSP(){
-  if(!grToken){setFreightLabel('err','SharePoint未接続');showFreightFallback();return;}
+  var grTok=await LEENAI.auth.token('graph');
+  if(!grTok){setFreightLabel('err','SharePoint未接続');showFreightFallback();return;}
   setFreightLabel('info','SharePointから読込中...');
   try{
     const encodedPath=FREIGHT_SP_PATH.split('/').map(encodeURIComponent).join('/');
-    const url=`${GR_API}/drives/${DRIVE_ID}/root:/${encodedPath}:/content`;
-    const r=await fetch(url,{headers:{Authorization:`Bearer ${grToken}`}});
+    const url=GR_API+'/drives/'+DRIVE_ID+'/root:/'+encodedPath+':/content';
+    const r=await fetch(url,{headers:{Authorization:'Bearer '+grTok}});
     if(!r.ok)throw new Error(`SP ${r.status}`);
     const buf=await r.arrayBuffer();
     await parseFreightBuffer(buf,'SharePoint');
