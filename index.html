@@ -964,7 +964,7 @@ async function loadShipping(){
         is_vietnam:cntr.toUpperCase().includes('VIETNAM')};
     };
     // 統計用: 全bookings (FD完了も含む)
-    allShippingAll=bookings.map(toRow);
+    allShippingAll=bookings.filter(b=>!/^L/i.test((b.cr49f_invoice_no||'').trim())).map(toRow); // 国内転売(IV「L」始まり)は統計からも除外 (v4.3)
     // 表示用: FD未完了のみ
     allShipping=targetBookings.length?targetBookings.map(toRow):[];
   }catch(e){
@@ -1694,7 +1694,7 @@ function startTool(){
 LEENAI.init({
   sys:'PORTAL',
   name:'今日の作業',
-  version:'4.2',
+  version:'4.3',
   date:'2026-10-19',
   desc:'通関・COTECNA・船積書類 作業管理',
   onReady:startTool,
