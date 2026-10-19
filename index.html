@@ -303,10 +303,6 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
       <span class="filter-label">担当者</span>
       <select class="filter-sel" id="staffFilter" onchange="applyFilter()">
         <option value="">全員</option>
-        <option value="JU">JU (朱 フナム)</option>
-        <option value="ZHAN">ZHAN (セン ガイキン)</option>
-        <option value="LEE JUAH">LEE JUAH (李 ジュア)</option>
-        <option value="竹内 雅将">竹内 雅将</option>
       </select>
       <div class="fdivider"></div>
       <span class="filter-info" id="rangeHint">通関: CY_CUT 明日分 ｜ COTECNA: 当日・前日分</span>
@@ -398,8 +394,6 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
       <span class="filter-label">担当者</span>
       <select class="filter-sel" id="spStaffFilter" onchange="renderShipping()">
         <option value="">全員</option>
-        <option value="大場">大場</option>
-        <option value="パク">パク</option>
         <option value="—">未マッピング</option>
       </select>
       <div class="fdivider"></div>
@@ -614,15 +608,14 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
       <div class="section">
         <div class="sec-hdr" style="background:rgba(45,90,30,.08);">
           <span class="sec-title" style="color:#2D5A1E;">🛃 通関担当者マスター</span>
-          <span style="font-size:11px;color:var(--text3);margin-left:8px;">POL → 担当者 マッピング</span>
-          <button onclick="addTsukanRow()" style="margin-left:auto;padding:3px 12px;border-radius:6px;border:1px solid #2D5A1E;background:#2D5A1E;color:#fff;font-size:11px;cursor:pointer;">＋ 追加</button>
+          <span style="font-size:11px;color:var(--text3);margin-left:8px;">POL → 担当者 マッピング（共通マスター pol_staff）</span>
         </div>
         <div class="table-wrap">
           <table>
             <thead><tr>
               <th class="th-g" style="width:160px;">POL</th>
               <th class="th-g" style="width:180px;">担当者</th>
-              <th class="th-g" style="width:60px;"></th>
+              <th class="th-g" style="width:180px;">補助</th>
             </tr></thead>
             <tbody id="tsukanMasterBody"></tbody>
           </table>
@@ -635,8 +628,7 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
       <div class="section">
         <div class="sec-hdr" style="background:rgba(26,60,120,.08);">
           <span class="sec-title" style="color:#1A3C78;">📄 船積書類担当者マスター</span>
-          <span style="font-size:11px;color:var(--text3);margin-left:8px;">IVコード → Importer → 担当者 マッピング</span>
-          <button onclick="addShippingRow()" style="margin-left:auto;padding:3px 12px;border-radius:6px;border:1px solid #1A3C78;background:#1A3C78;color:#fff;font-size:11px;cursor:pointer;">＋ 追加</button>
+          <span style="font-size:11px;color:var(--text3);margin-left:8px;">IVコード → Importer → 担当者 マッピング（共通マスター doc_staff）</span>
         </div>
         <div class="table-wrap">
           <table>
@@ -644,7 +636,6 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
               <th class="th-ship" style="width:80px;">IVコード</th>
               <th class="th-ship" style="width:160px;">Importer</th>
               <th class="th-ship" style="width:120px;">担当者</th>
-              <th class="th-ship" style="width:60px;"></th>
             </tr></thead>
             <tbody id="shippingMasterBody"></tbody>
           </table>
@@ -654,9 +645,8 @@ table.mx td.pol-td{text-align:left;font-weight:600;font-size:11px;position:stick
 
     <!-- 保存バー -->
     <div style="display:flex;align-items:center;gap:12px;margin-top:16px;padding:12px 16px;background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);">
-      <span style="font-size:12px;color:var(--text2);">変更はSharePointに保存されます</span>
-      <button onclick="saveMasterJson()" style="margin-left:auto;padding:6px 24px;border-radius:6px;border:none;background:#2D5A1E;color:#fff;font-size:13px;font-weight:500;cursor:pointer;">💾 マスターを保存</button>
-      <span id="masterSaveOk" style="font-size:12px;color:var(--ok);display:none;">✅ 保存しました</span>
+      <span style="font-size:12px;color:var(--text2);">担当者の変更はヘッダーの ⚙ マスター設定（POL 担当 / 書類担当）で行います。保存後「🔄 データ更新」で反映されます</span>
+      <button onclick="LEENAI._openMasterPanel()" style="margin-left:auto;padding:6px 24px;border-radius:6px;border:none;background:#2D5A1E;color:#fff;font-size:13px;font-weight:500;cursor:pointer;">⚙ マスター設定を開く</button>
     </div>
   </div>
   </div><!-- /tab-content master -->
@@ -672,14 +662,16 @@ const DRIVE_ID  = 'b!ZK58_9YllU-vETQD3Xz0TbOInXbVCXJHnQ2280KJBArFLeM_18EgRbSeoO-
 const JSON_PATH = '古紙/-. AI 活用/PORTAL/clearance_status.json';
 const GR_API    = 'https://graph.microsoft.com/v1.0';
 
-// POL → 担当者 (master_staff.json から動的ロード)
-let polStaffData=[]; // [{pol, staff}]
+// POL → 担当者 (共通マスター pol_staff — 値は STAFF_CODE, 表示名は staff マスター)
+let polStaffData=[]; // [{pol, staff, assist}]  pol='*' = その他の港
+let staffNameMap={};  // STAFF_CODE → 名前(日)
 function getPolStaffMap(){
   const m={};
-  polStaffData.forEach(r=>{if(r.pol&&r.staff)m[r.pol.toUpperCase()]=r.staff;});
+  polStaffData.forEach(r=>{if(r.pol&&r.pol!=='*'&&r.staff)m[r.pol.toUpperCase()]=r.staff;});
   return m;
 }
-const CHIP_CLS = {'JU':'ju','ZHAN':'zhan','LEE JUAH':'lee','竹内 雅将':'take','大場':'oba','パク':'pak'};
+function staffName(code){return (code&&code!=='—')?(staffNameMap[code]||code):'—';}
+const CHIP_CLS = {'HN_JU':'ju','KX_ZHAN':'zhan','JA_LEE':'lee','M_TAKEUCHI':'take','M_OBA':'oba','SW_PARK':'pak'};
 const TS_OPTS  = ['未','ED未','ACL未'];
 const CT_OPTS  = ['未','提出'];
 
@@ -804,37 +796,13 @@ function applyCtColor(sel){
   else sel.classList.add('st-no');
 }
 
-// ── IV prefix → Importer → 担当者マッピング ──
-const IV_IMPORTER_MAP = {
-  'RA':{name:'R. A.',staff:'大場'},'MG':{name:'MEGA SURYA',staff:'大場'},
-  'IK':{name:'INDAH KIAT',staff:'大場'},'TJ':{name:'TJIWI KIMIA',staff:'大場'},
-  'HA':{name:'HANKUK PAPER',staff:'大場'},'NA':{name:'NATURA',staff:'大場'},
-  'PC':{name:'PAPER COREA',staff:'大場'},'RE':{name:'RE',staff:'大場'},
-  'SG':{name:'SAIGON',staff:'大場'},'KN':{name:'KHOI NGUYEN',staff:'大場'},
-  'SI':{name:'SINO PAPER',staff:'大場'},'TP':{name:'THAI PAPER',staff:'大場'},
-  'TA':{name:'Thuan An',staff:'大場'},'KO':{name:'KOA(M)',staff:'大場'},
-  'DD':{name:'DDT',staff:'大場'},'HK':{name:'HKB',staff:'大場'},
-  'DO':{name:'DOHACO',staff:'大場'},'SK':{name:'SIAM KRAFT',staff:'大場'},
-  'CR':{name:'CORELEX',staff:'大場'},'VT':{name:'VIET TRI',staff:'大場'},
-  'TH':{name:'THANH HOA',staff:'大場'},'XS':{name:'XSD',staff:'大場'},
-  'AS':{name:'ASIA PAPER',staff:'パク'},'DH':{name:'DAEHAN PAPER',staff:'パク'},
-  'DW':{name:'DAEWANG PAPER',staff:'パク'},'OW':{name:'DONGWON',staff:'パク'},
-  'HS':{name:'HANSOL',staff:'パク'},'JJ':{name:'JEONJU',staff:'パク'},
-  'JS':{name:'JUSHIN',staff:'パク'},'KL':{name:'KLEANNARA',staff:'パク'},
-  'TG':{name:'TAE GYOUNG',staff:'パク'},'KS':{name:'KISUK',staff:'パク'},
-  'TL':{name:'TAILIM PAPER',staff:'パク'},'YC':{name:'YUCHANG',staff:'パク'},
-  'NF':{name:'NIKKO FIBRE',staff:'パク'},'CL':{name:'CLC(Y)',staff:'パク'},
-  'CV':{name:'CLC(V)',staff:'パク'},'DA':{name:'DOUBLE A',staff:'パク'},
-  'CA':{name:'CAS',staff:'パク'},'DT':{name:'DONG TIEN',staff:'パク'},
-  'XM':{name:'XUAN MAI',staff:'パク'},'KC':{name:'TKC KRAFT',staff:'パク'},
-  'TQ':{name:'TAN QUANG',staff:'パク'},'NI':{name:'NIC INTERTRADE',staff:'パク'},
-  'VD':{name:'VAN DIEM',staff:'パク'},'NE':{name:'NEW TOYO',staff:'パク'},
-  'TE':{name:'THAI HIEP',staff:'パク'},'NB':{name:'NIBONG TEBAL',staff:'パク'},
-  'A':{name:'ASPEX',staff:'パク'}
-};
-const IV_CODE_KEYS=Object.keys(IV_IMPORTER_MAP).sort((a,b)=>b.length-a.length);
-const IV_NAME_TO_STAFF=Object.fromEntries(Object.values(IV_IMPORTER_MAP).map(v=>[v.name.toUpperCase(),v.staff]));
-function getBuyerStaff(buyerName){if(!buyerName||buyerName==='—')return'—';return IV_NAME_TO_STAFF[buyerName.toUpperCase()]||'—';}
+// ── IV prefix → Importer → 担当者マッピング (共通マスター doc_staff) ──
+function getBuyerStaff(buyerName){
+  if(!buyerName||buyerName==='—')return'—';
+  const up=buyerName.toUpperCase();
+  const r=shippingStaffData.find(x=>(x.importer||'').toUpperCase()===up&&x.staff);
+  return r?r.staff:'—';
+}
 function getShipStaff(ivNo){
   if(!ivNo||ivNo==='—')return{name:'—',staff:'—'};
   // 先頭1文字(N/L/U等のプレフィックス)を除去してコード抽出
@@ -1083,9 +1051,10 @@ function getStaff(pol){
   const up=pol.toUpperCase();
   const pm=getPolStaffMap();
   for(const[k,v]of Object.entries(pm))if(up.includes(k))return v;
-  return'—';
+  const other=polStaffData.find(r=>r.pol==='*');
+  return other&&other.staff?other.staff:'—';
 }
-function mkChip(s){return`<span class="chip ${CHIP_CLS[s]||'none'}">${s||'—'}</span>`;}
+function mkChip(s){return`<span class="chip ${CHIP_CLS[s]||'none'}">${staffName(s)}</span>`;}
 async function fetchPolMap(guids){
   const m={};
   await Promise.all(guids.map(async g=>{
@@ -1604,7 +1573,7 @@ function renderStats(){
   const monthTotals={};
   staffs.forEach(staff=>{
     let rowTotal=0;
-    html+=`<tr><td style="padding:4px 10px;border-bottom:.5px solid var(--border);font-weight:500;">${staff}</td>`;
+    html+=`<tr><td style="padding:4px 10px;border-bottom:.5px solid var(--border);font-weight:500;">${staffName(staff)}</td>`;
     months.forEach(m=>{
       const d=stats[staff]?.[m]||{TT:0,LC:0,他:0};
       const sub=d.TT+d.LC+d.他;rowTotal+=sub;
@@ -1634,89 +1603,32 @@ function renderStats(){
 
 async function onScPeriodChange(){allSale=[];await loadSale();}
 
-// ── マスターJSON ──
-const MASTER_PATH='古紙/-. AI 活用/PORTAL/master_staff.json';
-function masterFilePath(){return MASTER_PATH.split('/').map(encodeURIComponent).join('/');}
-
-// デフォルト値 (JSONなし時)
-const DEFAULT_TSUKAN=[
-  {pol:'ISHIKARI',staff:'JU'},{pol:'NAHA',staff:'JU'},
-  {pol:'KANAZAWA',staff:'ZHAN'},{pol:'AKITA',staff:'ZHAN'},{pol:'NIIGATA',staff:'ZHAN'},
-  {pol:'NAGOYA',staff:'ZHAN'},{pol:'SHIMIZU',staff:'ZHAN'},{pol:'MIZUSHIMA',staff:'ZHAN'},
-  {pol:'HAKATA',staff:'ZHAN'},{pol:'KUMAMOTO',staff:'ZHAN'},{pol:'MOJI',staff:'ZHAN'},
-  {pol:'SENDAI',staff:'LEE JUAH'},{pol:'OSAKA',staff:'LEE JUAH'},{pol:'KOBE',staff:'LEE JUAH'},
-  {pol:'TOKYO',staff:'竹内 雅将'},{pol:'YOKOHAMA',staff:'竹内 雅将'},{pol:'FUKUYAMA',staff:'ZHAN'}
-];
-const DEFAULT_SHIPPING=[
-  {code:'RA',importer:'R. A.',staff:'大場'},{code:'MG',importer:'MEGA SURYA',staff:'大場'},
-  {code:'IK',importer:'INDAH KIAT',staff:'大場'},{code:'TJ',importer:'TJIWI KIMIA',staff:'大場'},
-  {code:'HA',importer:'HANKUK PAPER',staff:'大場'},{code:'NA',importer:'NATURA',staff:'大場'},
-  {code:'PC',importer:'PAPER COREA',staff:'大場'},{code:'RE',importer:'RE',staff:'大場'},
-  {code:'SG',importer:'SAIGON',staff:'大場'},{code:'KN',importer:'KHOI NGUYEN',staff:'大場'},
-  {code:'SI',importer:'SINO PAPER',staff:'大場'},{code:'TP',importer:'THAI PAPER',staff:'大場'},
-  {code:'TA',importer:'Thuan An',staff:'大場'},{code:'KO',importer:'KOA(M)',staff:'大場'},
-  {code:'DD',importer:'DDT',staff:'大場'},{code:'HK',importer:'HKB',staff:'大場'},
-  {code:'DO',importer:'DOHACO',staff:'大場'},{code:'SK',importer:'SIAM KRAFT',staff:'大場'},
-  {code:'CR',importer:'CORELEX',staff:'大場'},{code:'VT',importer:'VIET TRI',staff:'大場'},
-  {code:'TH',importer:'THANH HOA',staff:'大場'},{code:'XS',importer:'XSD',staff:'大場'},
-  {code:'AS',importer:'ASIA PAPER',staff:'パク'},{code:'DH',importer:'DAEHAN PAPER',staff:'パク'},
-  {code:'DW',importer:'DAEWANG PAPER',staff:'パク'},{code:'OW',importer:'DONGWON',staff:'パク'},
-  {code:'HS',importer:'HANSOL',staff:'パク'},{code:'JJ',importer:'JEONJU',staff:'パク'},
-  {code:'JS',importer:'JUSHIN',staff:'パク'},{code:'KL',importer:'KLEANNARA',staff:'パク'},
-  {code:'TG',importer:'TAE GYOUNG',staff:'パク'},{code:'KS',importer:'KISUK',staff:'パク'},
-  {code:'TL',importer:'TAILIM PAPER',staff:'パク'},{code:'YC',importer:'YUCHANG',staff:'パク'},
-  {code:'NF',importer:'NIKKO FIBRE',staff:'パク'},{code:'CL',importer:'CLC(Y)',staff:'パク'},
-  {code:'CV',importer:'CLC(V)',staff:'パク'},{code:'DA',importer:'DOUBLE A',staff:'パク'},
-  {code:'CA',importer:'CAS',staff:'パク'},{code:'DT',importer:'DONG TIEN',staff:'パク'},
-  {code:'XM',importer:'XUAN MAI',staff:'パク'},{code:'KC',importer:'TKC KRAFT',staff:'パク'},
-  {code:'TQ',importer:'TAN QUANG',staff:'パク'},{code:'NI',importer:'NIC INTERTRADE',staff:'パク'},
-  {code:'VD',importer:'VAN DIEM',staff:'パク'},{code:'NE',importer:'NEW TOYO',staff:'パク'},
-  {code:'TE',importer:'THAI HIEP',staff:'パク'},{code:'NB',importer:'NIBONG TEBAL',staff:'パク'},
-  {code:'A',importer:'ASPEX',staff:'パク'}
-];
-
-async function loadMasterJson(){
+// ── 担当マスター (共通マスター staff / pol_staff / doc_staff — v4.1) ──
+async function loadMasterJson(opts){
   try{
-    var gr=await LEENAI.auth.token('graph');
-    if(!gr)return;
-    const r=await fetch(GR_API+'/drives/'+DRIVE_ID+'/root:/'+masterFilePath()+':/content',
-      {headers:{Authorization:'Bearer '+gr}});
-    if(!r.ok)throw new Error('not found');
-    const d=await r.json();
-    polStaffData=d.tsukan_staff||DEFAULT_TSUKAN;
-    shippingStaffData=d.shipping_staff||DEFAULT_SHIPPING;
+    const [staff,pol,doc]=await Promise.all([
+      LEENAI.master.get('staff',opts),LEENAI.master.get('pol_staff',opts),LEENAI.master.get('doc_staff',opts)]);
+    staffNameMap=Object.fromEntries((staff||[]).map(r=>[r.code,r.name_ja||r.code]));
+    polStaffData=(pol||[]).map(r=>({pol:(r.pol||'').trim().toUpperCase(),staff:r.staff||'',assist:r.assist||''}));
+    shippingStaffData=(doc||[]).map(r=>({code:(r.iv_code||'').trim(),importer:r.importer||'',staff:r.staff||''}));
   }catch(e){
-    // ファイルなし → デフォルト値使用
-    polStaffData=[...DEFAULT_TSUKAN];
-    shippingStaffData=[...DEFAULT_SHIPPING];
+    LEENAI.toast('担当マスターを読み込めません: '+e.message,'err');
   }
+  fillStaffFilters();
+  renderMasterTabs();
 }
 
-async function saveMasterJson(){
-  const payload={
-    last_updated:new Date().toISOString(),
-    tsukan_staff:polStaffData,
-    shipping_staff:shippingStaffData
+// 担当者フィルタの選択肢 (マスターに出てくる担当のみ)
+function fillStaffFilters(){
+  const fill=(id,codes,tail)=>{
+    const el=document.getElementById(id);if(!el)return;
+    const cur=el.value;
+    el.innerHTML='<option value="">全員</option>'
+      +[...new Set(codes)].filter(Boolean).map(c=>`<option value="${c}">${staffName(c)}</option>`).join('')+(tail||'');
+    el.value=[...el.options].some(o=>o.value===cur)?cur:'';
   };
-  try{
-    const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${masterFilePath()}:/content`,{
-      method:'PUT',
-      headers:{Authorization:'Bearer '+(await LEENAI.auth.token('graph')),'Content-Type':'application/json'},
-      body:JSON.stringify(payload,null,2)
-    });
-    if(!r.ok)throw new Error(r.status+'');
-    document.getElementById('masterSaveOk').style.display='';
-    setTimeout(()=>document.getElementById('masterSaveOk').style.display='none',3000);
-    // マスター保存後 → 担当者変更を各タブに反映
-    showLoading('担当者情報を更新中...');
-    try{
-      allShipping=[];allShippingAll=[];
-      const rd=getRangeDays();
-      await Promise.all([loadTsukan(rd),loadCotecna(rd)]);
-      const activeTab=document.querySelector('.tab-btn.on')?.id?.replace('tab-','');
-      if(activeTab==='shipping')await loadShipping();
-    }finally{hideLoading();}
-  }catch(e){alert('保存エラー: '+e.message);}
+  fill('staffFilter',polStaffData.map(r=>r.staff));
+  fill('spStaffFilter',shippingStaffData.map(r=>r.staff),'<option value="—">未マッピング</option>');
 }
 
 // ── マスタータブ切替 ──
@@ -1733,51 +1645,32 @@ function renderMasterTabs(){
   renderShippingMaster();
 }
 
-// ── 通関担当者編集 ──
+// ── 通関担当者 (表示のみ — 編集は ⚙ マスター設定) ──
 function renderTsukanMaster(){
   const tb=document.getElementById('tsukanMasterBody');if(!tb)return;
-  tb.innerHTML=polStaffData.map((r,i)=>`
+  tb.innerHTML=polStaffData.map(r=>`
     <tr>
-      <td><input class="master-edit-input" value="${r.pol||''}" oninput="polStaffData[${i}].pol=this.value" placeholder="POL名"></td>
-      <td><input class="master-edit-input" value="${r.staff||''}" oninput="polStaffData[${i}].staff=this.value" placeholder="担当者名"></td>
-      <td class="cn"><button class="master-del-btn" onclick="delTsukanRow(${i})">削除</button></td>
+      <td>${r.pol==='*'?'その他の港':r.pol}</td>
+      <td>${mkChip(r.staff)}</td>
+      <td>${r.assist?mkChip(r.assist):''}</td>
     </tr>`).join('');
-}
-function addTsukanRow(){
-  polStaffData.push({pol:'',staff:''});
-  renderTsukanMaster();
-}
-function delTsukanRow(i){
-  if(!confirm('削除しますか?'))return;
-  polStaffData.splice(i,1);
-  renderTsukanMaster();
 }
 
-// ── 船積書類担当者編集 ──
+// ── 船積書類担当者 (表示のみ — 編集は ⚙ マスター設定) ──
 function renderShippingMaster(){
   const tb=document.getElementById('shippingMasterBody');if(!tb)return;
-  tb.innerHTML=shippingStaffData.map((r,i)=>`
+  tb.innerHTML=shippingStaffData.map(r=>`
     <tr>
-      <td><input class="master-edit-input" value="${r.code||''}" oninput="shippingStaffData[${i}].code=this.value" placeholder="コード(例:MG=NMG, NF=UNF, KY=LKY)" style="width:70px;"></td>
-      <td><input class="master-edit-input" value="${r.importer||''}" oninput="shippingStaffData[${i}].importer=this.value" placeholder="Importer名"></td>
-      <td><input class="master-edit-input" value="${r.staff||''}" oninput="shippingStaffData[${i}].staff=this.value" placeholder="大場/パク/..."></td>
-      <td class="cn"><button class="master-del-btn" onclick="delShippingRow(${i})">削除</button></td>
+      <td>${r.code}</td>
+      <td>${r.importer}</td>
+      <td>${mkChip(r.staff||'—')}</td>
     </tr>`).join('');
-}
-function addShippingRow(){
-  shippingStaffData.push({code:'',importer:'',staff:''});
-  renderShippingMaster();
-}
-function delShippingRow(i){
-  if(!confirm('削除しますか?'))return;
-  shippingStaffData.splice(i,1);
-  renderShippingMaster();
 }
 
 async function reloadData(){
   showLoading('データを更新中...');
   try{
-    await loadStatusJson();
+    await Promise.all([loadStatusJson(), LEENAI.auth.status.graph==='ok'?loadMasterJson({fresh:true}):Promise.resolve()]);
     const activeTab=document.querySelector('.tab-btn.on')?.id?.replace('tab-','');
     if(activeTab==='shipping'){
       allShipping=[];
@@ -1800,8 +1693,8 @@ function startTool(){
 LEENAI.init({
   sys:'PORTAL',
   name:'今日の作業',
-  version:'4.0',
-  date:'2026-10-08',
+  version:'4.1',
+  date:'2026-10-19',
   desc:'通関・COTECNA・船積書類 作業管理',
   onReady:startTool,
   redirectUri:'https://mhlee205.github.io/CLEARANCE_COMPASS/',
