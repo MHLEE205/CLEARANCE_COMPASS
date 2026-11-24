@@ -72,6 +72,9 @@ th.th-sc{background:#2D6B1E;color:rgba(255,255,255,.9);}
 .save-btn:hover{opacity:.85;}
 .save-btn:disabled{background:var(--surface3);color:var(--text3);cursor:not-allowed;}
 .save-ok{font-size:12px;color:var(--ok);display:none;}
+/* v4.9: 状態ファイル 読込失敗の警告 · 他の人が先に変更した通知 */
+.st-warn{background:rgba(220,38,38,.10);border:1px solid rgba(220,38,38,.55);color:#B91C1C;border-radius:var(--radius);padding:8px 16px;margin-bottom:12px;font-size:12px;font-weight:600;}
+.st-note{font-size:12px;color:var(--warn);margin:-6px 0 12px;padding:0 4px;}
 
 /* ── セクション&テーブル ── */
 .section{background:var(--read);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:16px;overflow:hidden;}
@@ -451,6 +454,8 @@ html[data-theme="dark"] .mp{--mp-page:#14181F;--mp-surface:#1E242E;--mp-text:#E6
       <button class="save-btn" id="saveBtn" onclick="saveStatus()">💾 変更を保存</button>
       <span class="save-ok" id="saveOk">✅ 保存しました</span>
     </div>
+    <div class="st-note" id="saveNote" style="display:none;"></div>
+    <div class="st-warn" id="stWarnToday" style="display:none;">⚠ 状態ファイル(clearance_status.json)を読み込めませんでした。チェック状態が正しく表示されていません。「🔄 データ更新」を押してください</div>
 
     <!-- 通関セクション -->
     <div class="section">
@@ -550,6 +555,8 @@ html[data-theme="dark"] .mp{--mp-page:#14181F;--mp-surface:#1E242E;--mp-text:#E6
       <button class="save-btn" id="spSaveBtn" onclick="saveSpStatus()">💾 変更を保存</button>
       <span class="save-ok" id="spSaveOk">✅ 保存しました</span>
     </div>
+    <div class="st-note" id="spSaveNote" style="display:none;"></div>
+    <div class="st-warn" id="stWarnShipping" style="display:none;">⚠ 状態ファイル(clearance_status.json)を読み込めませんでした。チェック状態が正しく表示されていません。「🔄 データ更新」を押してください</div>
 
     <!-- 統計パネル -->
     <div id="statsPanel" style="margin-bottom:12px;">
@@ -835,32 +842,152 @@ async function dvGet(url){
 
 // ── SharePoint JSON ──
 function filePath(){return JSON_PATH.split('/').map(encodeURIComponent).join('/');}
+/* v4.9: 読込失敗 (404 以外) を覚えておく — 警告の帯を出し、保存 (PUT) を止める */
+let statusLoadError='';
+const ST_LOAD_WARN='⚠ 状態ファイル(clearance_status.json)を読み込めませんでした。チェック状態が正しく表示されていません。「🔄 データ更新」を押してください';
+function updateStatusWarn(){
+  ['stWarnToday','stWarnShipping'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display=statusLoadError?'':'none';});
+}
+function setStatusMaps(d){
+  statusMap=d.records||{};
+  cotecnaMap=d.cotecna||{};
+  shippingMap=d.shipping||{};
+  savedMap=JSON.parse(JSON.stringify(statusMap));
+  savedCotecnaMap=JSON.parse(JSON.stringify(cotecnaMap));
+  savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
+}
 async function loadStatusJson(){
+  statusLoadError='';
   try{
     var gr=await LEENAI.auth.token('graph');
-    if(!gr){statusMap={};cotecnaMap={};shippingMap={};savedMap={};savedCotecnaMap={};savedShippingMap={};return;}
+    if(!gr)throw new Error('トークンなし');
     const r=await fetch(GR_API+'/drives/'+DRIVE_ID+'/root:/'+filePath()+':/content',
-      {headers:{Authorization:'Bearer '+gr}});
-    if(!r.ok)throw new Error('not found');
-    const d=await r.json();
-    statusMap=d.records||{};
-    cotecnaMap=d.cotecna||{};
-    shippingMap=d.shipping||{};
-    savedMap=JSON.parse(JSON.stringify(statusMap));
-    savedCotecnaMap=JSON.parse(JSON.stringify(cotecnaMap));
-    savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
-  }catch(e){statusMap={};cotecnaMap={};shippingMap={};savedMap={};savedCotecnaMap={};savedShippingMap={};}
+      {headers:{Authorization:'Bearer '+gr},cache:'no-store'});
+    if(r.status===404){setStatusMaps({});return;}          // ファイルなし = 正常 · 空
+    if(!r.ok)throw new Error('HTTP '+r.status);
+    const d=JSON.parse(await r.text());
+    if(!d||typeof d!=='object'||Array.isArray(d))throw new Error('形が違います');
+    setStatusMaps(d);
+  }catch(e){setStatusMaps({});statusLoadError=e.message||'読込失敗';}
+  finally{updateStatusWarn();}
 }
+
+/* v4.9: 差分マージ保存 — 保存直前に最新を読み直し、自分が変えた「欄」だけを重ねて eTag 条件 PUT
+   (DOC_TOOL 書類ツール も同じファイルの shipping に欄単位 · eTag で書く。表にないキーは触らない) */
+const ST_SECS=[
+  {sec:'records', fields:['tsukan_irai','tsukan_status'],          def:{tsukan_irai:false,tsukan_status:'未'},            stamp:true},
+  {sec:'cotecna', fields:['report_status'],                        def:{report_status:'未'},                              stamp:true},
+  {sec:'shipping',fields:['dep','furikomi','fd_date','fd_note'],   def:{dep:'未',furikomi:'未',fd_date:'',fd_note:''}, stamp:false} // shipping は v4.8 · DOC_TOOL と同じく updated_by だけ
+];
+const ST_SAVE_TRIES=3;
+const ST_CONFLICT_MSG='保存エラー: 他の人が同時に保存中です。もう一度「変更を保存」を押してください';
+function stMaps(){return {records:[statusMap,savedMap],cotecna:[cotecnaMap,savedCotecnaMap],shipping:[shippingMap,savedShippingMap]};}
+// 全キー (今の値 ∪ 読み込んだ時の値) を F8 と同じ基準で比べ、変わった欄だけを集める
+function collectStatusChanges(){
+  const M=stMaps(),out=[];
+  ST_SECS.forEach(S=>{
+    const cur=M[S.sec][0],sav=M[S.sec][1];
+    new Set([...Object.keys(cur),...Object.keys(sav)]).forEach(key=>{
+      const c=cur[key]||S.def,s=sav[key]||S.def;
+      const fields=S.fields.filter(f=>c[f]!==s[f]);
+      if(fields.length)out.push({sec:S.sec,key,fields,vals:fields.map(f=>c[f]),before:fields.map(f=>s[f])});
+    });
+  });
+  return out;
+}
+function anyStatusChanges(){return collectStatusChanges().length>0;}
+async function stReadLatest(gr){
+  const base=GR_API+'/drives/'+DRIVE_ID+'/root:/'+filePath();
+  const m=await fetch(base+'?$select=id,eTag',{headers:{Authorization:'Bearer '+gr},cache:'no-store'});
+  if(m.status===404)return{obj:{},eTag:''};
+  if(!m.ok)throw new Error('読込失敗 '+m.status);
+  const eTag=(await m.json()).eTag||'';
+  const r=await fetch(base+':/content',{headers:{Authorization:'Bearer '+gr},cache:'no-store'});
+  if(r.status===404)return{obj:{},eTag:''};
+  if(!r.ok)throw new Error('読込失敗 '+r.status);
+  let obj;try{obj=JSON.parse(await r.text());}catch(e){throw new Error('clearance_status.json を読めません (JSON)');}
+  if(!obj||typeof obj!=='object'||Array.isArray(obj))throw new Error('clearance_status.json の形が違います');
+  return{obj,eTag};
+}
+function stMerge(obj,changes,now){
+  const conflicts=[];
+  if(!('last_updated' in obj))obj.last_updated='';
+  ST_SECS.forEach(S=>{if(!obj[S.sec]||typeof obj[S.sec]!=='object'||Array.isArray(obj[S.sec]))obj[S.sec]={};});
+  changes.forEach(ch=>{
+    const S=ST_SECS.find(x=>x.sec===ch.sec),box=obj[ch.sec];
+    let e=box[ch.key];
+    if(!e||typeof e!=='object'||Array.isArray(e))e=Object.assign({},S.def);
+    ch.fields.forEach((f,i)=>{
+      const latest=(f in e)?e[f]:S.def[f];
+      if(latest!==ch.before[i]&&latest!==ch.vals[i]&&conflicts.indexOf(ch.key)<0)conflicts.push(ch.key);   // 同じ欄を他の人が先に変えていた
+      e[f]=ch.vals[i];
+    });
+    e.updated_by=currentUser;
+    if(S.stamp)e.updated_at=now;
+    box[ch.key]=e;
+  });
+  obj.last_updated=now;
+  return conflicts;
+}
+// 戻り値: {obj, conflicts} · 412 が続いたら err.conflict=true
 async function saveStatusJson(){
+  if(statusLoadError)throw Object.assign(new Error(ST_LOAD_WARN),{loadBlock:true});
   var gr=await LEENAI.auth.token('graph');
   if(!gr)throw new Error('SharePoint未接続');
-  const payload={last_updated:new Date().toISOString(),records:statusMap,cotecna:cotecnaMap,shipping:shippingMap};
-  const r=await fetch(GR_API+'/drives/'+DRIVE_ID+'/root:/'+filePath()+':/content',{
-    method:'PUT',
-    headers:{Authorization:'Bearer '+gr,'Content-Type':'application/json'},
-    body:JSON.stringify(payload,null,2)
-  });
-  if(!r.ok)throw new Error('保存失敗 '+r.status);
+  for(let n=0;n<ST_SAVE_TRIES;n++){
+    const changes=collectStatusChanges();
+    const L=await stReadLatest(gr);
+    const now=new Date().toISOString();
+    const conflicts=stMerge(L.obj,changes,now);
+    const h={Authorization:'Bearer '+gr,'Content-Type':'application/json'};
+    if(L.eTag)h['If-Match']=L.eTag;
+    const r=await fetch(GR_API+'/drives/'+DRIVE_ID+'/root:/'+filePath()+':/content',{
+      method:'PUT',headers:h,cache:'no-store',body:JSON.stringify(L.obj,null,2)
+    });
+    if(r.status===412)continue;                 // 他の人が先に保存 → 読み直してやり直し
+    if(!r.ok)throw new Error('保存失敗 '+r.status);
+    return{obj:L.obj,conflicts};
+  }
+  throw Object.assign(new Error(ST_CONFLICT_MSG),{conflict:true});
+}
+// 保存ボタン 2 つ (通関·COTECNA / 船積書類) 共通 — 3 区域の未保存変更をまとめて保存
+async function saveAllStatus(btnId,okId){
+  const btn=document.getElementById(btnId);
+  const btns=['saveBtn','spSaveBtn'].map(id=>document.getElementById(id)).filter(Boolean);
+  btns.forEach(b=>b.disabled=true);btn.textContent='保存中...';
+  ['saveNote','spSaveNote'].forEach(id=>{const el=document.getElementById(id);if(el)el.style.display='none';});
+  const snap=JSON.parse(JSON.stringify({records:statusMap,cotecna:cotecnaMap,shipping:shippingMap}));
+  try{
+    const R=await saveStatusJson();
+    // 保存中に画面で変えた欄は、未保存のまま残す
+    const M=stMaps(),next={};
+    ST_SECS.forEach(S=>{
+      const merged=R.obj[S.sec]||{},n=JSON.parse(JSON.stringify(merged));
+      const cur=M[S.sec][0],before=snap[S.sec];
+      Object.keys(cur).forEach(key=>{
+        const c=cur[key],b=before[key]||S.def;
+        S.fields.forEach(f=>{if(c[f]!==b[f]){n[key]=n[key]||Object.assign({},S.def);n[key][f]=c[f];n[key].updated_by=c.updated_by;}});
+      });
+      next[S.sec]={cur:n,saved:JSON.parse(JSON.stringify(merged))};
+    });
+    statusMap=next.records.cur;cotecnaMap=next.cotecna.cur;shippingMap=next.shipping.cur;
+    savedMap=next.records.saved;savedCotecnaMap=next.cotecna.saved;savedShippingMap=next.shipping.saved;
+    renderTsukan();renderCotecna();
+    if(allShipping.length)renderShipping();
+    document.getElementById('saveBar').classList.toggle('show',anyUnsaved());
+    document.getElementById('spSaveBar').classList.toggle('show',anySpUnsaved());
+    const ok=document.getElementById(okId);
+    ok.style.display='';
+    setTimeout(()=>{ok.style.display='none';},3000);
+    if(R.conflicts.length){
+      const note=document.getElementById(okId==='spSaveOk'?'spSaveNote':'saveNote');
+      note.textContent='次のIVは他の人が先に変更していました（今回の内容で保存）: '+R.conflicts.join(' · ');
+      note.style.display='';
+      setTimeout(()=>{note.style.display='none';},15000);
+    }
+  }catch(e){
+    alert(e.loadBlock||e.conflict?e.message:'保存エラー: '+e.message);   // 未保存の状態はそのまま
+  }finally{btns.forEach(b=>b.disabled=false);btn.textContent='💾 変更を保存';}
 }
 
 // ── 状態管理(通関) ──
@@ -1001,25 +1128,7 @@ function onFdNoteChange(ivNo,val){
   if(row)row.classList.toggle('row-unsaved',isSpUnsaved(ivNo));
   updateSpSaveBar();
 }
-async function saveSpStatus(){
-  const btn=document.getElementById('spSaveBtn');
-  btn.disabled=true;btn.textContent='保存中...';
-  try{
-    const payload={last_updated:new Date().toISOString(),records:statusMap,cotecna:cotecnaMap,shipping:shippingMap};
-    const r=await fetch(`${GR_API}/drives/${DRIVE_ID}/root:/${filePath()}:/content`,{
-      method:'PUT',headers:{Authorization:'Bearer '+(await LEENAI.auth.token('graph')),'Content-Type':'application/json'},
-      body:JSON.stringify(payload,null,2)
-    });
-    if(!r.ok)throw new Error('保存失敗 '+r.status);
-    savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
-    document.querySelectorAll('tr[data-sp-iv]').forEach(r=>r.classList.remove('row-unsaved'));
-    document.getElementById('spSaveBar').classList.remove('show');
-    document.getElementById('spSaveOk').style.display='';
-    setTimeout(()=>{document.getElementById('spSaveOk').style.display='none';},3000);
-    renderShipping();
-  }catch(e){alert('保存エラー: '+e.message);}
-  finally{btn.disabled=false;btn.textContent='💾 変更を保存';}
-}
+async function saveSpStatus(){return saveAllStatus('spSaveBtn','spSaveOk');}   // v4.9: 共通の差分マージ保存
 
 function switchTab(name){
   ['mail','alloc','today','shipping','purchase','sale','master'].forEach(t=>{
@@ -1155,22 +1264,7 @@ function renderShipping(){
   }).join('');
 }
 
-async function saveStatus(){
-  const btn=document.getElementById('saveBtn');
-  btn.disabled=true;btn.textContent='保存中...';
-  try{
-    await saveStatusJson();
-    savedMap=JSON.parse(JSON.stringify(statusMap));
-    savedCotecnaMap=JSON.parse(JSON.stringify(cotecnaMap));
-    savedShippingMap=JSON.parse(JSON.stringify(shippingMap));
-    document.querySelectorAll('.row-unsaved').forEach(r=>r.classList.remove('row-unsaved'));
-    document.querySelectorAll('.dot-unsaved').forEach(d=>d.style.display='none');
-    document.getElementById('saveBar').classList.remove('show');
-    document.getElementById('saveOk').style.display='';
-    setTimeout(()=>{document.getElementById('saveOk').style.display='none';},3000);
-  }catch(e){alert('保存エラー: '+e.message);}
-  finally{btn.disabled=false;btn.textContent='💾 変更を保存';}
-}
+async function saveStatus(){return saveAllStatus('saveBtn','saveOk');}   // v4.9: 共通の差分マージ保存
 
 // ── 日付ユーティリティ ──
 function localDateStr(off=0){const d=new Date();d.setDate(d.getDate()+off);
@@ -1806,6 +1900,8 @@ function renderShippingMaster(){
 }
 
 async function reloadData(){
+  // v4.9: 未保存の変更 (画面外のキーも含む全キー判定) があれば確認
+  if((anyUnsaved()||anySpUnsaved()||anyStatusChanges())&&!confirm('保存していない変更があります。破棄して更新しますか？'))return;
   showLoading('データを更新中...');
   try{
     await Promise.all([loadStatusJson(), LEENAI.auth.status.graph==='ok'?loadMasterJson({fresh:true}):Promise.resolve()]);
@@ -2778,8 +2874,8 @@ return {mount:mount,unmount:unmount,refresh:refresh,_S:S,_W:W,_buildWork:buildWo
 LEENAI.init({
   sys:'PORTAL',
   name:'今日の作業',
-  version:'4.8',
-  date:'2026-10-20',
+  version:'4.9',
+  date:'2026-11-24',
   desc:'通関・COTECNA・船積書類 作業管理',
   onReady:startTool,
   graphScopes:['Mail.ReadWrite','Sites.ReadWrite.All'],   // v4.4: 📧 メール (MailPortal) — 初回ログイン時に同意
