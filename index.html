@@ -875,7 +875,7 @@ async function loadStatusJson(){
 /* v4.9: 差分マージ保存 — 保存直前に最新を読み直し、自分が変えた「欄」だけを重ねて eTag 条件 PUT
    (DOC_TOOL 書類ツール も同じファイルの shipping に欄単位 · eTag で書く。表にないキーは触らない) */
 const ST_SECS=[
-  {sec:'records', fields:['tsukan_irai','tsukan_status'],          def:{tsukan_irai:false,tsukan_status:'未'},            stamp:true},
+  {sec:'records', fields:['tsukan_irai','tsukan_status','tsukan_irai_at'], def:{tsukan_irai:false,tsukan_status:'未',tsukan_irai_at:''}, stamp:true},   // v4.10: tsukan_irai_at = 「通関依頼済」 をチェックした時刻 (書類ツール の Deposit 依頼 期限 = この日 + 1 営業日)
   {sec:'cotecna', fields:['report_status'],                        def:{report_status:'未'},                              stamp:true},
   {sec:'shipping',fields:['dep','furikomi','fd_date','fd_note'],   def:{dep:'未',furikomi:'未',fd_date:'',fd_note:''}, stamp:false} // shipping は v4.8 · DOC_TOOL と同じく updated_by だけ
 ];
@@ -1000,6 +1000,9 @@ function isTsUnsaved(ivNo){
 function onCheckChange(ivNo,checked){
   if(!statusMap[ivNo])statusMap[ivNo]={tsukan_irai:false,tsukan_status:'未'};
   statusMap[ivNo].tsukan_irai=checked;
+  /* v4.10: チェックした時刻を一緒に保存 (外したら消す · 保存済みのチェックを外して また付けたら 前の時刻に戻す) */
+  const sv=savedMap[ivNo];
+  statusMap[ivNo].tsukan_irai_at=checked?((sv&&sv.tsukan_irai&&sv.tsukan_irai_at)?sv.tsukan_irai_at:new Date().toISOString()):'';
   // チェックON → 自動でED未 / チェックOFF → 未に戻す
   statusMap[ivNo].tsukan_status=checked?'ED未':'未';
   statusMap[ivNo].updated_by=currentUser;statusMap[ivNo].updated_at=new Date().toISOString();
@@ -2874,8 +2877,8 @@ return {mount:mount,unmount:unmount,refresh:refresh,_S:S,_W:W,_buildWork:buildWo
 LEENAI.init({
   sys:'PORTAL',
   name:'今日の作業',
-  version:'4.9',
-  date:'2026-11-24',
+  version:'4.10',
+  date:'2026-11-25',
   desc:'通関・COTECNA・船積書類 作業管理',
   onReady:startTool,
   graphScopes:['Mail.ReadWrite','Sites.ReadWrite.All'],   // v4.4: 📧 メール (MailPortal) — 初回ログイン時に同意
