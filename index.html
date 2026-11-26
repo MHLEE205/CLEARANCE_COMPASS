@@ -875,7 +875,7 @@ async function loadStatusJson(){
 /* v4.9: 差分マージ保存 — 保存直前に最新を読み直し、自分が変えた「欄」だけを重ねて eTag 条件 PUT
    (DOC_TOOL 書類ツール も同じファイルの shipping に欄単位 · eTag で書く。表にないキーは触らない) */
 const ST_SECS=[
-  {sec:'records', fields:['tsukan_irai','tsukan_status','tsukan_irai_at'], def:{tsukan_irai:false,tsukan_status:'未',tsukan_irai_at:''}, stamp:true},   // v4.10: tsukan_irai_at = 「通関依頼済」 をチェックした時刻 (書類ツール の Deposit 依頼 期限 = この日 + 1 営業日)
+  {sec:'records', fields:['tsukan_irai','tsukan_status','tsukan_irai_at','tsukan_irai_off_at'], def:{tsukan_irai:false,tsukan_status:'未',tsukan_irai_at:'',tsukan_irai_off_at:''}, stamp:true},   // v4.10: tsukan_irai_at = 「通関依頼済」 をチェックした時刻 (書類ツール の Deposit 依頼 期限 = この日 + 1 営業日) · v4.11: tsukan_irai_off_at = 保存済みのチェックを人が外した時刻 (また付けたら '' · C-01 の自動記録はこれより前の送付では書かない)
   {sec:'cotecna', fields:['report_status'],                        def:{report_status:'未'},                              stamp:true},
   {sec:'shipping',fields:['dep','furikomi','fd_date','fd_note'],   def:{dep:'未',furikomi:'未',fd_date:'',fd_note:''}, stamp:false} // shipping は v4.8 · DOC_TOOL と同じく updated_by だけ
 ];
@@ -1003,6 +1003,11 @@ function onCheckChange(ivNo,checked){
   /* v4.10: チェックした時刻を一緒に保存 (外したら消す · 保存済みのチェックを外して また付けたら 前の時刻に戻す) */
   const sv=savedMap[ivNo];
   statusMap[ivNo].tsukan_irai_at=checked?((sv&&sv.tsukan_irai&&sv.tsukan_irai_at)?sv.tsukan_irai_at:new Date().toISOString()):'';
+  /* v4.11: 保存済みで付いていたチェックを外した時刻 (付けたら '' · 最初から外れていた行には書かない = 保存済みの値のまま) */
+  statusMap[ivNo].tsukan_irai_off_at=checked?'':((sv&&sv.tsukan_irai)?new Date().toISOString():((sv&&sv.tsukan_irai_off_at)||''));
+  if(!checked&&!(sv&&sv.tsukan_irai)){   // v4.11: 最初から外れていた行 (付けて保存前に外した) = 保存済みの値に戻す (新しい欄を書かない)
+    ['tsukan_irai_at','tsukan_irai_off_at'].forEach(f=>{if(sv&&(f in sv))statusMap[ivNo][f]=sv[f];else delete statusMap[ivNo][f];});
+  }
   // チェックON → 自動でED未 / チェックOFF → 未に戻す
   statusMap[ivNo].tsukan_status=checked?'ED未':'未';
   statusMap[ivNo].updated_by=currentUser;statusMap[ivNo].updated_at=new Date().toISOString();
@@ -2877,8 +2882,8 @@ return {mount:mount,unmount:unmount,refresh:refresh,_S:S,_W:W,_buildWork:buildWo
 LEENAI.init({
   sys:'PORTAL',
   name:'今日の作業',
-  version:'4.10',
-  date:'2026-11-25',
+  version:'4.11',
+  date:'2026-11-26',
   desc:'通関・COTECNA・船積書類 作業管理',
   onReady:startTool,
   graphScopes:['Mail.ReadWrite','Sites.ReadWrite.All'],   // v4.4: 📧 メール (MailPortal) — 初回ログイン時に同意
